@@ -72,6 +72,50 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.38.1</version>
+				<configuration>
+					<images>
+						<image>
+							<name>%g/help-ukraine</name>
+							<alias>help-ukraine</alias>
+							<build>
+								<dockerFile>${project.basedir}/Dockerfile</dockerFile>
+							</build>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>docker-build</id>
+						<phase>install</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>docker-save</id>
+						<phase>install</phase>
+						<goals>
+							<goal>save</goal>
+						</goals>
+						<configuration>
+							<saveAlias>help-ukraine</saveAlias>
+							<saveFile>${project.build.directory}/release-image/help-ukraine-released-image.tar.gz</saveFile>
+						</configuration>
+					</execution>
+					<execution>
+						<id>docker-push</id>
+						<phase>install</phase>
+						<goals>
+							<goal>save</goal>
+							<goal>push</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>
