@@ -81,6 +81,7 @@
 						<image>
 							<name>%g/help-ukraine</name>
 							<alias>help-ukraine</alias>
+							<registry>registry.hub.docker.com/library/busybox</registry>
 							<build>
 								<dockerFile>${project.basedir}/Dockerfile</dockerFile>
 							</build>

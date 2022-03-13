@@ -1,6 +1,4 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
-
-RUN apk add --update --no-cache tzdata
+FROM eclipse-temurin:17
 
 ENV TZ="Europe/Warsaw"
 
