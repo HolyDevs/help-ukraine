@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Card from './Card'
+import Card from '../style-generics/Card'
 
 const RolePickerBody = styled.div`
     height: 100vh;
@@ -23,6 +23,7 @@ const RolePickerButton = styled(Card)`
     font-size:24px;
     font-weight: 600;
     }`;
+
 const RolePickerButtonDistancer = styled.div`
     background-color: var(--ukrainski-niebieski);
     height: 5vh;`;
@@ -30,14 +31,18 @@ const RolePickerButtonDistancer = styled.div`
 const RolePicker = () => {
     return (
         <RolePickerBody>
-            <RolePickerButton className="card card-1">
-                I need help
-            </RolePickerButton>
+            <a href="/refugee">
+                <RolePickerButton>
+                     I need help
+                </RolePickerButton>
+            </a>
             <RolePickerButtonDistancer>
             </RolePickerButtonDistancer>
+            <a href="/volunteer">
             <RolePickerButton className="card-1">
                 I can help
             </RolePickerButton>
+            </a>
         </RolePickerBody>
     );
 }

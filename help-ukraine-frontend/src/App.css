@@ -2,3 +2,6 @@ html {
     --ukrainski-niebieski: #284878;
     --bialy: white;
 }
+body{
+    margin: 0;
+}
