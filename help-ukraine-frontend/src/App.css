@@ -1,5 +1,7 @@
 html {
     --ukrainski-niebieski: #284878;
+    /*z flagi*/
+    --ukrainski-zolty: #FFD700;
     --bialy: white;
 }
 body{
