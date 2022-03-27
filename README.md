@@ -5,3 +5,4 @@
 
 
 docker tag help-ukraine/help-ukraine gcr.io/help-ukraine-344011/help-ukraine
+docker push gcr.io/help-ukraine-344011/help-ukraine
