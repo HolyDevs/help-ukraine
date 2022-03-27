@@ -1,17 +1,7 @@
-html,
-body {
+html {
     --ukrainski-niebieski: #284878;
-    height: 100%;
+    --bialy: white;
 }
-.role-picker {
-    height: 100%;
-    background-color: var(--ukrainski-niebieski);
-}
-.role-picker-button {
-    height: 30vh;
-    background: white;
-    width: 30vh;
-}
-.role-picker-button-distancer {
-    height: 5vh;
+body{
+    margin: 0;
 }
