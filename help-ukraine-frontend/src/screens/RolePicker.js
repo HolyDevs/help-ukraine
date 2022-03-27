@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Card from '../style-generics/Card'
+import {Link} from "react-router-dom";
 
 const RolePickerBody = styled.div`
     height: 100vh;
@@ -31,18 +32,18 @@ const RolePickerButtonDistancer = styled.div`
 const RolePicker = () => {
     return (
         <RolePickerBody>
-            <a href="/refugee">
+            <Link to="/refugee">
                 <RolePickerButton>
                      I need help
                 </RolePickerButton>
-            </a>
+            </Link>
             <RolePickerButtonDistancer>
             </RolePickerButtonDistancer>
-            <a href="/volunteer">
+            <Link to="/volunteer">
             <RolePickerButton className="card-1">
                 I can help
             </RolePickerButton>
-            </a>
+            </Link>
         </RolePickerBody>
     );
 }
