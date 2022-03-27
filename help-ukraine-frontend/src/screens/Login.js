@@ -37,7 +37,10 @@ const LoginButton = styled.button`
     height:75px;
     font-size:26px;
 `
-
+const SignInLabel = styled.div`
+    color: var(--bialy);
+    padding-top: 25px;
+`
 const Login = () => {
     return (
         <>
@@ -46,8 +49,10 @@ const Login = () => {
                 </Logo>
             </LoginLogoHeader>
             <LoginBottom>
+                <LoginButton>Login</LoginButton>
+                <SignInLabel>Or sign in</SignInLabel>
                 <Link to="/rolePicker">
-                    <LoginButton>Login</LoginButton>
+                    <LoginButton>Register</LoginButton>
                 </Link>
             </LoginBottom>
         </>
