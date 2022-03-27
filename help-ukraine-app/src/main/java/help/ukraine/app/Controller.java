@@ -8,6 +8,6 @@ public class Controller {
 
    @GetMapping("hello")
    public String get() {
-      return "<h2>Hello Ukraine Kapitanie</h2>";
+      return "<h2>Hello Ukraine</<h2>";
    }
 }
