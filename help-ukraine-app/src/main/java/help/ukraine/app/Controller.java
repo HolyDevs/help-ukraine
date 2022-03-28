@@ -11,6 +11,6 @@ public class Controller {
    @GetMapping("hello")
    public String get() {
       log.debug("hello endpoint hit");
-      return "<h2>Hello Ukraine Kapitanie</h2>";
+      return "<h2>Hello Ukraine</<h2>";
    }
 }
