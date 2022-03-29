@@ -1,7 +1,7 @@
 package help.ukraine.app.service.impl;
 
 import help.ukraine.app.data.UserEntity;
-import help.ukraine.app.exception.MissingDataException;
+import help.ukraine.app.exception.DataNotExistsException;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.repository.UserRepository;
 import help.ukraine.app.service.UserService;
@@ -24,19 +24,19 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
 
-    public UserModel getUser(String id) throws MissingDataException {
+    public UserModel getUser(String id) throws DataNotExistsException {
         Optional<UserEntity> optional = userRepository.findById(id);
         throwIfMissingUser(optional, id);
         log.info(String.format(FETCHED_USER_MSG, id));
         return mapperFacade.map(optional.get(), UserModel.class);
     }
 
-    private void throwIfMissingUser(Optional<UserEntity> optional, String id) throws MissingDataException {
+    private void throwIfMissingUser(Optional<UserEntity> optional, String id) throws DataNotExistsException {
         if (optional.isPresent()) {
             return;
         }
         String msg = String.format(MISSING_USER_MSG, id);
         log.error(msg);
-        throw new MissingDataException(msg);
+        throw new DataNotExistsException(msg);
     }
 }

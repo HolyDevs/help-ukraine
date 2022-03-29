@@ -1,1 +1,1 @@
-INSERT INTO users(id, first_name, last_name, login) VALUES('123', 'Jan', 'Kowalski', 'aaa');
+INSERT INTO users(id, first_name, last_name, login) VALUES('123', 'Jan', 'Lokalny', 'aaa');
