@@ -34,15 +34,15 @@ const RolePicker = () => {
         <RolePickerBody>
             <Link to="/refugee">
                 <RolePickerButton>
-                     I need help
+                    I need help
                 </RolePickerButton>
             </Link>
             <RolePickerButtonDistancer>
             </RolePickerButtonDistancer>
             <Link to="/volunteer">
-            <RolePickerButton className="card-1">
-                I can help
-            </RolePickerButton>
+                <RolePickerButton className="card-1">
+                    I can help
+                </RolePickerButton>
             </Link>
         </RolePickerBody>
     );
