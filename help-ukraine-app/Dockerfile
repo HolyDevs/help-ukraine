@@ -8,4 +8,4 @@ WORKDIR /usr/bin/help-ukraine-app
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "app.jar", "--add-opens", "java.base/java.lang=ALL-UNNAMED"]
+CMD ["java", "--add-opens", "java.base/java.lang=ALL-UNNAMED", "-jar", "app.jar"]
