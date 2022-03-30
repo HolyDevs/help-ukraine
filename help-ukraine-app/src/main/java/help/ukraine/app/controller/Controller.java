@@ -1,6 +1,6 @@
 package help.ukraine.app.controller;
 
-import help.ukraine.app.exception.MissingDataException;
+import help.ukraine.app.exception.DataNotExistsException;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.service.UserService;
 import lombok.extern.log4j.Log4j2;
@@ -31,7 +31,7 @@ public class Controller {
          log.debug("fetch user endpoint hit");
          UserModel userModel = userService.getUser(userId);
          return ResponseEntity.ok().body(userModel);
-      } catch (MissingDataException e) {
+      } catch (DataNotExistsException e) {
          throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
       }
    }
