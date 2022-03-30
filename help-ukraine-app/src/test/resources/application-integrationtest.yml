@@ -1,0 +1,25 @@
+logging:
+  level:
+    root: info
+    help.ukraine.app: debug
+server:
+  error:
+    include-message: always
+spring:
+  sql:
+    init:
+      mode: always
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;
+    username: SA
+    password:
+  jpa:
+    show-sql: true
+    hibernate.ddl-auto: none
+    properties:
+      dialect: org.hibernate.dialect.H2Dialect
+  cloud:
+    gcp:
+      sql:
+        enabled: false
+

@@ -3,8 +3,8 @@ package help.ukraine.app.controller;
 import help.ukraine.app.exception.DataNotExistsException;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
+@RequiredArgsConstructor
 @Log4j2
 public class Controller {
 
-   @Autowired
-   private UserService userService;
+   private final UserService userService;
 
    @GetMapping("hello")
    public String get() {
