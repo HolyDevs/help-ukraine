@@ -1,0 +1,16 @@
+logging:
+  level:
+    root: info
+    help.ukraine.app: debug
+server:
+  error:
+    include-message: always
+spring:
+  sql:
+    init:
+      mode: never
+  cloud:
+    gcp:
+      sql:
+        enabled: false
+
