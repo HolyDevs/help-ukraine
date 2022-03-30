@@ -5,24 +5,22 @@ import help.ukraine.app.exception.DataNotExistsException;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.repository.UserRepository;
 import help.ukraine.app.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import ma.glasnost.orika.MapperFacade;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 @Log4j2
 public class UserServiceImpl implements UserService {
     private static final String MISSING_USER_MSG = "There is no user with id %s";
     private static final String FETCHED_USER_MSG = "User with id %s fetched";
 
-    @Autowired
-    private MapperFacade mapperFacade;
-    @Autowired
-    private UserRepository userRepository;
-
+    private final MapperFacade mapperFacade;
+    private final UserRepository userRepository;
 
     public UserModel getUser(String id) throws DataNotExistsException {
         Optional<UserEntity> optional = userRepository.findById(id);
