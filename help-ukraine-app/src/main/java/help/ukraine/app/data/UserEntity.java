@@ -1,11 +1,14 @@
 package help.ukraine.app.data;
 
+import help.ukraine.app.enumerator.AccountType;
+import help.ukraine.app.enumerator.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @AllArgsConstructor
@@ -14,25 +17,24 @@ import javax.persistence.*;
 @Setter
 @Table(name = "users")
 public class UserEntity {
-
-    private static final String ROLE_COLUMN = "role";
-
     @Id
-    private String username;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
+    @Column(unique = true)
+    private String email;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ROLE_COLUMN)
-    private RoleEntity roleEntity;
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType;
 
-    @Column(name = ROLE_COLUMN, insertable = false, updatable = false)
-    private String role;
-
-    @Column(nullable = false)
-    private String password;
+    private String name;
+    private String surname;
+    private Date birthDate;
+    private String phoneNumber;
+    private String hashingSalt;
+    private String passwordHashedWithSalt;
+    private boolean isAccountVerified;
 }
