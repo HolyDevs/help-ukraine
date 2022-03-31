@@ -1,14 +1,14 @@
 package help.ukraine.app.data;
 
+import help.ukraine.app.enumerator.AccountType;
+import help.ukraine.app.enumerator.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @AllArgsConstructor
@@ -17,16 +17,24 @@ import javax.persistence.Table;
 @Setter
 @Table(name = "users")
 public class UserEntity {
-
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
+    @Column(unique = true)
+    private String email;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
 
-    @Column(nullable = false)
-    private String login;
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType;
+
+    private String name;
+    private String surname;
+    private Date birthDate;
+    private String phoneNumber;
+    private String hashingSalt;
+    private String passwordHashedWithSalt;
+    private boolean isAccountVerified;
 }

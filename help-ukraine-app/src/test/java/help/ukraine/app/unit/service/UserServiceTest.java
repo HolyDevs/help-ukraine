@@ -36,9 +36,9 @@ class UserServiceTest {
 
     @BeforeEach
     void setUpMock() {
-        UserEntity userEntity = new UserEntity(EXISTING_USER_ID, "Jan", "Testowy", "aaa");
-        doReturn(Optional.of(userEntity)).when(userRepository).findById(EXISTING_USER_ID);
-        doReturn(Optional.empty()).when(userRepository).findById(NOT_EXISTING_USER_ID);
+//        UserEntity userEntity = new UserEntity(EXISTING_USER_ID, "Jan", "Testowy", "aaa");
+//        doReturn(Optional.of(userEntity)).when(userRepository).findById(EXISTING_USER_ID);
+//        doReturn(Optional.empty()).when(userRepository).findById(NOT_EXISTING_USER_ID);
     }
 
     @Test

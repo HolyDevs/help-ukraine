@@ -39,12 +39,7 @@ class AppApplicationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-
-    @BeforeEach
-    void saveUser() {
-        userRepository.save(new UserEntity(CREATED_USER_ID, "Jan", "Testowy", "aaa"));
-    }
+    
 
     @Transactional
     @Test

@@ -23,10 +23,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     public UserModel getUser(String id) throws DataNotExistsException {
-        Optional<UserEntity> optional = userRepository.findById(id);
-        throwIfMissingUser(optional, id);
-        log.info(String.format(FETCHED_USER_MSG, id));
-        return mapperFacade.map(optional.get(), UserModel.class);
+        return null;
+//        Optional<UserEntity> optional = userRepository.findById(id);
+//        throwIfMissingUser(optional, id);
+//        log.info(String.format(FETCHED_USER_MSG, id));
+//        return mapperFacade.map(optional.get(), UserModel.class);
     }
 
     private void throwIfMissingUser(Optional<UserEntity> optional, String id) throws DataNotExistsException {
