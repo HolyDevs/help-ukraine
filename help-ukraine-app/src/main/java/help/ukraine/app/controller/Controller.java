@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @RestController
 @RequiredArgsConstructor
 @Log4j2
@@ -25,11 +27,11 @@ public class Controller {
       return "<h2>Hello Ukraine</<h2>";
    }
 
-   @GetMapping(value = "user/{userId}", produces = "application/json")
-   public ResponseEntity<UserModel> getUser(@PathVariable("userId") String userId) {
+   @GetMapping(value = "user/{username}", produces = APPLICATION_JSON_VALUE)
+   public ResponseEntity<UserModel> getUser(@PathVariable("username") String username) {
       try {
          log.debug("fetch user endpoint hit");
-         UserModel userModel = userService.getUser(userId);
+         UserModel userModel = userService.getUser(username);
          return ResponseEntity.ok().body(userModel);
       } catch (DataNotExistsException e) {
          throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

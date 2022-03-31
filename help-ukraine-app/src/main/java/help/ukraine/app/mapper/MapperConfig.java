@@ -1,4 +1,4 @@
-package help.ukraine.app.config;
+package help.ukraine.app.mapper;
 
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class MapperConfig {
 
     @Bean
-    public MapperFacade mapperFacade() {
+    public MapperFacade userMapperFacade() {
         return new DefaultMapperFactory.Builder().build().getMapperFacade();
     }
 }

@@ -8,9 +8,13 @@ import lombok.*;
 @Setter
 public class UserModel {
 
-    private String id;
+    private String username;
 
     private String firstName;
 
     private String lastName;
+
+    private String role;
+
+    private String password;
 }

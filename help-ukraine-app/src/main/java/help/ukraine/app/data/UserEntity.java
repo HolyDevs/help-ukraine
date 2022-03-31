@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @AllArgsConstructor
@@ -18,8 +15,10 @@ import javax.persistence.Table;
 @Table(name = "users")
 public class UserEntity {
 
+    private static final String ROLE_COLUMN = "role";
+
     @Id
-    private String id;
+    private String username;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -27,6 +26,13 @@ public class UserEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = ROLE_COLUMN)
+    private RoleEntity roleEntity;
+
+    @Column(name = ROLE_COLUMN, insertable = false, updatable = false)
+    private String role;
+
     @Column(nullable = false)
-    private String login;
+    private String password;
 }
