@@ -28,11 +28,20 @@ public class Controller {
    }
 
    @GetMapping(value = "user/{username}", produces = APPLICATION_JSON_VALUE)
-   public ResponseEntity<UserModel> getUser(@PathVariable("username") String username) {
+//   public ResponseEntity<UserModel> getUser(@PathVariable("username") String username) {
+//      try {
+//         log.debug("fetch user endpoint hit");
+//         UserModel userModel = userService.getUser(username);
+//         return ResponseEntity.ok().body(userModel);
+//      } catch (DataNotExistsException e) {
+//         throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//      }
+//   }
+   public UserModel getUser(@PathVariable("username") String username) {
       try {
          log.debug("fetch user endpoint hit");
-         UserModel userModel = userService.getUser(username);
-         return ResponseEntity.ok().body(userModel);
+         return userService.getUser(username);
+//         return ResponseEntity.ok().body(userModel);
       } catch (DataNotExistsException e) {
          throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
       }

@@ -40,6 +40,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        response.setStatus(FORBIDDEN.value());
         if (request.getServletPath().equals(LOGIN_URL)) {
             filterChain.doFilter(request, response);
             return;
@@ -47,7 +48,6 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader(AUTHORIZATION);
         if (!hasAuthHeaderProperFormat(authHeader)) {
             setErrorResponse(response, IMPROPER_FORMAT_AUTH_HEADER_MSG);
-//            filterChain.doFilter(request, response);
             return;
         }
         try {
@@ -58,7 +58,6 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             String msg = String.format(ACCESS_TOKEN_FAIL, e.getMessage());
             setErrorResponse(response, msg);
         }
-//
     }
 
     private UsernamePasswordAuthenticationToken decodeToken(String authHeader) {
