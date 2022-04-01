@@ -5,10 +5,10 @@
     <parent>
         <groupId>com.holydevs.help-ukraine</groupId>
         <artifactId>help-ukraine</artifactId>
-        <version>0.0.0-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>help-ukraine-frontend</artifactId>
-    <version>0.0.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>help-ukraine-frontend</name>
 
     <properties>

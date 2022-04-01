@@ -1,3 +1,5 @@
+auth:
+  secret: SECRET
 logging:
   level:
     root: info

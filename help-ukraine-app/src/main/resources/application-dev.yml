@@ -1,3 +1,5 @@
+auth:
+  secret: ${auth-secret}
 logging:
   level:
     root: info
