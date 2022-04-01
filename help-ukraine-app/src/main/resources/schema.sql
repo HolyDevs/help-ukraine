@@ -55,7 +55,7 @@ create table searching_offers
     refugee_user_id                     bigint,
     people_total                        integer not null,
     preferred_location                  varchar(255),
-    range_from_preferred_location_in_km double,
+    range_from_preferred_location_in_km double precision,
     primary key (id)
 );
 create table searching_people

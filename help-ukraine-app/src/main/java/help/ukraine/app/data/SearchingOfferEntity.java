@@ -34,7 +34,10 @@ public class SearchingOfferEntity {
     private List<SearchingPersonEntity> searchingPeople;
 
     private String preferredLocation;
+
+    @Column(columnDefinition = "DOUBLE PRECISION")
     private Double rangeFromPreferredLocationInKm;
+
     private Boolean animalsInvolved;
     private int peopleTotal;
 }
