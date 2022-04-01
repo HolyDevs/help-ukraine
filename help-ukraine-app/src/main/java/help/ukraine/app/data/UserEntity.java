@@ -2,15 +2,13 @@ package help.ukraine.app.data;
 
 import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.enumerator.Sex;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -34,7 +32,6 @@ public class UserEntity {
     private String surname;
     private Date birthDate;
     private String phoneNumber;
-    private String hashingSalt;
-    private String passwordHashedWithSalt;
+    private String hashedPassword;
     private boolean isAccountVerified;
 }

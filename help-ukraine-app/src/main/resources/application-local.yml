@@ -16,10 +16,19 @@ spring:
     username: SA
     password:
   jpa:
+
     show-sql: true
     hibernate.ddl-auto: none
+#    hibernate.ddl-auto: create
     properties:
       dialect: org.hibernate.dialect.H2Dialect
+#      javax:
+#        persistence:
+#          schema-generation:
+#            create-source: metadata
+#            scripts:
+#              action: create
+#              create-target: create.sql
   cloud:
     gcp:
       sql:
