@@ -2,7 +2,7 @@ FROM eclipse-temurin:17
 
 ENV TZ="Europe/Warsaw"
 
-COPY target/help-ukraine-app-0.0.0-SNAPSHOT.jar /usr/bin/help-ukraine-app/app.jar
+COPY target/help-ukraine-app-0.0.1-SNAPSHOT.jar /usr/bin/help-ukraine-app/app.jar
 
 WORKDIR /usr/bin/help-ukraine-app
 
