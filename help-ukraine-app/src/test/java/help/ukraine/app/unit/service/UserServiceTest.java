@@ -8,7 +8,6 @@ import help.ukraine.app.model.UserModel;
 import help.ukraine.app.repository.UserRepository;
 import help.ukraine.app.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;

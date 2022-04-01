@@ -1,9 +1,9 @@
 package help.ukraine.app.security.config;
 
-import help.ukraine.app.security.filters.AuthenticationFilter;
-import help.ukraine.app.security.filters.AuthorizationFilter;
 import help.ukraine.app.security.TokenDecoder;
 import help.ukraine.app.security.TokenGenerator;
+import help.ukraine.app.security.filters.AuthenticationFilter;
+import help.ukraine.app.security.filters.AuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,7 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import static help.ukraine.app.enumerator.AccountType.HOST;
 import static help.ukraine.app.enumerator.AccountType.REFUGEE;
-import static help.ukraine.app.security.constants.SecurityConstants.*;
+import static help.ukraine.app.security.constants.SecurityConstants.LOGIN_URL;
+import static help.ukraine.app.security.constants.SecurityConstants.REFRESH_TOKEN_URL;
 import static org.springframework.http.HttpMethod.GET;
 
 @Configuration

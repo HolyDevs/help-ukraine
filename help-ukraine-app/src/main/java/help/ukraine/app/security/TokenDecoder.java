@@ -15,7 +15,10 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Optional;
 
 import static help.ukraine.app.security.constants.SecurityConstants.ROLE_CLAIM;
 import static org.springframework.http.HttpStatus.FORBIDDEN;

@@ -1,8 +1,8 @@
 package help.ukraine.app.controller;
 
-import help.ukraine.app.security.dto.GeneratedToken;
 import help.ukraine.app.security.TokenDecoder;
 import help.ukraine.app.security.TokenGenerator;
+import help.ukraine.app.security.dto.GeneratedToken;
 import help.ukraine.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
