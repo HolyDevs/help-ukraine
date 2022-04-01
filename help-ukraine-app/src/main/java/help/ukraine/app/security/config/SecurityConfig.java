@@ -40,9 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         setUpAuthProcess(http);
         // ~~~~~~~~ SECURITY DEFINITIONS ~~~~~~~~~~
-        // USER ENDPOINTS SECURITY ROLES
+        // USER ENDPOINTS SECURITY RULES
         defineUserEndpointSecurityRoles(http);
-        // OFFER ENDPOINTS SECURITY ROLES
+        // OFFER ENDPOINTS SECURITY RULES
         // todo
         http.authorizeRequests().anyRequest().authenticated();
     }
