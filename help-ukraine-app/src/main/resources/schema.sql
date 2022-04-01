@@ -14,7 +14,7 @@ create table hosts
 create table offer_images
 (
     id               bigint not null,
-    image            MEDIUMBLOB,
+    image            BYTEA,
     premise_offer_id bigint,
     primary key (id)
 );

@@ -20,7 +20,7 @@ public class OfferImageEntity {
     private Long id;
 
     @Lob
-    @Column(columnDefinition = "MEDIUMBLOB")
+    @Column(columnDefinition = "BYTEA")
     private String image;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
