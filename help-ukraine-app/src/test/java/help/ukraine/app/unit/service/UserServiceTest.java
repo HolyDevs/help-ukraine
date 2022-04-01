@@ -57,7 +57,6 @@ class UserServiceTest {
 
     @Transactional
     @Test
-    @Disabled
     void fetchUserOkTest() throws Exception {
         UserModel userModel = userService.getUserByEmail(EXISTING_EMAIL);
         assertEquals(EXISTING_EMAIL, userModel.getEmail());

@@ -6,24 +6,25 @@ import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.enumerator.Sex;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
-
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -36,8 +37,13 @@ class AppApplicationTest {
     private static final String USER_ENDPOINT = "/user";
     private static final String EXISTING_EMAIL = "jan.testowy@gmail.com";
     private static final String NOT_EXISTING_EMAIL = "aaa.bbb@ccc.com";
+    private static final String NOT_VALID_AUTH_HEADER = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYW4udGVzdG93eUBnbWFpbC5jb20iLCJyb2xlIjoiUmVmdWdlZSIsImlzcyI6Imlzc3VlciIsImV4cCI6NDgwMjQzNDY5OX0.Gwh34iQtUzO1a1uKK";
+    // TOKEN GENERATED FOR LOCAL SECRET 'SECRET', VALID FOR 100 YRS
+    private static final String VALID_AUTH_HEADER = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYW4udGVzdG93eUBnbWFpbC5jb20iLCJyb2xlIjoiUmVmdWdlZSIsImlzcyI6Imlzc3VlciIsImV4cCI6NDgwMjQzNDY5OX0.Gwh34iQtUzO1a1uKKxE2oj4HcjG1D8ZS_MErzEEmI-M";
 
     @Autowired
+    private WebApplicationContext context;
+
     private MockMvc mvc;
 
     @Autowired
@@ -46,6 +52,13 @@ class AppApplicationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @BeforeAll
+    void setUpMockMvc() {
+        mvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
 
     @BeforeEach
     void saveUser() {
@@ -65,10 +78,10 @@ class AppApplicationTest {
 
     @Transactional
     @Test
-    @WithMockUser(username=EXISTING_EMAIL, roles="Refugee")
     void fetchUserOkTest() throws Exception {
         // GET - OK
-        MvcResult mvcGetResult = mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + EXISTING_EMAIL))
+        MvcResult mvcGetResult = mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + EXISTING_EMAIL)
+                        .header("Authorization", VALID_AUTH_HEADER))
                 .andExpect(status().isOk())
                 .andReturn();
         String body = mvcGetResult.getResponse().getContentAsString();
@@ -79,11 +92,20 @@ class AppApplicationTest {
 
     @Transactional
     @Test
-    @WithMockUser(username=EXISTING_EMAIL, roles="Refugee")
     void fetchUserNotFoundTest() throws Exception {
         // GET - NOT FOUND
-        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + NOT_EXISTING_EMAIL))
+        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + NOT_EXISTING_EMAIL)
+                        .header("Authorization", VALID_AUTH_HEADER))
                 .andExpect(status().isNotFound());
+    }
+
+    @Transactional
+    @Test
+    void fetchUserForbiddenTest() throws Exception {
+        // GET - FORBIDDEN
+        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + NOT_EXISTING_EMAIL)
+                        .header("Authorization", NOT_VALID_AUTH_HEADER))
+                .andExpect(status().isForbidden());
     }
 
 }
