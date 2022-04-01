@@ -6,7 +6,6 @@
 ### 2. dostajemy access_token (10 min waznosci) i refresh_token (30 min)
 ### 3. strzał pod endpoint musi miec header Authorization z wartoscia Bearer <access_token>
 ### 4. refresh tokenów -> strzał GET pod /auth/refresh plus header Authorization z wartoscia Bearer <refresh_token>
-### -Dspring.profiles.active=local - dzieki temu uzywamy in-memory bazki ktorą inicjalizuje schema.sql i data.sql
 ##  mvn clean package
 ## kompilacja z utworzeniem obrazu dockera mvn clean install
 ## start kontenera docker run  -p 8080:8080 help-ukraine/help-ukraine 
