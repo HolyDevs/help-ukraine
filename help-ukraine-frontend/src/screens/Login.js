@@ -17,7 +17,7 @@ const LoginLogoHeader = styled.div`
 
 const LoginBottom = styled.div`
     height: 60vh;
-    color: var(-=ukrainski-bialy);
+    color: var(--ukrainski-bialy);
     background-color:  var(--ukrainski-niebieski);
     color: white;
     font-size:20px;
