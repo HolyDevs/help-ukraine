@@ -1,7 +1,8 @@
 import React from "react";
 import styled from 'styled-components';
 import {Link} from "react-router-dom";
-import InputForm from "./InputForm";
+import InputForm from "../components/InputForm";
+import AppButton from "../components/AppButton";
 
 const LoginLogoHeader = styled.div`
     height: 40vh;
@@ -33,12 +34,6 @@ const Logo = styled.img`
      width: 35vh;
      height: 40vh;`;
 
-const AppButton = styled.button`
-    background-color: var(--bialy);
-    width: 35vh;
-    height: 75px;
-    font-size: 26px;
-    margin: 15px`;
 
 const Login = () => {
     return (
