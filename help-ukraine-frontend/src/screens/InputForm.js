@@ -34,7 +34,7 @@ const Wrapper = styled.div`
 `
 const Link = styled.a`
     text-decoration: none;
-    color: #899ab5;
+    color: var(--ukrainski-szary);
 `
 
 const InputForm = (props) => {
