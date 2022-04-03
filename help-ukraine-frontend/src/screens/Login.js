@@ -12,10 +12,12 @@ const LoginLogoHeader = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding:50px`;
+    padding:50px;`;
 
 
 const LoginBottom = styled.div`
+    margin-top: 20px;
+    padding-top: 15px;
     height: 60vh;
     color: var(--ukrainski-bialy);
     background-color:  var(--ukrainski-niebieski);
