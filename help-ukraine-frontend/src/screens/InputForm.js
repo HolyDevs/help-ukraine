@@ -41,7 +41,7 @@ const InputForm = (props) => {
     return (
         <Wrapper>
             <InputLabel>{props.inputLabel}</InputLabel>
-            <Input>
+            <Input type={props.type}>
             </Input>
             <BottomLabel><Link href="https://www.youtube.com/watch?v=aHtEm9sxzYg">{props.bottomLabel}</Link></BottomLabel>
         </Wrapper>

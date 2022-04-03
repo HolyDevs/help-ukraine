@@ -48,8 +48,8 @@ const Login = () => {
                 </Logo>
             </LoginLogoHeader>
             <LoginBottom>
-                <InputForm inputLabel="Login"></InputForm>
-                <InputForm inputLabel="Password" bottomLabel="Forgot your password?"></InputForm>
+                <InputForm inputLabel="Login" type="text"></InputForm>
+                <InputForm inputLabel="Password" bottomLabel="Forgot your password?" type="password"></InputForm>
                 <AppButton>Login</AppButton>
                 <Link to="/rolePicker">
                     <AppButton>Register</AppButton>
