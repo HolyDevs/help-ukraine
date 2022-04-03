@@ -1,6 +1,7 @@
 import React from "react";
 import styled from 'styled-components';
 import {Link} from "react-router-dom";
+import InputForm from "./InputForm";
 
 const LoginLogoHeader = styled.div`
     height: 40vh;
@@ -16,7 +17,7 @@ const LoginLogoHeader = styled.div`
 
 const LoginBottom = styled.div`
     height: 60vh;
-    color: var(-=ukrainski-bialy);
+    color: var(--ukrainski-bialy);
     background-color:  var(--ukrainski-niebieski);
     color: white;
     font-size:20px;
@@ -26,21 +27,17 @@ const LoginBottom = styled.div`
     align-items: center;`;
 
 const Logo = styled.img`
-      background-size: 30vh;
-      width: 35vh;
-      height: 40vh;
-    `;
+     background-size: 30vh;
+     width: 35vh;
+     height: 40vh;`;
 
-const LoginButton = styled.button`
+const AppButton = styled.button`
     background-color: var(--bialy);
     width: 35vh;
-    height:75px;
-    font-size:26px;
-`
-const SignInLabel = styled.div`
-    color: var(--bialy);
-    padding-top: 25px;
-`
+    height: 75px;
+    font-size: 26px;
+    margin: 15px`;
+
 const Login = () => {
     return (
         <>
@@ -49,10 +46,11 @@ const Login = () => {
                 </Logo>
             </LoginLogoHeader>
             <LoginBottom>
-                <LoginButton>Login</LoginButton>
-                <SignInLabel>Or sign in</SignInLabel>
+                <InputForm inputLabel="Login"></InputForm>
+                <InputForm inputLabel="Password" bottomLabel="Forgot your password?"></InputForm>
+                <AppButton>Login</AppButton>
                 <Link to="/rolePicker">
-                    <LoginButton>Register</LoginButton>
+                    <AppButton>Register</AppButton>
                 </Link>
             </LoginBottom>
         </>

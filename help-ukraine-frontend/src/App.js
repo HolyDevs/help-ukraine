@@ -18,7 +18,6 @@ function App() {
                 </Route>
                 <Route path="/refugee" element={<Refugee/>}>
                 </Route>
-
             </Routes>
         </BrowserRouter>
     );
