@@ -25,8 +25,7 @@ const InputLabel = styled.div`
     font-size: 14px;
 `
 const BottomLabel = styled.div`
-    color: white;
-    font-size: 14px;
+    font-size: 12px;
     text-align: right;
     font-weight: lighter;
 `
@@ -35,7 +34,7 @@ const Wrapper = styled.div`
 `
 const Link = styled.a`
     text-decoration: none;
-    color: white;
+    color: #899ab5;
 `
 
 const InputForm = (props) => {
