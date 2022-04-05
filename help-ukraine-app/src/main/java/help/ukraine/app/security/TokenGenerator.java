@@ -3,9 +3,11 @@ package help.ukraine.app.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import help.ukraine.app.security.constants.AuthTokenContents;
 import help.ukraine.app.security.dto.GeneratedToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
@@ -15,8 +17,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.Optional;
 
-import static help.ukraine.app.security.constants.SecurityConstants.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Component
 @RequiredArgsConstructor
@@ -26,7 +26,7 @@ public class TokenGenerator {
     private final ObjectMapper objectMapper;
 
     public void fillResponseWithGeneratedToken(GeneratedToken generatedToken, HttpServletResponse response) throws IOException {
-        response.setContentType(APPLICATION_JSON_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         objectMapper.writeValue(response.getOutputStream(), generatedToken);
     }
 
@@ -48,16 +48,16 @@ public class TokenGenerator {
         }
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
+                .withExpiresAt(new Date(System.currentTimeMillis() + AuthTokenContents.ACCESS_TOKEN_EXPIRATION))
                 .withIssuer(issuer)
-                .withClaim(ROLE_CLAIM, role)
+                .withClaim(AuthTokenContents.ROLE_CLAIM, role)
                 .sign(algorithm);
     }
 
     private String generateRefreshToken(User user, String issuer, Algorithm algorithm) {
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
+                .withExpiresAt(new Date(System.currentTimeMillis() + AuthTokenContents.REFRESH_TOKEN_EXPIRATION))
                 .withIssuer(issuer)
                 .sign(algorithm);
     }

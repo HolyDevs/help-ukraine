@@ -1,6 +1,7 @@
 package help.ukraine.app.security.filters;
 
 import help.ukraine.app.security.TokenGenerator;
+import help.ukraine.app.security.constants.AuthTokenContents;
 import help.ukraine.app.security.dto.GeneratedToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -17,9 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static help.ukraine.app.security.constants.SecurityConstants.PASSWORD_PARAMETER;
-import static help.ukraine.app.security.constants.SecurityConstants.USERNAME_PARAMETER;
-
 @Log4j2
 @RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -29,8 +27,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String username = request.getParameter(USERNAME_PARAMETER);
-        String password = request.getParameter(PASSWORD_PARAMETER);
+        String username = request.getParameter(AuthTokenContents.USERNAME_PARAMETER);
+        String password = request.getParameter(AuthTokenContents.PASSWORD_PARAMETER);
         log.info("Authentication attempt for user {}", username);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(authenticationToken);

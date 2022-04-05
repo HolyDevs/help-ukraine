@@ -5,7 +5,7 @@ import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.exception.DataNotExistsException;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.repository.UserRepository;
-import help.ukraine.app.security.constants.SecurityConstants;
+import help.ukraine.app.security.constants.AuthRoles;
 import help.ukraine.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -73,8 +73,8 @@ public class UserServiceImpl implements UserService {
 
     private String getOAuthRole(AccountType accountType) {
         return switch (accountType) {
-            case REFUGEE -> SecurityConstants.REFUGEE_ROLE;
-            case HOST -> SecurityConstants.HOST_ROLE;
+            case REFUGEE -> AuthRoles.REFUGEE_ROLE;
+            case HOST -> AuthRoles.HOST_ROLE;
         };
     }
 }
