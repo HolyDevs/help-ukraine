@@ -34,8 +34,9 @@ class AppApplicationTest {
     private static final String EXISTING_EMAIL = "jan.testowy@gmail.com";
     private static final String NOT_EXISTING_EMAIL = "aaa.bbb@ccc.com";
     private static final String NOT_VALID_AUTH_HEADER = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYW4udGVzdG93eUBnbWFpbC5jb20iLCJyb2xlIjoiUmVmdWdlZSIsImlzcyI6Imlzc3VlciIsImV4cCI6NDgwMjQzNDY5OX0.Gwh34iQtUzO1a1uKK";
-    // TOKEN GENERATED FOR LOCAL SECRET 'SECRET', VALID FOR 100 YRS
-    private static final String VALID_AUTH_HEADER = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYW4udGVzdG93eUBnbWFpbC5jb20iLCJyb2xlIjoiUmVmdWdlZSIsImlzcyI6Imlzc3VlciIsImV4cCI6NDgwMjQzNDY5OX0.Gwh34iQtUzO1a1uKKxE2oj4HcjG1D8ZS_MErzEEmI-M";
+    // TOKENS GENERATED FOR LOCAL SECRET 'SECRET', VALID FOR 100 YRS
+    private static final String VALID_AUTH_HEADER_REFUGEE_ROLE = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYW4udGVzdG93eUBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9SRUZVR0VFIiwiaXNzIjoiaXNzdWVyIiwiZXhwIjoxNjgwNzA1OTQ0fQ.J9R-t85oahFGnJlVkqbjN1xbjZaXBidb3UrhE7U3y00";
+    private static final String VALID_AUTH_HEADER_NO_ROLE = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYW4udGVzdG93eUBnbWFpbC5jb20iLCJpc3MiOiJpc3N1ZXIiLCJleHAiOjE2ODA3MDQ0OTV9.BDmwvbTCPQl-3SZiHHWBTes7RoF5mjmuxt8ZLIF7qg0";
 
     @Autowired
     private MockMvc mvc;
@@ -67,7 +68,7 @@ class AppApplicationTest {
     void fetchUserOkTest() throws Exception {
         // GET - OK
         MvcResult mvcGetResult = mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + EXISTING_EMAIL)
-                        .header("Authorization", VALID_AUTH_HEADER))
+                        .header("Authorization", VALID_AUTH_HEADER_REFUGEE_ROLE))
                 .andExpect(status().isOk())
                 .andReturn();
         String body = mvcGetResult.getResponse().getContentAsString();
@@ -81,16 +82,25 @@ class AppApplicationTest {
     void fetchUserNotFoundTest() throws Exception {
         // GET - NOT FOUND
         mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + NOT_EXISTING_EMAIL)
-                        .header("Authorization", VALID_AUTH_HEADER))
+                        .header("Authorization", VALID_AUTH_HEADER_REFUGEE_ROLE))
                 .andExpect(status().isNotFound());
     }
 
     @Transactional
     @Test
-    void fetchUserForbiddenTest() throws Exception {
+    void fetchUserNotValidTokenForbiddenTest() throws Exception {
         // GET - FORBIDDEN
         mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + NOT_EXISTING_EMAIL)
                         .header("Authorization", NOT_VALID_AUTH_HEADER))
+                .andExpect(status().isForbidden());
+    }
+
+    @Transactional
+    @Test
+    void fetchUserTokenWithNoRoleForbiddenTest() throws Exception {
+        // GET - FORBIDDEN
+        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + NOT_EXISTING_EMAIL)
+                        .header("Authorization", VALID_AUTH_HEADER_NO_ROLE))
                 .andExpect(status().isForbidden());
     }
 

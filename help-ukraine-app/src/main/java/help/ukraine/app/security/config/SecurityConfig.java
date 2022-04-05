@@ -7,6 +7,7 @@ import help.ukraine.app.security.filters.AuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,14 +16,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static help.ukraine.app.enumerator.AccountType.HOST;
-import static help.ukraine.app.enumerator.AccountType.REFUGEE;
 import static help.ukraine.app.security.constants.SecurityConstants.LOGIN_URL;
 import static help.ukraine.app.security.constants.SecurityConstants.REFRESH_TOKEN_URL;
-import static org.springframework.http.HttpMethod.GET;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true, securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -38,20 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        setUpAuthProcess(http);
-        // ~~~~~~~~ SECURITY DEFINITIONS ~~~~~~~~~~
-        // USER ENDPOINTS SECURITY RULES
-        defineUserEndpointSecurityRoles(http);
-        // OFFER ENDPOINTS SECURITY RULES
-        // todo
-        http.authorizeRequests().anyRequest().authenticated();
-    }
-
-    private void defineUserEndpointSecurityRoles(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(GET, "user/**").hasAnyAuthority(REFUGEE.name(), HOST.name());
-    }
-
-    private void setUpAuthProcess(HttpSecurity http) throws Exception {
         AuthenticationFilter authenticationFilter = new AuthenticationFilter(tokenGenerator, authenticationManagerBean());
         authenticationFilter.setFilterProcessesUrl(LOGIN_URL);
         http.authorizeRequests()
@@ -60,5 +45,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilter(authenticationFilter);
         http.addFilterBefore(new AuthorizationFilter(tokenDecoder), UsernamePasswordAuthenticationFilter.class);
+        http.authorizeRequests().anyRequest().authenticated();
     }
 }
