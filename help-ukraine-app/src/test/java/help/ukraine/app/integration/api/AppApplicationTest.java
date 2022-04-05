@@ -12,6 +12,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -68,7 +69,7 @@ class AppApplicationTest {
     void fetchUserOkTest() throws Exception {
         // GET - OK
         MvcResult mvcGetResult = mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + EXISTING_EMAIL)
-                        .header("Authorization", VALID_AUTH_HEADER_REFUGEE_ROLE))
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_REFUGEE_ROLE))
                 .andExpect(status().isOk())
                 .andReturn();
         String body = mvcGetResult.getResponse().getContentAsString();
@@ -82,7 +83,7 @@ class AppApplicationTest {
     void fetchUserNotFoundTest() throws Exception {
         // GET - NOT FOUND
         mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + NOT_EXISTING_EMAIL)
-                        .header("Authorization", VALID_AUTH_HEADER_REFUGEE_ROLE))
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_REFUGEE_ROLE))
                 .andExpect(status().isNotFound());
     }
 
@@ -91,7 +92,7 @@ class AppApplicationTest {
     void fetchUserNotValidTokenForbiddenTest() throws Exception {
         // GET - FORBIDDEN
         mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + NOT_EXISTING_EMAIL)
-                        .header("Authorization", NOT_VALID_AUTH_HEADER))
+                        .header(HttpHeaders.AUTHORIZATION, NOT_VALID_AUTH_HEADER))
                 .andExpect(status().isForbidden());
     }
 
@@ -100,7 +101,7 @@ class AppApplicationTest {
     void fetchUserTokenWithNoRoleForbiddenTest() throws Exception {
         // GET - FORBIDDEN
         mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + NOT_EXISTING_EMAIL)
-                        .header("Authorization", VALID_AUTH_HEADER_NO_ROLE))
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_ROLE))
                 .andExpect(status().isForbidden());
     }
 

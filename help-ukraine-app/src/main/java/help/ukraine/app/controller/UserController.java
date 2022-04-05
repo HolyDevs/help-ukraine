@@ -2,7 +2,7 @@ package help.ukraine.app.controller;
 
 import help.ukraine.app.exception.DataNotExistsException;
 import help.ukraine.app.model.UserModel;
-import help.ukraine.app.security.constants.SecurityConstants;
+import help.ukraine.app.security.constants.AuthRoles;
 import help.ukraine.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -30,7 +30,7 @@ public class UserController {
    }
 
    @GetMapping(value = "/user", produces = APPLICATION_JSON_VALUE)
-   @Secured({SecurityConstants.REFUGEE_ROLE, SecurityConstants.HOST_ROLE})
+   @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
    public ResponseEntity<UserModel> getUserByEmail(@RequestParam("email") String email) {
       try {
          log.debug("fetch user endpoint hit");

@@ -1,8 +1,11 @@
 package help.ukraine.app.security.filters;
 
 import help.ukraine.app.security.TokenDecoder;
+import help.ukraine.app.security.constants.AuthTokenContents;
+import help.ukraine.app.security.constants.AuthUrls;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -13,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static help.ukraine.app.security.constants.SecurityConstants.*;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -28,10 +29,10 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        String authHeader = request.getHeader(AUTHORIZATION);
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info("Authorization attempt for authorization header: {}", authHeader);
         if (!tokenDecoder.hasAuthHeaderProperFormat(authHeader)) {
-            tokenDecoder.fillResponseWithTokenVerificationError(response, IMPROPER_FORMAT_AUTH_HEADER_MSG);
+            tokenDecoder.fillResponseWithTokenVerificationError(response, AuthTokenContents.IMPROPER_FORMAT_AUTH_HEADER_MSG);
             return;
         }
         try {
@@ -40,12 +41,12 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             log.info("Token successfully decoded during authorization for user: {}", authenticationToken.getName());
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            tokenDecoder.fillResponseWithTokenVerificationError(response, ACCESS_TOKEN_FAIL);
+            tokenDecoder.fillResponseWithTokenVerificationError(response, AuthTokenContents.ACCESS_TOKEN_FAIL);
         }
     }
 
     private boolean isLoginOrRefreshRequest(HttpServletRequest request) {
-        return request.getServletPath().equals(LOGIN_URL)
-                || request.getServletPath().equals(REFRESH_TOKEN_URL);
+        return request.getServletPath().equals(AuthUrls.LOGIN_URL)
+                || request.getServletPath().equals(AuthUrls.REFRESH_TOKEN_URL);
     }
 }

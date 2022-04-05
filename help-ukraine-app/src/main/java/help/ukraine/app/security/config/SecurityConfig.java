@@ -2,6 +2,7 @@ package help.ukraine.app.security.config;
 
 import help.ukraine.app.security.TokenDecoder;
 import help.ukraine.app.security.TokenGenerator;
+import help.ukraine.app.security.constants.AuthUrls;
 import help.ukraine.app.security.filters.AuthenticationFilter;
 import help.ukraine.app.security.filters.AuthorizationFilter;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import static help.ukraine.app.security.constants.SecurityConstants.LOGIN_URL;
-import static help.ukraine.app.security.constants.SecurityConstants.REFRESH_TOKEN_URL;
 
 @Configuration
 @EnableWebSecurity
@@ -38,9 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         AuthenticationFilter authenticationFilter = new AuthenticationFilter(tokenGenerator, authenticationManagerBean());
-        authenticationFilter.setFilterProcessesUrl(LOGIN_URL);
+        authenticationFilter.setFilterProcessesUrl(AuthUrls.LOGIN_URL);
         http.authorizeRequests()
-                .antMatchers(LOGIN_URL + "/**", REFRESH_TOKEN_URL + "/**").permitAll();
+                .antMatchers(AuthUrls.LOGIN_URL + "/**", AuthUrls.REFRESH_TOKEN_URL + "/**").permitAll();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilter(authenticationFilter);
