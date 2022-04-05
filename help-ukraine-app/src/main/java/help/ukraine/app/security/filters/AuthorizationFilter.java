@@ -37,7 +37,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         try {
             UsernamePasswordAuthenticationToken authenticationToken = tokenDecoder.decodeToken(authHeader);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            log.info("Successful authorization for user: {}", authenticationToken.getName());
+            log.info("Token successfully decoded during authorization for user: {}", authenticationToken.getName());
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             tokenDecoder.fillResponseWithTokenVerificationError(response, ACCESS_TOKEN_FAIL);

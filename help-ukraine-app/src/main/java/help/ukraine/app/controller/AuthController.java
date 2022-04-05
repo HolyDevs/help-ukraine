@@ -2,6 +2,7 @@ package help.ukraine.app.controller;
 
 import help.ukraine.app.security.TokenDecoder;
 import help.ukraine.app.security.TokenGenerator;
+import help.ukraine.app.security.constants.SecurityConstants;
 import help.ukraine.app.security.dto.GeneratedToken;
 import help.ukraine.app.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static help.ukraine.app.security.constants.SecurityConstants.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
@@ -28,15 +28,15 @@ public class AuthController {
     private final TokenDecoder tokenDecoder;
     private final UserService userService;
 
-    @PostMapping(LOGIN_URL)
+    @PostMapping(SecurityConstants.LOGIN_URL)
     public void login() {}
 
-    @GetMapping(REFRESH_TOKEN_URL)
+    @GetMapping(SecurityConstants.REFRESH_TOKEN_URL)
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authHeader = request.getHeader(AUTHORIZATION);
         log.info("Token renewal attempt for authorization header: {}", authHeader);
         if (!tokenDecoder.hasAuthHeaderProperFormat(authHeader)) {
-            tokenDecoder.fillResponseWithTokenVerificationError(response, IMPROPER_FORMAT_AUTH_HEADER_MSG);
+            tokenDecoder.fillResponseWithTokenVerificationError(response, SecurityConstants.IMPROPER_FORMAT_AUTH_HEADER_MSG);
             return;
         }
         try {
@@ -47,7 +47,7 @@ public class AuthController {
             log.info("Successful token renewal for user: {}", user.getUsername());
             tokenGenerator.fillResponseWithGeneratedToken(generatedToken, response);
         } catch (Exception e) {
-            tokenDecoder.fillResponseWithTokenVerificationError(response, ACCESS_TOKEN_FAIL);
+            tokenDecoder.fillResponseWithTokenVerificationError(response, SecurityConstants.ACCESS_TOKEN_FAIL);
         }
     }
 }

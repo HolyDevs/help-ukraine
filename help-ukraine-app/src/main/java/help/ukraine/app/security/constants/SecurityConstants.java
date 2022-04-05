@@ -12,6 +12,10 @@ public final class SecurityConstants {
     public static final String ACCESS_TOKEN_NAME = "access_token";
     public static final String REFRESH_TOKEN_NAME = "refresh_token";
 
+    // ROLES
+    public static final String REFUGEE_ROLE = "ROLE_REFUGEE";
+    public static final String HOST_ROLE = "ROLE_HOST";
+
     // TOKEN EXPIRATION PERIODS
     public static final int ACCESS_TOKEN_EXPIRATION = 10 * 60 * 1000;
     public static final int REFRESH_TOKEN_EXPIRATION = 30 * 60 * 1000;

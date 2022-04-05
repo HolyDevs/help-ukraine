@@ -15,10 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static help.ukraine.app.security.constants.SecurityConstants.ROLE_CLAIM;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -56,7 +53,8 @@ public class TokenDecoder {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         Optional<String> roleOptional = Optional.ofNullable(decodedJWT.getClaim(ROLE_CLAIM).asString());
         roleOptional.ifPresent(role -> authorities.add(new SimpleGrantedAuthority(role)));
-        return new UsernamePasswordAuthenticationToken(username, null, authorities);
+        return new UsernamePasswordAuthenticationToken(username, null,
+                Collections.unmodifiableCollection(authorities));
     }
 
 

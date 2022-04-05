@@ -1,9 +1,11 @@
 package help.ukraine.app.service.impl;
 
 import help.ukraine.app.data.UserEntity;
+import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.exception.DataNotExistsException;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.repository.UserRepository;
+import help.ukraine.app.security.constants.SecurityConstants;
 import help.ukraine.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -35,8 +37,9 @@ public class UserServiceImpl implements UserService {
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
             UserModel userModel = getUserByEmail(username);
+            String oAuthRole = getOAuthRole(userModel.getAccountType());
             Collection<SimpleGrantedAuthority> authorities =
-                    Collections.singletonList(new SimpleGrantedAuthority(userModel.getAccountType().name()));
+                    Collections.singletonList(new SimpleGrantedAuthority(oAuthRole));
             return new User(userModel.getEmail(), userModel.getPassword(), authorities);
         } catch (DataNotExistsException e) {
             log.error(e);
@@ -66,5 +69,12 @@ public class UserServiceImpl implements UserService {
         String msg = String.format(MISSING_USER_MSG, email);
         log.error(msg);
         throw new DataNotExistsException(msg);
+    }
+
+    private String getOAuthRole(AccountType accountType) {
+        return switch (accountType) {
+            case REFUGEE -> SecurityConstants.REFUGEE_ROLE;
+            case HOST -> SecurityConstants.HOST_ROLE;
+        };
     }
 }
