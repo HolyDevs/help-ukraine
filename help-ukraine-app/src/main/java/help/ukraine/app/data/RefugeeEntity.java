@@ -22,7 +22,8 @@ public class RefugeeEntity implements Serializable {
     private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = USER_ID_COLUMN_NAME, referencedColumnName = UserEntity.ID_COLUMN_NAME, insertable = false, updatable = false)
+    @JoinColumn(name = USER_ID_COLUMN_NAME, referencedColumnName = UserEntity.ID_COLUMN_NAME,
+            insertable = false, updatable = false)
     private UserEntity user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = SearchingOfferEntity.REFUGEE_ID_FIELD_NAME)
