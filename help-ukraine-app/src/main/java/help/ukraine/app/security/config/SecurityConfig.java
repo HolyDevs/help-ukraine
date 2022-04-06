@@ -37,12 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         AuthenticationFilter authenticationFilter = new AuthenticationFilter(tokenGenerator, authenticationManagerBean());
         authenticationFilter.setFilterProcessesUrl(AuthUrls.LOGIN_URL);
-        http.authorizeRequests()
-                .antMatchers(AuthUrls.LOGIN_URL + "/**", AuthUrls.REFRESH_TOKEN_URL + "/**").permitAll();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilter(authenticationFilter);
         http.addFilterBefore(new AuthorizationFilter(tokenDecoder), UsernamePasswordAuthenticationFilter.class);
-        http.authorizeRequests().anyRequest().authenticated();
     }
 }

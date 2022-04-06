@@ -1,6 +1,7 @@
 package help.ukraine.app.service;
 
 import help.ukraine.app.exception.DataNotExistsException;
+import help.ukraine.app.exception.UserAlreadyRegisteredException;
 import help.ukraine.app.model.UserModel;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,5 +11,5 @@ public interface UserService extends UserDetailsService {
     @Override
     User loadUserByUsername(String username) throws UsernameNotFoundException;
     UserModel getUserByEmail(String email) throws DataNotExistsException;
-    UserModel saveUser(UserModel userModel);
+    UserModel registerUser(UserModel userModel) throws UserAlreadyRegisteredException;
 }

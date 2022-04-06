@@ -1,0 +1,11 @@
+{
+  "email": "jan.testowy1@gmail.com",
+  "sex": "MALE",
+  "accountType": "REFUGEE",
+  "name": "Jan",
+  "surname": "Testowy1",
+  "birthDate": "1988-01-07",
+  "phoneNumber": "666-666-666",
+  "password": "aaa",
+  "isAccountVerified": true
+}

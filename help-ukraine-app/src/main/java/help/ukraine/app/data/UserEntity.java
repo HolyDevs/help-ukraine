@@ -15,6 +15,9 @@ import java.util.Date;
 @Setter
 @Table(name = "users")
 public class UserEntity {
+
+    public static final String ID_COLUMN_NAME = "id";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -33,5 +36,5 @@ public class UserEntity {
     private Date birthDate;
     private String phoneNumber;
     private String hashedPassword;
-    private boolean isAccountVerified;
+    private Boolean isAccountVerified;
 }

@@ -1,9 +1,14 @@
 package help.ukraine.app.service.impl;
 
+import help.ukraine.app.data.HostEntity;
+import help.ukraine.app.data.RefugeeEntity;
 import help.ukraine.app.data.UserEntity;
 import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.exception.DataNotExistsException;
+import help.ukraine.app.exception.UserAlreadyRegisteredException;
 import help.ukraine.app.model.UserModel;
+import help.ukraine.app.repository.HostRepository;
+import help.ukraine.app.repository.RefugeeRepository;
 import help.ukraine.app.repository.UserRepository;
 import help.ukraine.app.security.constants.AuthRoles;
 import help.ukraine.app.service.UserService;
@@ -28,9 +33,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private static final String MISSING_USER_MSG = "There is no user with email %s";
     private static final String FETCHED_USER_MSG = "User with email %s fetched";
+    private static final String USER_ALREADY_REGISTERED_MSG = "User with email %s is already registered";
 
     private final MapperFacade userMapperFacade;
     private final UserRepository userRepository;
+    private final HostRepository hostRepository;
+    private final RefugeeRepository refugeeRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -55,11 +63,32 @@ public class UserServiceImpl implements UserService {
         return userMapperFacade.map(optional.get(), UserModel.class);
     }
 
-    public UserModel saveUser(UserModel userModel) {
+    @Override
+    public UserModel registerUser(UserModel userModel) throws UserAlreadyRegisteredException {
+        throwIfUserAlreadyRegistered(userModel.getEmail());
+        encodePassword(userModel);
+        UserEntity userEntity = userMapperFacade.map(userModel, UserEntity.class);
+        userEntity = userRepository.save(userEntity);
+        switch (userModel.getAccountType()) {
+            case REFUGEE -> registerRefugee(userEntity.getId());
+            case HOST -> registerHost(userEntity.getId());
+        }
+        return userMapperFacade.map(userEntity, UserModel.class);
+    }
+
+    private void registerRefugee(Long userEntityId) {
+        RefugeeEntity refugeeEntity = RefugeeEntity.builder().userId(userEntityId).build();
+        refugeeRepository.save(refugeeEntity);
+    }
+
+    private void registerHost(Long userEntityId) {
+        HostEntity hostEntity = HostEntity.builder().userId(userEntityId).build();
+        hostRepository.save(hostEntity);
+    }
+
+    private void encodePassword(UserModel userModel) {
         String password = userModel.getPassword();
         userModel.setPassword(passwordEncoder.encode(password));
-        UserEntity userEntity = userMapperFacade.map(userModel, UserEntity.class);
-        return userMapperFacade.map(userRepository.save(userEntity), UserModel.class);
     }
 
     private void throwIfMissingUser(Optional<UserEntity> optional, String email) throws DataNotExistsException {
@@ -69,6 +98,15 @@ public class UserServiceImpl implements UserService {
         String msg = String.format(MISSING_USER_MSG, email);
         log.error(msg);
         throw new DataNotExistsException(msg);
+    }
+
+    private void throwIfUserAlreadyRegistered(String email) throws UserAlreadyRegisteredException {
+        if (!userRepository.existsByEmail(email)) {
+            return;
+        }
+        String msg = String.format(USER_ALREADY_REGISTERED_MSG, email);
+        log.error(msg);
+        throw new UserAlreadyRegisteredException(msg);
     }
 
     private String getOAuthRole(AccountType accountType) {
