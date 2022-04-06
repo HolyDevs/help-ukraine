@@ -1,7 +1,7 @@
 package help.ukraine.app.security.filters;
 
 import help.ukraine.app.security.TokenDecoder;
-import help.ukraine.app.security.constants.AuthTokenContents;
+import help.ukraine.app.security.constants.AuthMessages;
 import help.ukraine.app.security.constants.AuthUrls;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -25,14 +25,14 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (isLoginOrRefreshRequest(request)) {
+        if (isNoAuthEndpoint(request)) {
             filterChain.doFilter(request, response);
             return;
         }
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info("Authorization attempt for authorization header: {}", authHeader);
         if (!tokenDecoder.hasAuthHeaderProperFormat(authHeader)) {
-            tokenDecoder.fillResponseWithTokenVerificationError(response, AuthTokenContents.IMPROPER_FORMAT_AUTH_HEADER_MSG);
+            tokenDecoder.fillResponseWithTokenVerificationError(response, AuthMessages.IMPROPER_FORMAT_AUTH_HEADER_MSG);
             return;
         }
         try {
@@ -41,12 +41,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             log.info("Token successfully decoded during authorization for user: {}", authenticationToken.getName());
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            tokenDecoder.fillResponseWithTokenVerificationError(response, AuthTokenContents.ACCESS_TOKEN_FAIL);
+            tokenDecoder.fillResponseWithTokenVerificationError(response, AuthMessages.ACCESS_TOKEN_FAIL);
         }
     }
 
-    private boolean isLoginOrRefreshRequest(HttpServletRequest request) {
-        return request.getServletPath().equals(AuthUrls.LOGIN_URL)
-                || request.getServletPath().equals(AuthUrls.REFRESH_TOKEN_URL);
+    private boolean isNoAuthEndpoint(HttpServletRequest request) {
+        return AuthUrls.NO_AUTH_URLS.contains(request.getServletPath());
     }
 }
