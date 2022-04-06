@@ -69,12 +69,11 @@ public class UserServiceImpl implements UserService {
         encodePassword(userModel);
         UserEntity userEntity = userMapperFacade.map(userModel, UserEntity.class);
         userEntity = userRepository.save(userEntity);
-        UserModel savedUserModel = userMapperFacade.map(userEntity, UserModel.class);
         switch (userModel.getAccountType()) {
             case REFUGEE -> registerRefugee(userEntity.getId());
             case HOST -> registerHost(userEntity.getId());
         }
-        return savedUserModel;
+        return userMapperFacade.map(userEntity, UserModel.class);
     }
 
     private void registerRefugee(Long userEntityId) {
