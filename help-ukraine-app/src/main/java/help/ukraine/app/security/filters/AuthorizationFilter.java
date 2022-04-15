@@ -1,5 +1,6 @@
 package help.ukraine.app.security.filters;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import help.ukraine.app.security.TokenDecoder;
 import help.ukraine.app.security.constants.AuthMessages;
 import help.ukraine.app.security.constants.AuthUrls;
@@ -40,7 +41,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             log.info("Token successfully decoded during authorization for user: {}", authenticationToken.getName());
             filterChain.doFilter(request, response);
-        } catch (Exception e) {
+        } catch (JWTVerificationException e) {
             tokenDecoder.fillResponseWithTokenVerificationError(response, AuthMessages.ACCESS_TOKEN_FAIL);
         }
     }

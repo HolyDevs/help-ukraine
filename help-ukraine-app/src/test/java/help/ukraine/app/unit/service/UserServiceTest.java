@@ -127,6 +127,13 @@ class UserServiceTest {
         assertThrows(DataNotExistsException.class, () -> userService.deleteUser(NOT_EXISTING_EMAIL));
     }
 
+    @Transactional
+    @Test
+    void modifyUserTest() {
+
+    }
+
+
     private RefugeeEntity buildRegisteredRefugeeEntity(UserEntity userEntity) {
         return RefugeeEntity.builder()
                 .userId(userEntity.getId())

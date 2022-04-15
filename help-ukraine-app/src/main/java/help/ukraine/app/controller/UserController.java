@@ -24,7 +24,15 @@ import javax.validation.Valid;
 @Log4j2
 public class UserController {
 
+    // ENDPOINTS
+    public static final String USER_ENDPOINT = "/user";
+    public static final String DELETE_USER_ENDPOINT = USER_ENDPOINT + "/delete";
+    public static final String MODIFY_USER_ENDPOINT = USER_ENDPOINT + "/modify";
+    public static final String REGISTER_USER_ENDPOINT = USER_ENDPOINT + "/register";
+    // PARAMS
     public static final String EMAIL_PARAM_NAME = "email";
+
+
     private static final String PARAM_AND_BODY_EMAILS_NOT_MATCH = "Email passed as parameter (%s) and one placed in body (%s) do not match";
 
     private final UserService userService;
@@ -36,7 +44,7 @@ public class UserController {
         return "<h2>Hello Ukraine</<h2>";
     }
 
-    @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = USER_ENDPOINT, produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
     public ResponseEntity<UserModel> getUser(@RequestParam(EMAIL_PARAM_NAME) String email) {
         log.debug("fetch user endpoint hit");
@@ -49,7 +57,7 @@ public class UserController {
         }
     }
 
-    @PutMapping(value = "/user/modify", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = MODIFY_USER_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
     public ResponseEntity<UserModel> modifyUser(@RequestParam(EMAIL_PARAM_NAME) String email, @Valid @RequestBody UserModel userModel) {
         log.debug("modify user endpoint hit");
@@ -59,7 +67,7 @@ public class UserController {
         return ResponseEntity.ok().body(modifiedUserModel);
     }
 
-    @PostMapping(value = AuthUrls.REGISTER_USER_URL, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = REGISTER_USER_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserModel> registerUser(@Valid @RequestBody UserModel userModel) {
         try {
             log.debug("register user endpoint hit");
@@ -70,7 +78,8 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/user/delete")
+    @DeleteMapping(DELETE_USER_ENDPOINT)
+    @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
     public ResponseEntity<Void> deleteUser(@RequestParam(EMAIL_PARAM_NAME) String email) {
         log.debug("delete user endpoint hit");
         throwIfAuthNotBelongsToUser(email);

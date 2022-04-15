@@ -2,13 +2,13 @@ package help.ukraine.app.integration.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
-import help.ukraine.app.controller.UserController;
+import help.ukraine.app.data.RefugeeEntity;
 import help.ukraine.app.data.UserEntity;
 import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.enumerator.Sex;
 import help.ukraine.app.model.UserModel;
+import help.ukraine.app.repository.RefugeeRepository;
 import help.ukraine.app.repository.UserRepository;
-import help.ukraine.app.security.constants.AuthUrls;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,7 +26,7 @@ import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-import static help.ukraine.app.controller.UserController.EMAIL_PARAM_NAME;
+import static help.ukraine.app.controller.UserController.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,8 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles(profiles = "integrationtest")
 class UserApiTest {
 
-    // ENDPOINTS
-    private static final String USER_ENDPOINT = "/user";
     // EMAILS
     private static final String EXISTING_EMAIL = "jan.testowy@gmail.com";
     private static final String REGISTERED_EMAIL = "jan.testowy1@gmail.com";
@@ -59,6 +57,9 @@ class UserApiTest {
     private UserRepository userRepository;
 
     @Autowired
+    private RefugeeRepository refugeeRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -74,7 +75,9 @@ class UserApiTest {
                 .phoneNumber("666-666-666")
                 .sex(Sex.MALE)
                 .build();
-        userRepository.save(userEntity);
+        userEntity = userRepository.save(userEntity);
+        RefugeeEntity refugeeEntity = RefugeeEntity.builder().userId(userEntity.getId()).build();
+        refugeeRepository.save(refugeeEntity);
     }
 
     @Transactional
@@ -132,8 +135,8 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_REGISTER_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // POST - CREATED
-        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.post(AuthUrls.REGISTER_USER_URL)
-                        .servletPath(AuthUrls.REGISTER_USER_URL)
+        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.post(REGISTER_USER_ENDPOINT)
+                        .servletPath(REGISTER_USER_ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userUploadPayload))
@@ -146,8 +149,8 @@ class UserApiTest {
         assertEquals(AccountType.REFUGEE, registeredUserModel.getAccountType());
 
         // POST - BAD REQUEST
-        mvc.perform(MockMvcRequestBuilders.post(AuthUrls.REGISTER_USER_URL)
-                        .servletPath(AuthUrls.REGISTER_USER_URL)
+        mvc.perform(MockMvcRequestBuilders.post(REGISTER_USER_ENDPOINT)
+                        .servletPath(REGISTER_USER_ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userUploadPayload))
@@ -160,12 +163,53 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_REGISTER_PAYLOAD_NULL_NAME_PATH), StandardCharsets.UTF_8);
 
         // POST - BAD REQUEST
-        mvc.perform(MockMvcRequestBuilders.post(AuthUrls.REGISTER_USER_URL)
-                        .servletPath(AuthUrls.REGISTER_USER_URL)
+        mvc.perform(MockMvcRequestBuilders.post(REGISTER_USER_ENDPOINT)
+                        .servletPath(REGISTER_USER_ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userUploadPayload))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Transactional
+    @Test
+    void deleteUserNoContentTest() throws Exception {
+        // DELETE - NO CONTENT
+        mvc.perform(MockMvcRequestBuilders.delete(DELETE_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+                        .servletPath(DELETE_USER_ENDPOINT)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_REFUGEE_ROLE))
+                .andExpect(status().isNoContent());
+    }
+
+    @Transactional
+    @Test
+    void deleteUserNotFoundTest() throws Exception {
+        // DELETE - NOT FOUND
+        mvc.perform(MockMvcRequestBuilders.delete(DELETE_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
+                        .servletPath(DELETE_USER_ENDPOINT)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Transactional
+    @Test
+    void deleteUserNotValidTokenForbiddenTest() throws Exception {
+        // DELETE - FORBIDDEN
+        mvc.perform(MockMvcRequestBuilders.delete(DELETE_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
+                        .servletPath(DELETE_USER_ENDPOINT)
+                        .header(HttpHeaders.AUTHORIZATION, NOT_VALID_AUTH_HEADER))
+                .andExpect(status().isForbidden());
+    }
+
+    @Transactional
+    @Test
+    void deleteUserTokenWithNoRoleForbiddenTest() throws Exception {
+        // DELETE - FORBIDDEN
+        mvc.perform(MockMvcRequestBuilders.delete(DELETE_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+                        .servletPath(DELETE_USER_ENDPOINT)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_NO_ROLE))
+                .andExpect(status().isForbidden());
     }
 
 }
