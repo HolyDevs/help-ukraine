@@ -33,6 +33,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private static final String MISSING_USER_MSG = "There is no user with email %s";
     private static final String FETCHED_USER_MSG = "User with email %s fetched";
+    private static final String DELETED_USER_MSG = "User with email %s deleted";
+    private static final String MODIFIED_USER_MSG = "User with email %s modified";
+    private static final String CREATED_USER_MSG = "User with email %s created";
     private static final String USER_ALREADY_REGISTERED_MSG = "User with email %s is already registered";
 
     private final MapperFacade userMapperFacade;
@@ -44,7 +47,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            UserModel userModel = getUserByEmail(username);
+            UserModel userModel = getUser(username);
             String oAuthRole = getOAuthRole(userModel.getAccountType());
             Collection<SimpleGrantedAuthority> authorities =
                     Collections.singletonList(new SimpleGrantedAuthority(oAuthRole));
@@ -56,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserModel getUserByEmail(String email) throws DataNotExistsException {
+    public UserModel getUser(String email) throws DataNotExistsException {
         Optional<UserEntity> optional = userRepository.findByEmail(email);
         throwIfMissingUser(optional, email);
         log.info(String.format(FETCHED_USER_MSG, email));
@@ -66,22 +69,62 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserModel registerUser(UserModel userModel) throws UserAlreadyRegisteredException {
         throwIfUserAlreadyRegistered(userModel.getEmail());
+        return createUser(userModel);
+    }
+
+    @Override
+    public UserModel modifyUser(UserModel userModel) {
+        Optional<UserEntity> optional = userRepository.findByEmail(userModel.getEmail());
+        if (optional.isEmpty()) {
+            return createUser(userModel);
+        }
+        UserEntity userEntity = optional.get();
+        return updateUser(userModel, userEntity);
+    }
+
+    @Override
+    public void deleteUser(String email) throws DataNotExistsException {
+        Optional<UserEntity> optional = userRepository.findByEmail(email);
+        throwIfMissingUser(optional, email);
+        UserEntity userEntity = optional.get();
+        switch (userEntity.getAccountType()) {
+            case HOST -> hostRepository.deleteById(userEntity.getId());
+            case REFUGEE -> refugeeRepository.deleteById(userEntity.getId());
+        }
+        log.info(String.format(DELETED_USER_MSG, email));
+        userRepository.delete(userEntity);
+    }
+
+    private UserModel createUser(UserModel userModel) {
         encodePassword(userModel);
         UserEntity userEntity = userMapperFacade.map(userModel, UserEntity.class);
         userEntity = userRepository.save(userEntity);
         switch (userModel.getAccountType()) {
-            case REFUGEE -> registerRefugee(userEntity.getId());
-            case HOST -> registerHost(userEntity.getId());
+            case REFUGEE -> createRefugee(userEntity.getId());
+            case HOST -> createHost(userEntity.getId());
         }
+        log.info(String.format(CREATED_USER_MSG, userModel.getEmail()));
         return userMapperFacade.map(userEntity, UserModel.class);
     }
 
-    private void registerRefugee(Long userEntityId) {
+    private UserModel updateUser(UserModel userModel, UserEntity userEntity) {
+        if (shouldPasswordBeModified(userModel, userEntity)) {
+            encodePassword(userModel);
+        } else {
+            userModel.setPassword(userEntity.getHashedPassword());
+        }
+        userEntity = userMapperFacade.map(userModel, UserEntity.class);
+        userEntity = userRepository.save(userEntity);
+        log.info(String.format(MODIFIED_USER_MSG, userModel.getEmail()));
+        return userMapperFacade.map(userEntity, UserModel.class);
+    }
+
+    private void createRefugee(Long userEntityId) {
         RefugeeEntity refugeeEntity = RefugeeEntity.builder().userId(userEntityId).build();
         refugeeRepository.save(refugeeEntity);
     }
 
-    private void registerHost(Long userEntityId) {
+    private void createHost(Long userEntityId) {
         HostEntity hostEntity = HostEntity.builder().userId(userEntityId).build();
         hostRepository.save(hostEntity);
     }
@@ -114,5 +157,9 @@ public class UserServiceImpl implements UserService {
             case REFUGEE -> AuthRoles.REFUGEE_ROLE;
             case HOST -> AuthRoles.HOST_ROLE;
         };
+    }
+
+    private boolean shouldPasswordBeModified(UserModel userModel, UserEntity userEntity) {
+        return !passwordEncoder.matches(userModel.getPassword(), userEntity.getHashedPassword());
     }
 }

@@ -2,6 +2,7 @@ package help.ukraine.app.integration.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
+import help.ukraine.app.controller.UserController;
 import help.ukraine.app.data.UserEntity;
 import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.enumerator.Sex;
@@ -25,6 +26,7 @@ import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+import static help.ukraine.app.controller.UserController.EMAIL_PARAM_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -79,7 +81,7 @@ class UserApiTest {
     @Test
     void fetchUserOkTest() throws Exception {
         // GET - OK
-        MvcResult mvcGetResult = mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + EXISTING_EMAIL)
+        MvcResult mvcGetResult = mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
                         .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_REFUGEE_ROLE)
                         .accept(MediaType.APPLICATION_JSON))
@@ -95,7 +97,7 @@ class UserApiTest {
     @Test
     void fetchUserNotFoundTest() throws Exception {
         // GET - NOT FOUND
-        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + NOT_EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
                         .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
                         .accept(MediaType.APPLICATION_JSON))
@@ -106,7 +108,7 @@ class UserApiTest {
     @Test
     void fetchUserNotValidTokenForbiddenTest() throws Exception {
         // GET - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + NOT_EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
                         .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, NOT_VALID_AUTH_HEADER)
                         .accept(MediaType.APPLICATION_JSON))
@@ -117,7 +119,7 @@ class UserApiTest {
     @Test
     void fetchUserTokenWithNoRoleForbiddenTest() throws Exception {
         // GET - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?email=" + EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
                         .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_NO_ROLE)
                         .accept(MediaType.APPLICATION_JSON))

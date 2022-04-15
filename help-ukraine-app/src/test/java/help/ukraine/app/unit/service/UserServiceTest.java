@@ -23,8 +23,7 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
@@ -76,14 +75,14 @@ class UserServiceTest {
     @Transactional
     @Test
     void fetchUserOkTest() throws Exception {
-        UserModel userModel = userService.getUserByEmail(EXISTING_EMAIL);
+        UserModel userModel = userService.getUser(EXISTING_EMAIL);
         assertEquals(EXISTING_EMAIL, userModel.getEmail());
     }
 
     @Transactional
     @Test
     void fetchUserDataNotExistsExceptionTest() {
-        assertThrows(DataNotExistsException.class, () -> userService.getUserByEmail(NOT_EXISTING_EMAIL));
+        assertThrows(DataNotExistsException.class, () -> userService.getUser(NOT_EXISTING_EMAIL));
     }
 
     @Transactional
@@ -114,6 +113,18 @@ class UserServiceTest {
         // USER REGISTRATION ASSERTION
         UserModel userModelToRegister = buildUserModelToRegister();
         assertThrows(UserAlreadyRegisteredException.class, () -> userService.registerUser(userModelToRegister));
+    }
+
+    @Transactional
+    @Test
+    void deleteUserTest() {
+        assertDoesNotThrow(() -> userService.deleteUser(EXISTING_EMAIL));
+    }
+
+    @Transactional
+    @Test
+    void deleteUserDataNotExistsExceptionTest() {
+        assertThrows(DataNotExistsException.class, () -> userService.deleteUser(NOT_EXISTING_EMAIL));
     }
 
     private RefugeeEntity buildRegisteredRefugeeEntity(UserEntity userEntity) {

@@ -24,6 +24,9 @@ import javax.validation.Valid;
 @Log4j2
 public class UserController {
 
+    public static final String EMAIL_PARAM_NAME = "email";
+    private static final String PARAM_AND_BODY_EMAILS_NOT_MATCH = "Email passed as parameter (%s) and one placed in body (%s) do not match";
+
     private final UserService userService;
     private final AuthChecker authChecker;
 
@@ -35,15 +38,25 @@ public class UserController {
 
     @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    public ResponseEntity<UserModel> getUserByEmail(@RequestParam("email") String email) {
+    public ResponseEntity<UserModel> getUser(@RequestParam(EMAIL_PARAM_NAME) String email) {
         log.debug("fetch user endpoint hit");
         throwIfAuthNotBelongsToUser(email);
         try {
-            UserModel userModel = userService.getUserByEmail(email);
+            UserModel userModel = userService.getUser(email);
             return ResponseEntity.ok().body(userModel);
         } catch (DataNotExistsException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+    }
+
+    @PutMapping(value = "/user/modify", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
+    public ResponseEntity<UserModel> modifyUser(@RequestParam(EMAIL_PARAM_NAME) String email, @Valid @RequestBody UserModel userModel) {
+        log.debug("modify user endpoint hit");
+        throwIfParamAndBodyEmailsNotMatch(email, userModel);
+        throwIfAuthNotBelongsToUser(email);
+        UserModel modifiedUserModel = userService.modifyUser(userModel);
+        return ResponseEntity.ok().body(modifiedUserModel);
     }
 
     @PostMapping(value = AuthUrls.REGISTER_USER_URL, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,12 +70,33 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/user/delete")
+    public ResponseEntity<Void> deleteUser(@RequestParam(EMAIL_PARAM_NAME) String email) {
+        log.debug("delete user endpoint hit");
+        throwIfAuthNotBelongsToUser(email);
+        try {
+            userService.deleteUser(email);
+            return ResponseEntity.noContent().build();
+        } catch (DataNotExistsException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
     private void throwIfAuthNotBelongsToUser(String email) {
         if (authChecker.checkIfAuthBelongsToUser(email)) {
             return;
         }
         log.error(AuthMessages.USER_NO_ACCESS_MSG);
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, AuthMessages.USER_NO_ACCESS_MSG);
+    }
+
+    private void throwIfParamAndBodyEmailsNotMatch(String emailParam, UserModel userModel) {
+        if (emailParam.equals(userModel.getEmail())) {
+            return;
+        }
+        String msg = String.format(PARAM_AND_BODY_EMAILS_NOT_MATCH, emailParam, userModel.getEmail());
+        log.error(msg);
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msg);
     }
 
 }

@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public interface UserService extends UserDetailsService {
     @Override
     User loadUserByUsername(String username) throws UsernameNotFoundException;
-    UserModel getUserByEmail(String email) throws DataNotExistsException;
+    UserModel getUser(String email) throws DataNotExistsException;
     UserModel registerUser(UserModel userModel) throws UserAlreadyRegisteredException;
+    UserModel modifyUser(UserModel userModel);
+    void deleteUser(String email) throws DataNotExistsException;
 }
