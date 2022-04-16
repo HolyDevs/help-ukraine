@@ -41,6 +41,14 @@ class UserApiTest {
     private static final String EXISTING_EMAIL = "jan.testowy@gmail.com";
     private static final String REGISTERED_EMAIL = "jan.testowy1@gmail.com";
     private static final String NOT_EXISTING_EMAIL = "aaa.bbb@ccc.com";
+    // NAMES
+    private static final String NAME = "Jan";
+    private static final String MODIFIED_NAME = "Andrzej";
+    // PASSWORDS
+    private static final String PASSWORD = "aaa";
+    private static final String HASHED_PASSWORD = "$2a$10$.2hoSJVTOkQAbU1BLy09Y.LycOAOjb3513D9ON6Q/gUjuT8GShZa."; // hashed "aaa"
+    private static final String MODIFIED_PASSWORD = "bbb";
+    private static final String HASHED_MODIFIED_PASSWORD = "$2a$10$1O6ru7a.cdzt4F88tvNWautFeNBoTrzXNSRHPGqjj9CTu4Dm50L62"; // hashed "bbb"
     // PAYLOADS PATHS
     private static final String USER_REGISTER_PAYLOAD_PATH = "payloads/users/userRegisterPayload.json";
     private static final String USER_REGISTER_PAYLOAD_NULL_NAME_PATH = "payloads/users/userRegisterPayloadNullName.json";
@@ -94,6 +102,7 @@ class UserApiTest {
 
         UserModel userModel = objectMapper.readValue(body, UserModel.class);
         assertEquals(EXISTING_EMAIL, userModel.getEmail());
+        assertEquals(NAME, userModel.getName());
     }
 
     @Transactional
@@ -147,6 +156,7 @@ class UserApiTest {
         UserModel registeredUserModel = objectMapper.readValue(postContent, UserModel.class);
         assertEquals(REGISTERED_EMAIL, registeredUserModel.getEmail());
         assertEquals(AccountType.REFUGEE, registeredUserModel.getAccountType());
+        assertEquals(NAME, registeredUserModel.getName());
 
         // POST - BAD REQUEST
         mvc.perform(MockMvcRequestBuilders.post(REGISTER_USER_ENDPOINT)
@@ -210,6 +220,35 @@ class UserApiTest {
                         .servletPath(DELETE_USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_NO_ROLE))
                 .andExpect(status().isForbidden());
+    }
+
+    @Transactional
+    @Test
+    void modifyUserCreatedAndBadRequestTest() throws Exception {
+        String userUploadPayload = Resources.toString(Resources.getResource(USER_REGISTER_PAYLOAD_PATH), StandardCharsets.UTF_8);
+
+        // POST - CREATED
+        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.post(REGISTER_USER_ENDPOINT)
+                        .servletPath(REGISTER_USER_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(userUploadPayload))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String postContent = mvcPostResult.getResponse().getContentAsString();
+        UserModel registeredUserModel = objectMapper.readValue(postContent, UserModel.class);
+        assertEquals(REGISTERED_EMAIL, registeredUserModel.getEmail());
+        assertEquals(AccountType.REFUGEE, registeredUserModel.getAccountType());
+        assertEquals(NAME, registeredUserModel.getName());
+
+        // POST - BAD REQUEST
+        mvc.perform(MockMvcRequestBuilders.post(REGISTER_USER_ENDPOINT)
+                        .servletPath(REGISTER_USER_ENDPOINT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(userUploadPayload))
+                .andExpect(status().isBadRequest());
     }
 
 }
