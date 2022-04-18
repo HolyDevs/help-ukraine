@@ -1,5 +1,6 @@
 package help.ukraine.app.controller;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import help.ukraine.app.security.TokenDecoder;
 import help.ukraine.app.security.TokenGenerator;
 import help.ukraine.app.security.constants.AuthMessages;
@@ -46,7 +47,7 @@ public class AuthController {
             GeneratedToken generatedToken = tokenGenerator.generateToken(user, issuer);
             log.info("Successful token renewal for user: {}", user.getUsername());
             tokenGenerator.fillResponseWithGeneratedToken(generatedToken, response);
-        } catch (Exception e) {
+        } catch (JWTVerificationException e) {
             tokenDecoder.fillResponseWithTokenVerificationError(response, AuthMessages.ACCESS_TOKEN_FAIL);
         }
     }

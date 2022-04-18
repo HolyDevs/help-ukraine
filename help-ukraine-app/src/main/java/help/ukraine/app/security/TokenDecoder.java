@@ -3,6 +3,7 @@ package help.ukraine.app.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import help.ukraine.app.security.constants.AuthTokenContents;
@@ -44,7 +45,7 @@ public class TokenDecoder {
         objectMapper.writeValue(response.getOutputStream(), tokenVerificationError);
     }
 
-    public UsernamePasswordAuthenticationToken decodeToken(String authHeader) {
+    public UsernamePasswordAuthenticationToken decodeToken(String authHeader) throws JWTVerificationException {
         String token = authHeader.substring(BEARER_PREFIX.length());
         Algorithm algorithm = Algorithm.HMAC256(authSecret);
         JWTVerifier verifier = JWT.require(algorithm).build();
