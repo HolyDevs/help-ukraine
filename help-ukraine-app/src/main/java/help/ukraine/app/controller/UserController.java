@@ -48,15 +48,11 @@ public class UserController {
     }
 
     @PutMapping(value = MODIFY_USER_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserModel> modifyUser(@RequestParam(EMAIL_PARAM_NAME) String email, @Valid @RequestBody UserModel userModel) throws UserNoAccessException, DataNotExistsException, UserAlreadyRegisteredException {
+    public ResponseEntity<UserModel> modifyUser(@RequestParam(EMAIL_PARAM_NAME) String email, @Valid @RequestBody UserModel userModel) throws UserNoAccessException, DataNotExistsException {
         log.debug("modify user endpoint hit");
-        throwIfParamAndBodyEmailsNotMatch(email, userModel);
-        if (userService.existsUser(email)) {
-            UserModel modifiedUserModel = userService.updateUser(userModel);
-            return ResponseEntity.ok().body(modifiedUserModel);
-        }
-        UserModel registeredUserModel = userService.createUser(userModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUserModel);
+        badRequestIfParamAndBodyEmailsNotMatch(email, userModel);
+        UserModel modifiedUserModel = userService.updateUser(userModel);
+        return ResponseEntity.ok().body(modifiedUserModel);
     }
 
     @PostMapping(value = REGISTER_USER_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -93,7 +89,7 @@ public class UserController {
         return exception.getMessage();
     }
 
-    private void throwIfParamAndBodyEmailsNotMatch(String emailParam, UserModel userModel) {
+    private void badRequestIfParamAndBodyEmailsNotMatch(String emailParam, UserModel userModel) {
         if (emailParam.equals(userModel.getEmail())) {
             return;
         }

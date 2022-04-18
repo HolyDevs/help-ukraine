@@ -202,6 +202,14 @@ class UserServiceTest {
     }
 
     @Transactional
+    @WithMockUser(username = REGISTERED_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
+    @Test
+    void modifyUserNameDataNotExistsExceptionTest() {
+        UserModel userModelToModify = buildUserModelToRegister();
+        assertThrows(DataNotExistsException.class, () -> userService.updateUser(userModelToModify));
+    }
+
+    @Transactional
     @WithMockUser(username = EXISTING_EMAIL)
     @Test
     void modifyUserNameAccessDeniedExceptionTest() {

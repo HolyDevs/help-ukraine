@@ -105,11 +105,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsUser(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    @Override
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
     public void deleteUser(String email) throws DataNotExistsException, UserNoAccessException {
         throwIfAuthNotBelongsToUser(email);
@@ -155,7 +150,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void throwIfUserAlreadyRegistered(String email) throws UserAlreadyRegisteredException {
-        if (!existsUser(email)) {
+        if (!userRepository.existsByEmail(email)) {
             return;
         }
         String msg = String.format(USER_ALREADY_REGISTERED_MSG, email);

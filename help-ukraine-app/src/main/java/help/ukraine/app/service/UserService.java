@@ -24,6 +24,4 @@ public interface UserService extends UserDetailsService {
     void deleteUser(String email) throws DataNotExistsException, UserNoAccessException;
 
     UserModel createUser(UserModel userModel) throws UserAlreadyRegisteredException;
-
-    boolean existsUser(String email);
 }
