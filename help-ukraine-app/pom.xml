@@ -184,6 +184,9 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.38.1</version>
                 <configuration>
+                    <buildArgs>
+                        <profile>{$project.profile}</profile>
+                    </buildArgs>
                     <images>
                         <image>
                             <name>%g/help-ukraine</name>

@@ -1,3 +1,5 @@
+ARG profile
+
 FROM eclipse-temurin:17
 
 ENV TZ="Europe/Warsaw"
@@ -8,4 +10,4 @@ WORKDIR /usr/bin/help-ukraine-app
 
 EXPOSE 8080
 
-CMD ["java", "--add-opens", "java.base/java.lang=ALL-UNNAMED", "-Dspring.profiles.active=dev", "-jar", "app.jar"]
+CMD ["java", "--add-opens", "java.base/java.lang=ALL-UNNAMED", "-Dspring.profiles.active=${profile}", "-jar", "app.jar"]
