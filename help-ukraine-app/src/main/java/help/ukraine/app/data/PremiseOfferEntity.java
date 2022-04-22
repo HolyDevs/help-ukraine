@@ -1,19 +1,19 @@
 package help.ukraine.app.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Table(name = "premise_offers")
@@ -41,8 +41,8 @@ public class PremiseOfferEntity {
     private int bedrooms;
     private boolean animalsAllowed;
     private boolean wheelchairFriendly;
-    private Date fromDate;
-    private Date toDate;
+    private LocalDate fromDate;
+    private LocalDate toDate;
     private boolean active;
     private boolean verified;
     private String description;
