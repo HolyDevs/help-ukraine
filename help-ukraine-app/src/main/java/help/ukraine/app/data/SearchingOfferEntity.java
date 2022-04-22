@@ -25,7 +25,7 @@ public class SearchingOfferEntity {
     public static final String REFUGEE_ID_FIELD_NAME = "refugee";
 
     @Column(name = REFUGEE_ID_COLUMN_NAME, updatable = false, insertable = false)
-    private Long hostId;
+    private Long refugeeId;
 
     @Column(columnDefinition = "TEXT")
     private String additionalInfo;

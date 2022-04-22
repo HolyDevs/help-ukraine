@@ -1,9 +1,9 @@
 package help.ukraine.app.mapper;
 
-import help.ukraine.app.data.OfferImageEntity;
-import help.ukraine.app.data.PremiseOfferEntity;
-import help.ukraine.app.data.UserEntity;
+import help.ukraine.app.data.*;
 import help.ukraine.app.model.PremiseOfferModel;
+import help.ukraine.app.model.SearchingOfferModel;
+import help.ukraine.app.model.SearchingPersonModel;
 import help.ukraine.app.model.UserModel;
 import ma.glasnost.orika.*;
 import ma.glasnost.orika.converter.ConverterFactory;
@@ -32,6 +32,21 @@ public class MapperConfig {
         mapperFactory.classMap(PremiseOfferModel.class, PremiseOfferEntity.class)
                 .field("hostId", "host.userId")
                 .field("offerImagesLocations{}", "offerImages{imageLocation}")
+                .byDefault()
+                .register();
+
+        return mapperFactory.getMapperFacade();
+    }
+
+    @Bean
+    public MapperFacade searchingOfferFacade() {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        mapperFactory.classMap(SearchingOfferModel.class, SearchingOfferEntity.class)
+                .field("refugeeId", "refugee.userId")
+                .byDefault()
+                .register();
+
+        mapperFactory.classMap(SearchingPersonModel.class, SearchingPersonEntity.class)
                 .byDefault()
                 .register();
 
