@@ -6,6 +6,10 @@ import Refugee from "./screens/Refugee";
 import Volunteer from "./screens/Volunteer";
 import Login from "./screens/Login";
 import Error from "./screens/Error";
+import Family from "./screens/Family";
+import Profile from "./screens/Profile";
+import Search from "./screens/Search";
+import Main from './screens/Main';
 import RegisterRefugeeBasicInfoForm from "./screens/register/refugee/RegisterRefugeeBasicInfoForm";
 import RegisterVolunteer from "./screens/register/volunteer/RegisterVolunteer";
 import RegisterRefugeeAccountForm from "./screens/register/refugee/RegisterRefugeeAccountForm";
@@ -21,6 +25,11 @@ function App() {
                 <Route path="/rolePicker" element={<RolePicker/>}/>
                 <Route path="/volunteer" element={<Volunteer/>}/>
                 <Route path="/refugee" element={<Refugee/>}/>
+                <Route path="/main" element={<Main/>}>
+                    <Route path="family" element={<Family/>}/>
+                    <Route path="profile" element={<Profile/>}/>
+                    <Route path="search" element={<Search/>}/>
+                </Route>
                 <Route path="/error" element={<Error/>}/>
                 <Route path="/registerRefugee/account-creation" element={<RegisterRefugeeAccountForm/>}/>
                 <Route path="/registerRefugee/account-basic-info" element={<RegisterRefugeeBasicInfoForm/>}/>

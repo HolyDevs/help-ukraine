@@ -1,13 +1,18 @@
 html {
     --ukrainski-niebieski: #284878;
+    --ukrainski-niebieski-lighten: #4d6a96;
     --ukrainski-szary: #899ab5;
+    --ukrainski-szary-tlo: #f6f6f6;
+    --ukrainski-szary-ciemny: #606060;
     /*z flagi*/
     --ukrainski-zolty: #FFD700;
     --bialy: white;
 }
 body{
     margin: 0;
-    font-family: Roboto,sans-serif;
+    font-family: 'PT Sans', sans-serif;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
 }
 a {
     text-decoration: none;
