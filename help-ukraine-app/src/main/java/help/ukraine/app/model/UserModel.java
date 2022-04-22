@@ -18,6 +18,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class UserModel {
+    private Long id;
 
     @Email(regexp = ValidationRegex.EMAIL_ADDRESS_PATTERN)
     private String email;

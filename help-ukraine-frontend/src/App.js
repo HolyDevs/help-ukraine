@@ -10,6 +10,10 @@ import Family from "./screens/Family";
 import Profile from "./screens/Profile";
 import Search from "./screens/Search";
 import Main from './screens/Main';
+import RegisterRefugeeBasicInfoForm from "./screens/register/refugee/RegisterRefugeeBasicInfoForm";
+import RegisterVolunteer from "./screens/register/volunteer/RegisterVolunteer";
+import RegisterRefugeeAccountForm from "./screens/register/refugee/RegisterRefugeeAccountForm";
+import RegisterRefugeeFurtherForm from "./screens/register/refugee/RegisterRefugeeFurtherForm";
 
 
 function App() {
@@ -17,7 +21,7 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Login />}/> //To correct
+                <Route path="/" element={<Login />}/>
                 <Route path="/rolePicker" element={<RolePicker/>}/>
                 <Route path="/volunteer" element={<Volunteer/>}/>
                 <Route path="/refugee" element={<Refugee/>}/>
@@ -27,6 +31,10 @@ function App() {
                     <Route path="search" element={<Search/>}/>
                 </Route>
                 <Route path="/error" element={<Error/>}/>
+                <Route path="/registerRefugee/account-creation" element={<RegisterRefugeeAccountForm/>}/>
+                <Route path="/registerRefugee/account-basic-info" element={<RegisterRefugeeBasicInfoForm/>}/>
+                <Route path="/registerRefugee/account-further-info" element={<RegisterRefugeeFurtherForm/>}/>
+                <Route path="/registerVolunteer" element={<RegisterVolunteer/>}/>
             </Routes>
         </BrowserRouter>
     );
