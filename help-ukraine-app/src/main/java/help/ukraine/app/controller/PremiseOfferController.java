@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("premises")
+@RequestMapping("premise-offers")
 @RequiredArgsConstructor
 @Log4j2
 public class PremiseOfferController {
@@ -70,7 +70,7 @@ public class PremiseOfferController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<PremiseOfferModel> updatePremiseOfferById(@PathVariable Long id, @RequestBody PremiseOfferModel premiseOfferModel) {
+    public ResponseEntity<PremiseOfferModel> updatePremiseOfferById(@PathVariable Long id, @Valid @RequestBody PremiseOfferModel premiseOfferModel) {
         if (!premiseOfferModel.getId().equals(id)) {
             log.error(ID_MISMATCH_MSG);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -78,9 +78,12 @@ public class PremiseOfferController {
 
         try {
             return new ResponseEntity<>(premiseOfferService.updatePremiseOffer(premiseOfferModel), HttpStatus.OK);
-        } catch (PremiseOfferNotFoundException e) {
+        } catch (PremiseOfferNotFoundException | HostDoesNotExistException e) {
             log.error("", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (FailedToSavePremiseOfferException e) {
+            log.error("", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

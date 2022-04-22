@@ -1,6 +1,5 @@
 package help.ukraine.app.service.impl;
 
-import com.google.api.gax.rpc.FailedPreconditionException;
 import help.ukraine.app.data.OfferImageEntity;
 import help.ukraine.app.data.PremiseOfferEntity;
 import help.ukraine.app.exception.FailedToSavePremiseOfferException;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.ProviderNotFoundException;
 import java.util.List;
 
 @Service
@@ -26,7 +24,6 @@ public class PremiseOfferService {
 
     private final PremiseOfferRepository premiseOfferRepository;
     private final HostRepository hostRepository;
-    private final OfferImagesRepository offerImagesRepository;
     private final MapperFacade premiseOfferFacade;
 
     public PremiseOfferModel getPremiseOfferById(Long id) throws PremiseOfferNotFoundException {
@@ -60,23 +57,21 @@ public class PremiseOfferService {
         hostRepository.findById(premiseOfferModel.getHostId())
                 .orElseThrow(() -> new HostDoesNotExistException(String.format(HOST_NOT_FOUND_EXCEPTION_MSG, premiseOfferModel.getHostId())));
         PremiseOfferEntity premiseOfferEntity = premiseOfferFacade.map(premiseOfferModel, PremiseOfferEntity.class);
-        setPremiseReferenceToOfferImages(premiseOfferEntity);
+        setPremiseOfferReferenceToOfferImages(premiseOfferEntity);
         premiseOfferEntity = premiseOfferRepository.save(premiseOfferEntity);
         PremiseOfferEntity savedEntity = premiseOfferRepository.findById(premiseOfferEntity.getId())
                 .orElseThrow(() -> new FailedToSavePremiseOfferException(FAILED_TO_SAVE_EXCEPTION_MSG));
         return premiseOfferFacade.map(savedEntity, PremiseOfferModel.class);
     }
 
-    public PremiseOfferModel updatePremiseOffer(PremiseOfferModel premiseOfferModel) throws PremiseOfferNotFoundException {
-        PremiseOfferEntity premiseOffer = premiseOfferRepository.findById(premiseOfferModel.getId())
+    public PremiseOfferModel updatePremiseOffer(PremiseOfferModel premiseOfferModel) throws PremiseOfferNotFoundException, FailedToSavePremiseOfferException, HostDoesNotExistException {
+        premiseOfferRepository.findById(premiseOfferModel.getId())
                 .orElseThrow(() -> new PremiseOfferNotFoundException(String.format(PREMISE_OFFER_NOT_FOUND_EXCEPTION_MSG, premiseOfferModel.getId())));
-        premiseOffer = premiseOfferFacade.map(premiseOffer, PremiseOfferEntity.class);
-        premiseOffer = premiseOfferRepository.save(premiseOffer);
-        return premiseOfferFacade.map(premiseOffer, PremiseOfferModel.class);
+        return createPremiseOffer(premiseOfferModel);
     }
 
-    private void setPremiseReferenceToOfferImages(PremiseOfferEntity premiseOffer) {
-        for(OfferImageEntity offerImage : premiseOffer.getOfferImages()) {
+    private void setPremiseOfferReferenceToOfferImages(PremiseOfferEntity premiseOffer) {
+        for (OfferImageEntity offerImage : premiseOffer.getOfferImages()) {
             offerImage.setPremiseOffer(premiseOffer);
         }
     }
