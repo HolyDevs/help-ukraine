@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 import styled from 'styled-components';
 import {Link, useNavigate} from "react-router-dom";
-import InputForm from "../components/InputForm";
-import AppButton from "../components/AppButton";
+import {InputFormOutlined} from "../components/widgets/Inputs";
+import AppButton from "../components/styled-components/AppButton";
 import AuthService from "../services/AuthService";
+import {RegisterSection} from "../components/styled-components/Sections";
 
 const LoginLogoHeader = styled.div`
     height: 40vh;
@@ -34,6 +35,11 @@ const Logo = styled.img`
      width: 35vh;
      height: 40vh;`;
 
+
+const Section = styled.div`
+     margin-bottom: 30px;`;
+
+
 const Login = () => {
     let navigate = useNavigate();
     const [login, setLogin] = useState("jan.lokalny@gmail.com");
@@ -59,7 +65,7 @@ const Login = () => {
               console.log(res);
             },
             error => {
-
+                window.alert("Incorrect login or password");
             }
         );
     }
@@ -71,16 +77,24 @@ const Login = () => {
                 </Logo>
             </LoginLogoHeader>
             <LoginBottom>
-                <InputForm value={login} onChange={handleLoginChanged} inputLabel="Login" type="text"/>
-                <InputForm value={password} onChange={handlePasswordChanged}
-                           inputLabel="Password"
-                           bottomLabel="Forgot your password?"
-                           bottomLabelUrl={"/error"}
-                           type="password"/>
+                <Section>
+                    <InputFormOutlined value={login} onChange={handleLoginChanged} inputLabel="Login" type="text"/>
+                </Section>
+                <Section>
+                    <InputFormOutlined value={password} onChange={handlePasswordChanged}
+                                       inputLabel="Password"
+                                       bottomLabel="Forgot your password?"
+                                       bottomLabelUrl={"/error"}
+                                       type="password"/>
+                </Section>
+                <RegisterSection>
                 <AppButton onClick={handleClick}>Login</AppButton>
+                </RegisterSection>
+                <RegisterSection>
                 <Link to="/rolePicker">
-                    <AppButton>Register</AppButton>
+                <AppButton>Register</AppButton>
                 </Link>
+                </RegisterSection>
             </LoginBottom>
         </>
     )

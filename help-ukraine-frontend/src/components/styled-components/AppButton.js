@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 const AppButton = styled.button`
     background-color: var(--bialy);
-    width: 35vh;
+    width: 100%;
     height: 75px;
     font-size: 26px;
-    margin: 15px`;
+   `;
 export  default  AppButton;
