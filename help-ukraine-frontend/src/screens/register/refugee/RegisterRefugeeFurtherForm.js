@@ -55,7 +55,7 @@ const RegisterRefugeeFurtherForm = () => {
             <TextareaContent/>
             </RegisterSection>
             <RegisterSection>
-                <Link to="/refugee">
+                <Link to="/main/search">
                 <AppButton>
                     Proceed
                 </AppButton>

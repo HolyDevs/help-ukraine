@@ -2,7 +2,6 @@ import './App.css';
 import React from 'react';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import RolePicker from "./screens/RolePicker";
-import Refugee from "./screens/Refugee";
 import Volunteer from "./screens/Volunteer";
 import Login from "./screens/Login";
 import Error from "./screens/Error";
@@ -24,7 +23,6 @@ function App() {
                 <Route path="/" element={<Login />}/>
                 <Route path="/rolePicker" element={<RolePicker/>}/>
                 <Route path="/volunteer" element={<Volunteer/>}/>
-                <Route path="/refugee" element={<Refugee/>}/>
                 <Route path="/main" element={<Main/>}>
                     <Route path="family" element={<Family/>}/>
                     <Route path="profile" element={<Profile/>}/>

@@ -55,7 +55,7 @@ const Login = () => {
             (res) => {
                 switch (res.role) {
                     case 'ROLE_REFUGEE':
-                        navigate("/refugee");
+                        navigate("/main/search");
                         break;
                     case 'VOLUNTEER':
                         navigate("/volunteer");
