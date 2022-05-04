@@ -1,10 +1,10 @@
 package help.ukraine.app.controller;
 
-import com.google.api.Http;
 import help.ukraine.app.exception.FailedToSaveSearchingOfferException;
 import help.ukraine.app.exception.RefugeeDoesNotExistException;
 import help.ukraine.app.exception.SearchingOfferNotFoundException;
 import help.ukraine.app.model.SearchingOfferModel;
+import help.ukraine.app.security.constants.AuthUrls;
 import help.ukraine.app.service.impl.SearchingOfferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("refugee-offers")
+@RequestMapping(AuthUrls.BACKEND_ROOT + "/refugee-offers")
 @RequiredArgsConstructor
 @Log4j2
 public class SearchingOfferController {

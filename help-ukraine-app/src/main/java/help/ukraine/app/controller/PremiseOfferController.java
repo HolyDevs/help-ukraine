@@ -4,6 +4,7 @@ import help.ukraine.app.exception.FailedToSavePremiseOfferException;
 import help.ukraine.app.exception.HostDoesNotExistException;
 import help.ukraine.app.exception.PremiseOfferNotFoundException;
 import help.ukraine.app.model.PremiseOfferModel;
+import help.ukraine.app.security.constants.AuthUrls;
 import help.ukraine.app.service.impl.PremiseOfferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -15,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("premise-offers")
+@RequestMapping(AuthUrls.BACKEND_ROOT + "/premise-offers")
 @RequiredArgsConstructor
 @Log4j2
 public class PremiseOfferController {

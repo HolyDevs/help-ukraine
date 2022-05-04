@@ -4,6 +4,7 @@ import help.ukraine.app.exception.DataNotExistsException;
 import help.ukraine.app.exception.UserAlreadyRegisteredException;
 import help.ukraine.app.exception.UserNoAccessException;
 import help.ukraine.app.model.UserModel;
+import help.ukraine.app.security.constants.AuthUrls;
 import help.ukraine.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -18,13 +19,11 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
+@RequestMapping(UserController.USER_ENDPOINT)
 public class UserController {
 
     // ENDPOINTS
-    public static final String USER_ENDPOINT = "/user";
-    public static final String DELETE_USER_ENDPOINT = USER_ENDPOINT + "/delete";
-    public static final String MODIFY_USER_ENDPOINT = USER_ENDPOINT + "/modify";
-    public static final String REGISTER_USER_ENDPOINT = USER_ENDPOINT + "/register";
+    public static final String USER_ENDPOINT = AuthUrls.BACKEND_ROOT + "/user";
     // PARAMS
     public static final String EMAIL_PARAM_NAME = "email";
     // MESSAGES
@@ -32,22 +31,16 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/hello")
-    public String get() {
-        log.debug("hello endpoint hit");
-        return "<h2>Hello Ukraine</<h2>";
-    }
-
     // CRUD ENDPOINTS
 
-    @GetMapping(value = USER_ENDPOINT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserModel> getUser(@RequestParam(EMAIL_PARAM_NAME) String email) throws UserNoAccessException, DataNotExistsException {
         log.debug("fetch user endpoint hit");
         UserModel userModel = userService.fetchUser(email);
         return ResponseEntity.ok().body(userModel);
     }
 
-    @PutMapping(value = MODIFY_USER_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserModel> modifyUser(@RequestParam(EMAIL_PARAM_NAME) String email, @Valid @RequestBody UserModel userModel) throws UserNoAccessException, DataNotExistsException {
         log.debug("modify user endpoint hit");
         badRequestIfParamAndBodyEmailsNotMatch(email, userModel);
@@ -55,14 +48,14 @@ public class UserController {
         return ResponseEntity.ok().body(modifiedUserModel);
     }
 
-    @PostMapping(value = REGISTER_USER_ENDPOINT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserModel> registerUser(@Valid @RequestBody UserModel userModel) throws UserAlreadyRegisteredException {
         log.debug("register user endpoint hit");
         UserModel registeredUserModel = userService.createUser(userModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUserModel);
     }
 
-    @DeleteMapping(DELETE_USER_ENDPOINT)
+    @DeleteMapping
     public ResponseEntity<Void> deleteUser(@RequestParam(EMAIL_PARAM_NAME) String email) throws UserNoAccessException, DataNotExistsException {
         log.debug("delete user endpoint hit");
         userService.deleteUser(email);

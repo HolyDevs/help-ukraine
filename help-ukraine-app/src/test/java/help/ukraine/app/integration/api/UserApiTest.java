@@ -162,8 +162,8 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_REGISTER_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // POST - CREATED
-        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.post(REGISTER_USER_ENDPOINT)
-                        .servletPath(REGISTER_USER_ENDPOINT)
+        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.post(USER_ENDPOINT)
+                        .servletPath(USER_ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userUploadPayload))
@@ -178,8 +178,8 @@ class UserApiTest {
         assertTrue(passwordEncoder.matches(PASSWORD, registeredUserModel.getPassword()));
 
         // POST - BAD REQUEST
-        mvc.perform(MockMvcRequestBuilders.post(REGISTER_USER_ENDPOINT)
-                        .servletPath(REGISTER_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.post(USER_ENDPOINT)
+                        .servletPath(USER_ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userUploadPayload))
@@ -192,8 +192,8 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_REGISTER_PAYLOAD_NULL_NAME_PATH), StandardCharsets.UTF_8);
 
         // POST - BAD REQUEST
-        mvc.perform(MockMvcRequestBuilders.post(REGISTER_USER_ENDPOINT)
-                        .servletPath(REGISTER_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.post(USER_ENDPOINT)
+                        .servletPath(USER_ENDPOINT)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userUploadPayload))
@@ -204,8 +204,8 @@ class UserApiTest {
     @Test
     void deleteUserNoContentTest() throws Exception {
         // DELETE - NO CONTENT
-        mvc.perform(MockMvcRequestBuilders.delete(DELETE_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-                        .servletPath(DELETE_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_REFUGEE_ROLE))
                 .andExpect(status().isNoContent());
     }
@@ -214,8 +214,8 @@ class UserApiTest {
     @Test
     void deleteUserNotFoundTest() throws Exception {
         // DELETE - NOT FOUND
-        mvc.perform(MockMvcRequestBuilders.delete(DELETE_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
-                        .servletPath(DELETE_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -225,8 +225,8 @@ class UserApiTest {
     @Test
     void deleteUserNotValidTokenForbiddenTest() throws Exception {
         // DELETE - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.delete(DELETE_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
-                        .servletPath(DELETE_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, NOT_VALID_AUTH_HEADER))
                 .andExpect(status().isForbidden());
     }
@@ -235,8 +235,8 @@ class UserApiTest {
     @Test
     void deleteUserTokenWithNoRoleForbiddenTest() throws Exception {
         // DELETE - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.delete(DELETE_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-                        .servletPath(DELETE_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_NO_ROLE))
                 .andExpect(status().isForbidden());
     }
@@ -245,8 +245,8 @@ class UserApiTest {
     @Test
     void deleteUserTokenForWrongUserForbiddenTest() throws Exception {
         // DELETE - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.delete(DELETE_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-                        .servletPath(DELETE_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE))
                 .andExpect(status().isForbidden());
     }
@@ -257,8 +257,8 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // PUT - OK
-        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.put(MODIFY_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-                        .servletPath(MODIFY_USER_ENDPOINT)
+        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_REFUGEE_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -280,8 +280,8 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_NOT_EXISTING_EMAIL_PATH), StandardCharsets.UTF_8);
 
         // PUT - NOT FOUND
-        mvc.perform(MockMvcRequestBuilders.put(MODIFY_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
-                        .servletPath(MODIFY_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -295,8 +295,8 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // PUT - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.put(MODIFY_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-                        .servletPath(MODIFY_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, NOT_VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -310,8 +310,8 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_NOT_EXISTING_EMAIL_PATH), StandardCharsets.UTF_8);
 
         // PUT - BAD REQUEST
-        mvc.perform(MockMvcRequestBuilders.put(MODIFY_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-                        .servletPath(MODIFY_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -326,8 +326,8 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // PUT - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.put(MODIFY_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-                        .servletPath(MODIFY_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_NO_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -341,8 +341,8 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // PUT - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.put(MODIFY_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-                        .servletPath(MODIFY_USER_ENDPOINT)
+        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -357,8 +357,8 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_PASSWORD_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // PUT - OK
-        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.put(MODIFY_USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-                        .servletPath(MODIFY_USER_ENDPOINT)
+        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+                        .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_REFUGEE_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
