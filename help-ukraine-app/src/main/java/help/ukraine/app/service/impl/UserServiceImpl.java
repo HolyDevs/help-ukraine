@@ -64,6 +64,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean existsUser(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
     public UserModel fetchUser(String email) throws DataNotExistsException, UserNoAccessException {
         throwIfAuthNotBelongsToUser(email);
