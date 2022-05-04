@@ -1,12 +1,14 @@
 package help.ukraine.app.security.filters;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import help.ukraine.app.controller.UserController;
 import help.ukraine.app.security.TokenDecoder;
 import help.ukraine.app.security.constants.AuthMessages;
 import help.ukraine.app.security.constants.AuthUrls;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -47,6 +49,14 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     }
 
     private boolean isNoAuthEndpoint(HttpServletRequest request) {
-        return AuthUrls.NO_AUTH_URLS.contains(request.getServletPath());
+        return !request.getServletPath().startsWith(AuthUrls.BACKEND_ROOT) ||
+                isUserRegistrationEndpoint(request) ||
+                AuthUrls.NO_AUTH_URLS.contains(request.getServletPath());
+    }
+
+    private boolean isUserRegistrationEndpoint(HttpServletRequest request) {
+        return request.getServletPath().equals(UserController.USER_ENDPOINT) &&
+                HttpMethod.POST.matches(request.getMethod());
+
     }
 }

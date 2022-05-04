@@ -29,10 +29,10 @@ public class AuthController {
     private final TokenDecoder tokenDecoder;
     private final UserService userService;
 
-    @PostMapping(AuthUrls.BACKEND_URL + AuthUrls.LOGIN_URL)
+    @PostMapping(AuthUrls.LOGIN_URL)
     public void login() {}
 
-    @GetMapping(AuthUrls.BACKEND_URL + AuthUrls.REFRESH_TOKEN_URL)
+    @GetMapping(AuthUrls.REFRESH_TOKEN_URL)
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info("Token renewal attempt for authorization header: {}", authHeader);
