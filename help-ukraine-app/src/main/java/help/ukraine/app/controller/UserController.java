@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @Log4j2
-@RequestMapping( UserController.USER_ENDPOINT)
+@RequestMapping(UserController.USER_ENDPOINT)
 public class UserController {
 
     // ENDPOINTS
