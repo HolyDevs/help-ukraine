@@ -5,6 +5,60 @@
 
     color: var(--ukrainski-niebieski);
 
+    .familyTitle {
+        margin-bottom: 50px;
+        margin-top: 50px;
+    }
+
+    .familyMembers {
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .familyMember {
+            font-size: 15px;
+            font-weight: bold;
+            -webkit-box-shadow: 0px 0px 4px 0px rgba(66, 68, 90, 0.25);
+            -moz-box-shadow: 0px 0px 4px 0px rgba(66, 68, 90, 0.25);
+            box-shadow: 0px 0px 4px 0px rgba(66, 68, 90, 0.25);
+            border-radius: 10px;
+            margin-top: 20px;
+            padding-left: 20px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            display: flex;
+
+            .editIcon {
+                padding-right: 20px;
+
+                img {
+                    height: 20px;
+                    margin-left: 10px;
+                    margin-right: 5px;
+                }
+                
+            }
+        }
+    }
+
+    .addFamilyMember {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        bottom: 70px;
+        left: 0;
+        width: 100%;
+        img {
+            height: 60px;
+            margin-left: 10px;
+            margin-right: 5px;
+        }
+    }
+
     .search {
         ul {
             padding-left: 0;
@@ -149,4 +203,39 @@
 
 .spacer {
     flex: 1;
+}
+
+.modal, 
+.modal--hidden {
+    .backdrop {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: 0.2;
+        top: 0;
+        left: 0;
+    }
+
+    .content {
+        position: absolute;
+        width: 90%;
+        height: 300px;
+        background-color: white;
+        transform: translateY(-50%);
+        border-radius: 8px;
+        -webkit-box-shadow: 0px 0px 10px 0px rgba(66, 68, 90, 0.6);
+        -moz-box-shadow: 0px 0px 10px 0px rgba(66, 68, 90, 0.6);
+        box-shadow: 0px 0px 10px 0px rgba(66, 68, 90, 0.6);
+    }
+}
+
+.modal {
+    opacity: 1;
+    pointer-events: initial;
+}
+
+.modal--hidden {
+    opacity: 0;
+    pointer-events: none;
 }
