@@ -5,6 +5,7 @@ import {InputFormOutlined} from "../components/widgets/Inputs";
 import AppButton from "../components/styled-components/AppButton";
 import AuthService from "../services/AuthService";
 import {RegisterSection} from "../components/styled-components/Sections";
+import LogoImg from "../assets/logo.png";
 
 const LoginLogoHeader = styled.div`
     height: 40vh;
@@ -32,8 +33,7 @@ const LoginBottom = styled.div`
 
 const Logo = styled.img`
      background-size: 30vh;
-     width: 35vh;
-     height: 40vh;`;
+     width: 20vh;`;
 
 
 const Section = styled.div`
@@ -73,7 +73,7 @@ const Login = () => {
     return (
         <>
             <LoginLogoHeader>
-                <Logo src={"./logo.png"}>
+                <Logo src={LogoImg}>
                 </Logo>
             </LoginLogoHeader>
             <LoginBottom>

@@ -5,6 +5,36 @@
 
     color: var(--ukrainski-niebieski);
 
+    .details {
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+
+        -webkit-box-shadow: 0px 0px 4px 0px rgba(66, 68, 90, 0.25);
+        -moz-box-shadow: 0px 0px 4px 0px rgba(66, 68, 90, 0.25);
+        box-shadow: 0px 0px 4px 0px rgba(66, 68, 90, 0.25);
+
+        .details__content {
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+
+            .separator {
+                border-top: solid 1px var(--ukrainski-niebieski);
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+
+            h2 {
+                margin-bottom: 2px;
+            }
+        }
+
+        img {
+            width: 100%;
+        }
+    }
+
     .search {
         ul {
             padding-left: 0;
@@ -96,6 +126,25 @@
                     margin-right: 5px;
                 }
             }
+        }
+    }
+
+    .search,
+    .profile,
+    .family,
+    .details {
+        animation: fade-in .5s;
+    }
+
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 }
