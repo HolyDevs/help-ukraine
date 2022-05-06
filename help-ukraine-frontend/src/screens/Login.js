@@ -62,7 +62,6 @@ const Login = () => {
                         break;
                 }
               window.location.reload();
-              console.log(res);
             },
             error => {
                 window.alert("Incorrect login or password");

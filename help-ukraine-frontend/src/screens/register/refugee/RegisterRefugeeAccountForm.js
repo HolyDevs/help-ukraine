@@ -17,10 +17,20 @@ const RegisterRefugeeAccountForm = () => {
         setState(state);
     }
 
+    const createNewUser = () => {
+        return {
+            email: state["email"],
+            password: state["password"],
+            isAccountVerified: true,
+            accountType: "REFUGEE"
+        };
+    }
+
     // temporary alert-based error handling
     // todo: create proper error info
     const handleRegisterButton = () => {
-        if (!ValidationService.areStringsValid([state["email"], state["password"], state["confirmPassword"]])) {
+        const stringForms = [state["email"], state["password"], state["confirmPassword"]];
+        if (!ValidationService.areStringsValid(stringForms)) {
             window.alert("Text input cannot be empty");
             return;
         }
@@ -28,11 +38,8 @@ const RegisterRefugeeAccountForm = () => {
             window.alert("Passwords do not match");
             return;
         }
-        const userToBeRegistered = {
-            email: state["email"],
-            password: state["password"]
-        }
-        localStorage.setItem('userToBeRegistered', JSON.stringify(userToBeRegistered));
+        const userToBeRegistered = createNewUser();
+        sessionStorage.setItem('userToBeRegistered', JSON.stringify(userToBeRegistered));
         navigate("/registerRefugee/account-basic-info");
     }
 

@@ -3,7 +3,6 @@ import qs from "qs";
 
 const API_URL = "http://localhost:8080/api/";
 
-
 class AuthService {
     doLogin(username, password) {
         const data = {'password': password, 'username': username};
@@ -11,6 +10,15 @@ class AuthService {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         };
         return axios.post(API_URL + 'auth/login', qs.stringify(data), options).then(res => res.data);
+    }
+
+    doRefreshToken(refreshToken) {
+        const options = {
+            method: 'GET',
+            headers: {'Authorization': 'Bearer ' + refreshToken},
+            url: API_URL + 'auth/refresh'
+        }
+        return axios(options).then(res => res.data);
     }
 
     doRegister(userData) {
@@ -35,23 +43,48 @@ class AuthService {
     async login(username, password) {
         const loginResponse = await this.doLogin(username, password);
         const userResponse = await this.fetchCurrentUser(username, loginResponse.access_token)
-        const decodedToken = this.parseJwt(loginResponse.access_token);
-        localStorage.setItem("user", JSON.stringify(userResponse));
-        localStorage.setItem("token_decoded", JSON.stringify(decodedToken));
+        sessionStorage.setItem("user", JSON.stringify(userResponse));
+        this.fillTokenData(loginResponse);
         return userResponse;
+    }
+
+    fillTokenData(loginResponse) {
+        const decodedAccessToken = this.parseJwt(loginResponse.access_token);
+        sessionStorage.setItem("decoded_access_token", JSON.stringify(decodedAccessToken));
+        sessionStorage.setItem("access_token", loginResponse.access_token);
+        sessionStorage.setItem("refresh_token", loginResponse.refresh_token);
     }
 
     async register(userData) {
         await this.doRegister(userData);
-        await this.login(userData.email, userData.password);
+        return await this.login(userData.email, userData.password);
     }
 
     logout() {
-        localStorage.clear();
+        sessionStorage.clear();
     }
 
     getCurrentUser() {
-        return JSON.parse(localStorage.getItem('user'));
+        return JSON.parse(sessionStorage.getItem('user'));
+    }
+
+    getAccessToken() {
+        const decodedAccessToken = JSON.parse(sessionStorage.getItem("decoded_access_token"));
+        const expiryTimestamp = decodedAccessToken.exp;
+        if (new Date(expiryTimestamp) < Date.now()) {
+            this.refreshToken();
+        }
+        return sessionStorage.getItem("access_token");
+    }
+
+    refreshToken() {
+        const refreshToken = sessionStorage.getItem("refresh_token");
+        this.doRefreshToken(refreshToken).then((res) => {
+            this.fillTokenData(res);
+        }).catch((error) => {
+            this.logout();
+            throw error;
+        });
     }
 
     parseJwt(token) {

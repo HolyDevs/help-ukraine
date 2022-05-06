@@ -17,7 +17,6 @@ const RegisterRefugeeBasicInfoForm = () => {
         setState(state);
     }
 
-
     // temporary alert-based error handling
     // todo: create proper error info
     const handleSubmitButton = () => {
@@ -25,10 +24,10 @@ const RegisterRefugeeBasicInfoForm = () => {
             window.alert("Text input cannot be empty");
             return;
         }
-        const userToBeRegistered = JSON.parse(localStorage.getItem('userToBeRegistered'))
+        const userToBeRegistered = JSON.parse(sessionStorage.getItem('userToBeRegistered'))
         userToBeRegistered.name = state["name"]
         userToBeRegistered.surname = state["surname"]
-        localStorage.setItem('userToBeRegistered', JSON.stringify(userToBeRegistered))
+        sessionStorage.setItem('userToBeRegistered', JSON.stringify(userToBeRegistered))
         navigate("/registerRefugee/account-further-info");
     }
 

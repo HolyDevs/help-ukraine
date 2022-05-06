@@ -14,6 +14,7 @@ import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -71,6 +72,9 @@ public class PremiseOfferService {
     }
 
     private void setPremiseOfferReferenceToOfferImages(PremiseOfferEntity premiseOffer) {
+        if (Objects.isNull(premiseOffer.getOfferImages())) {
+            return;
+        }
         for (OfferImageEntity offerImage : premiseOffer.getOfferImages()) {
             offerImage.setPremiseOffer(premiseOffer);
         }
