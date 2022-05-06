@@ -1,4 +1,4 @@
-import SearchList from "../components/Search/SearchList";
+import SearchList from "../../components/Search/SearchList";
 
 const Search = () => {
 
