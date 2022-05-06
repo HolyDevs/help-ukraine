@@ -14,6 +14,7 @@ import RegisterVolunteer from "./screens/register/volunteer/RegisterVolunteer";
 import RegisterRefugeeAccountForm from "./screens/register/refugee/RegisterRefugeeAccountForm";
 import RegisterRefugeeFurtherForm from "./screens/register/refugee/RegisterRefugeeFurtherForm";
 import Details from './screens/tabs/Details';
+import RegisterVolunteerFurtherForm from "./screens/register/volunteer/RegisterVolunteerFurtherForm";
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/registerRefugee/account-basic-info" element={<RegisterRefugeeBasicInfoForm/>}/>
                 <Route path="/registerRefugee/account-further-info" element={<RegisterRefugeeFurtherForm/>}/>
                 <Route path="/registerVolunteer" element={<RegisterVolunteer/>}/>
+                <Route path="/registerVolunteer/volunteer-further-info" element={<RegisterVolunteerFurtherForm/>}/>
             </Routes>
         </BrowserRouter>
     );

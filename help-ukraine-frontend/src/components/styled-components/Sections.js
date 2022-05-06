@@ -9,5 +9,5 @@ export const TextSection = styled.div`
     font-size: 16px;
     font-weight: 200;`;
 
-export const PustePoleJakLebBrzezinskiego20px = styled.div`
+export const PustePole20px = styled.div`
     margin-bottom: 20px;`;

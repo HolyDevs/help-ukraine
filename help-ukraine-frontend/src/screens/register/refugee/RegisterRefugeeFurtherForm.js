@@ -3,7 +3,7 @@ import {Checkbox, Dropdown, InputFormFilled, TextareaContent} from "../../../com
 import {Link} from "react-router-dom";
 import AppButton from "../../../components/styled-components/AppButton";
 import {
-    PustePoleJakLebBrzezinskiego20px,
+    PustePole20px,
     RegisterSection,
     TextSection
 } from "../../../components/styled-components/Sections";
@@ -40,14 +40,14 @@ const RegisterRefugeeFurtherForm = () => {
             <RegisterSection>
                 <InputFormFilled value={state["phone"]} onChange={(e) => {handleStateChanged(e, "phone");}} inputLabel="Phone number:" type="tel"/>
             </RegisterSection>
-            <PustePoleJakLebBrzezinskiego20px/>
+            <PustePole20px/>
             <RegisterSection>
-            <Checkbox inputLabel="I have a physicial disability and require a wheelchair"/>
+            <Checkbox inputLabel="I have a physical disability and require a wheelchair"/>
             </RegisterSection>
             <RegisterSection>
             <Checkbox inputLabel="I have a pet"/>
             </RegisterSection>
-            <PustePoleJakLebBrzezinskiego20px/>
+            <PustePole20px/>
             <TextSection>
                Additional information that might be important about you (allergies, diseases, requiring special treatment, etc.)
             </TextSection>
