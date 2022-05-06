@@ -53,11 +53,11 @@ const Login = () => {
     function handleClick() {
         AuthService.login(login, password).then(
             (res) => {
-                switch (res.role) {
-                    case 'ROLE_REFUGEE':
+                switch (res.accountType) {
+                    case 'REFUGEE':
                         navigate("/main/search");
                         break;
-                    case 'VOLUNTEER':
+                    case 'HOST':
                         navigate("/volunteer");
                         break;
                 }
