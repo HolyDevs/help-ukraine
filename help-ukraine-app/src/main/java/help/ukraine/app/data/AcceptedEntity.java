@@ -17,5 +17,5 @@ import javax.persistence.Table;
 @Table(name = "accepted")
 public class AcceptedEntity {
     @EmbeddedId
-    private SearchingAndPremiseOfferId searchingAndPremiseOfferId;
+    private SearchingPremiseOfferId searchingPremiseOfferId;
 }

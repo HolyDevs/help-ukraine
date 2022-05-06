@@ -4,7 +4,7 @@ import help.ukraine.app.data.RefugeeEntity;
 import help.ukraine.app.data.UserEntity;
 import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.enumerator.Sex;
-import help.ukraine.app.exception.DataNotExistsException;
+import help.ukraine.app.exception.UserNotExistsException;
 import help.ukraine.app.exception.UserAlreadyRegisteredException;
 import help.ukraine.app.exception.UserNoAccessException;
 import help.ukraine.app.model.UserModel;
@@ -97,7 +97,7 @@ class UserServiceTest {
     @WithMockUser(username = NOT_EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
     void fetchUserDataNotExistsExceptionTest() {
-        assertThrows(DataNotExistsException.class, () -> userService.fetchUser(NOT_EXISTING_EMAIL));
+        assertThrows(UserNotExistsException.class, () -> userService.fetchUser(NOT_EXISTING_EMAIL));
     }
 
     @Transactional
@@ -156,7 +156,7 @@ class UserServiceTest {
     @WithMockUser(username = NOT_EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
     void deleteUserDataNotExistsExceptionTest() {
-        assertThrows(DataNotExistsException.class, () -> userService.deleteUser(NOT_EXISTING_EMAIL));
+        assertThrows(UserNotExistsException.class, () -> userService.deleteUser(NOT_EXISTING_EMAIL));
     }
 
     @Transactional
@@ -206,7 +206,7 @@ class UserServiceTest {
     @Test
     void modifyUserNameDataNotExistsExceptionTest() {
         UserModel userModelToModify = buildUserModelToRegister();
-        assertThrows(DataNotExistsException.class, () -> userService.updateUser(userModelToModify));
+        assertThrows(UserNotExistsException.class, () -> userService.updateUser(userModelToModify));
     }
 
     @Transactional

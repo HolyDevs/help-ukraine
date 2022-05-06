@@ -1,5 +1,6 @@
 package help.ukraine.app.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.enumerator.Sex;
@@ -18,6 +19,9 @@ import java.util.Date;
 @Getter
 @Setter
 public class UserModel {
+
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+
     private Long id;
 
     @Email(regexp = ValidationRegex.EMAIL_ADDRESS_PATTERN)
@@ -36,7 +40,8 @@ public class UserModel {
     private String surname;
 
     @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
+    @DateTimeFormat(pattern = DATE_FORMAT)
     private Date birthDate;
 
     @NotBlank

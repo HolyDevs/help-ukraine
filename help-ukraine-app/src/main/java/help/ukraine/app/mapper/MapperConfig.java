@@ -1,14 +1,12 @@
 package help.ukraine.app.mapper;
 
 import help.ukraine.app.data.*;
-import help.ukraine.app.model.PremiseOfferModel;
-import help.ukraine.app.model.SearchingOfferModel;
-import help.ukraine.app.model.SearchingPersonModel;
-import help.ukraine.app.model.UserModel;
+import help.ukraine.app.model.*;
 import ma.glasnost.orika.*;
 import ma.glasnost.orika.converter.ConverterFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import ma.glasnost.orika.metadata.Type;
+import org.hibernate.mapping.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -50,6 +48,17 @@ public class MapperConfig {
                 .byDefault()
                 .register();
 
+        return mapperFactory.getMapperFacade();
+    }
+
+    @Bean
+    public MapperFacade pendingFacade() {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        mapperFactory.classMap(PendingEntity.class, PendingModel.class)
+                .field("searchingPremiseOfferId.searchingOffer.id", "searchingOfferId")
+                .field("searchingPremiseOfferId.premiseOffer.id", "premiseOfferId")
+                .byDefault()
+                .register();
         return mapperFactory.getMapperFacade();
     }
 }

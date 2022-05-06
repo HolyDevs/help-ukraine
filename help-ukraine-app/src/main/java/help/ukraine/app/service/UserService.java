@@ -1,6 +1,6 @@
 package help.ukraine.app.service;
 
-import help.ukraine.app.exception.DataNotExistsException;
+import help.ukraine.app.exception.UserNotExistsException;
 import help.ukraine.app.exception.UserAlreadyRegisteredException;
 import help.ukraine.app.exception.UserNoAccessException;
 import help.ukraine.app.model.UserModel;
@@ -15,13 +15,13 @@ public interface UserService extends UserDetailsService {
     User loadUserByUsername(String username) throws UsernameNotFoundException;
 
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    UserModel fetchUser(String email) throws DataNotExistsException, UserNoAccessException;
+    UserModel fetchUser(String email) throws UserNotExistsException, UserNoAccessException;
 
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    UserModel updateUser(UserModel userModel) throws UserNoAccessException, DataNotExistsException;
+    UserModel updateUser(UserModel userModel) throws UserNoAccessException, UserNotExistsException;
 
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    void deleteUser(String email) throws DataNotExistsException, UserNoAccessException;
+    void deleteUser(String email) throws UserNotExistsException, UserNoAccessException;
 
     UserModel createUser(UserModel userModel) throws UserAlreadyRegisteredException;
 }

@@ -17,5 +17,5 @@ import javax.persistence.Table;
 @Table(name = "pending")
 public class PendingEntity {
     @EmbeddedId
-    private SearchingAndPremiseOfferId searchingAndPremiseOfferId;
+    private SearchingPremiseOfferId searchingPremiseOfferId;
 }

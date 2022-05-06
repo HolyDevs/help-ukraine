@@ -1,6 +1,6 @@
 package help.ukraine.app.controller;
 
-import help.ukraine.app.exception.DataNotExistsException;
+import help.ukraine.app.exception.UserNotExistsException;
 import help.ukraine.app.exception.UserAlreadyRegisteredException;
 import help.ukraine.app.exception.UserNoAccessException;
 import help.ukraine.app.model.UserModel;
@@ -34,14 +34,14 @@ public class UserController {
     // CRUD ENDPOINTS
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserModel> getUser(@RequestParam(EMAIL_PARAM_NAME) String email) throws UserNoAccessException, DataNotExistsException {
+    public ResponseEntity<UserModel> getUser(@RequestParam(EMAIL_PARAM_NAME) String email) throws UserNoAccessException, UserNotExistsException {
         log.debug("fetch user endpoint hit");
         UserModel userModel = userService.fetchUser(email);
         return ResponseEntity.ok().body(userModel);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserModel> modifyUser(@RequestParam(EMAIL_PARAM_NAME) String email, @Valid @RequestBody UserModel userModel) throws UserNoAccessException, DataNotExistsException {
+    public ResponseEntity<UserModel> modifyUser(@RequestParam(EMAIL_PARAM_NAME) String email, @Valid @RequestBody UserModel userModel) throws UserNoAccessException, UserNotExistsException {
         log.debug("modify user endpoint hit");
         badRequestIfParamAndBodyEmailsNotMatch(email, userModel);
         UserModel modifiedUserModel = userService.updateUser(userModel);
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteUser(@RequestParam(EMAIL_PARAM_NAME) String email) throws UserNoAccessException, DataNotExistsException {
+    public ResponseEntity<Void> deleteUser(@RequestParam(EMAIL_PARAM_NAME) String email) throws UserNoAccessException, UserNotExistsException {
         log.debug("delete user endpoint hit");
         userService.deleteUser(email);
         return ResponseEntity.noContent().build();
@@ -64,9 +64,9 @@ public class UserController {
 
     // EXCEPTION HANDLING
 
-    @ExceptionHandler(DataNotExistsException.class)
+    @ExceptionHandler(UserNotExistsException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleDataNotExistsException(DataNotExistsException exception) {
+    public String handleUserNotExistsException(UserNotExistsException exception) {
         return exception.getMessage();
     }
 

@@ -4,7 +4,7 @@ import help.ukraine.app.data.HostEntity;
 import help.ukraine.app.data.RefugeeEntity;
 import help.ukraine.app.data.UserEntity;
 import help.ukraine.app.enumerator.AccountType;
-import help.ukraine.app.exception.DataNotExistsException;
+import help.ukraine.app.exception.UserNotExistsException;
 import help.ukraine.app.exception.UserAlreadyRegisteredException;
 import help.ukraine.app.exception.UserNoAccessException;
 import help.ukraine.app.model.UserModel;
@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
             Collection<SimpleGrantedAuthority> authorities =
                     Collections.singletonList(new SimpleGrantedAuthority(oAuthRole));
             return new User(userModel.getEmail(), userModel.getPassword(), authorities);
-        } catch (DataNotExistsException e) {
+        } catch (UserNotExistsException e) {
             log.error(e);
             throw new UsernameNotFoundException(e.getMessage(), e);
         }
@@ -65,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    public UserModel fetchUser(String email) throws DataNotExistsException, UserNoAccessException {
+    public UserModel fetchUser(String email) throws UserNotExistsException, UserNoAccessException {
         throwIfAuthNotBelongsToUser(email);
         UserModel userModel = getUser(email);
         log.info(String.format(FETCHED_USER_MSG, email));
@@ -88,11 +87,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    public UserModel updateUser(UserModel userModel) throws UserNoAccessException, DataNotExistsException {
-        throwIfAuthNotBelongsToUser(userModel.getEmail());
-        Optional<UserEntity> optional = userRepository.findByEmail(userModel.getEmail());
-        throwIfMissingUser(optional, userModel.getEmail());
-        UserEntity userEntity = optional.get();
+    public UserModel updateUser(UserModel userModel) throws UserNoAccessException, UserNotExistsException {
+        String email = userModel.getEmail();
+        throwIfAuthNotBelongsToUser(email);
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_MSG, email)));
         if (shouldPasswordBeModified(userModel, userEntity)) {
             encodePassword(userModel);
         } else {
@@ -106,11 +105,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    public void deleteUser(String email) throws DataNotExistsException, UserNoAccessException {
+    public void deleteUser(String email) throws UserNotExistsException, UserNoAccessException {
         throwIfAuthNotBelongsToUser(email);
-        Optional<UserEntity> optional = userRepository.findByEmail(email);
-        throwIfMissingUser(optional, email);
-        UserEntity userEntity = optional.get();
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_MSG, email)));
         switch (userEntity.getAccountType()) {
             case HOST -> hostRepository.deleteById(userEntity.getId());
             case REFUGEE -> refugeeRepository.deleteById(userEntity.getId());
@@ -119,10 +117,10 @@ public class UserServiceImpl implements UserService {
         log.info(String.format(DELETED_USER_MSG, email));
     }
 
-    private UserModel getUser(String email) throws DataNotExistsException {
-        Optional<UserEntity> optional = userRepository.findByEmail(email);
-        throwIfMissingUser(optional, email);
-        return userMapperFacade.map(optional.get(), UserModel.class);
+    private UserModel getUser(String email) throws UserNotExistsException {
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_MSG, email)));
+        return userMapperFacade.map(userEntity, UserModel.class);
     }
 
     private void createRefugee(Long userEntityId) {
@@ -138,15 +136,6 @@ public class UserServiceImpl implements UserService {
     private void encodePassword(UserModel userModel) {
         String password = userModel.getPassword();
         userModel.setPassword(passwordEncoder.encode(password));
-    }
-
-    private void throwIfMissingUser(Optional<UserEntity> optional, String email) throws DataNotExistsException {
-        if (optional.isPresent()) {
-            return;
-        }
-        String msg = String.format(MISSING_USER_MSG, email);
-        log.error(msg);
-        throw new DataNotExistsException(msg);
     }
 
     private void throwIfUserAlreadyRegistered(String email) throws UserAlreadyRegisteredException {

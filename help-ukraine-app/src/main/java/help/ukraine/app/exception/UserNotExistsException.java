@@ -1,7 +1,7 @@
 package help.ukraine.app.exception;
 
-public class DataNotExistsException extends Exception {
-    public DataNotExistsException(String message) {
+public class UserNotExistsException extends Exception {
+    public UserNotExistsException(String message) {
         super(message);
     }
 }

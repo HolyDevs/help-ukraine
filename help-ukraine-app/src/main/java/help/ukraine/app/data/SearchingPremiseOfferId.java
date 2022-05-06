@@ -15,7 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-public class SearchingAndPremiseOfferId implements Serializable {
+public class SearchingPremiseOfferId implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private SearchingOfferEntity searchingOffer;
     @ManyToOne(fetch = FetchType.LAZY)
