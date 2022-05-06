@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router";
-import Tabbar from "../components/Tabbar";
-import "../styles/Main.scss";
+import Tabbar from "../../components/Tabbar";
+import "../../styles/Main.scss";
 
 const Main = () => {
 
