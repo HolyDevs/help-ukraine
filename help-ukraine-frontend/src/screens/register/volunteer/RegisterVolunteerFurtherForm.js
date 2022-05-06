@@ -52,6 +52,12 @@ const RegisterVolunteerFurtherForm = () => {
             </RegisterSection>
             <PustePole20px/>
             <RegisterSection>
+                <Checkbox inputLabel="Prepared for people with phisical disabilities"/>
+            </RegisterSection>
+            <RegisterSection>
+                <Checkbox inputLabel="Accept pets."/>
+            </RegisterSection>
+            <RegisterSection>
                 <InputFormFilled value={state["street"]} onChange={(e) => {handleStateChanged(e, "name");}} inputLabel="Street:" type="text"/>
             </RegisterSection>
             <RegisterSection>
@@ -65,7 +71,7 @@ const RegisterVolunteerFurtherForm = () => {
             </RegisterSection>
             <PustePole20px/>
             <RegisterSection>
-                <Link to="/main/search">
+                <Link to="/volunteer/">
                     <AppButton>
                         Proceed
                     </AppButton>

@@ -9,4 +9,5 @@ export const RegisterBody = styled.div`
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    padding: 10%;`;
+    padding: 10%;
+    padding-bottom: 20%;`;
