@@ -1,7 +1,6 @@
 const Modal = ({ children, isVisible, onClose}) => {
 
     const setModalClassName = () => {
-        console.log(onClose);
         return "modal" + (isVisible ? "" : "--hidden");
     }
 

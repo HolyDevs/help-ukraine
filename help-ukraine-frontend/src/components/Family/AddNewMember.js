@@ -31,10 +31,6 @@ const AddNewMember = ({member}) => {
         
     }, [member])
 
-    useEffect(() => {
-        console.log("new moving issues: " + movingIssues);
-    }, [movingIssues])
-
     return (
         <div className="addNewMember">
             <div className="memberForm">
