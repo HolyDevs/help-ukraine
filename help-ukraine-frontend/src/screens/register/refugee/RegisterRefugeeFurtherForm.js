@@ -2,11 +2,7 @@ import React, {useState} from 'react';
 import {Checkbox, Dropdown, InputFormFilled, TextareaContent} from "../../../components/widgets/Inputs";
 import {useNavigate} from "react-router-dom";
 import AppButton from "../../../components/styled-components/AppButton";
-import {
-    PustePole20px,
-    RegisterSection,
-    TextSection
-} from "../../../components/styled-components/Sections";
+import {PustePole20px, RegisterSection, TextSection} from "../../../components/styled-components/Sections";
 import {RegisterHeader} from "../../../components/styled-components/Headers";
 import {RegisterBody} from "../../../components/styled-components/Screens";
 import ValidationService from "../../../services/ValidationService";
@@ -24,13 +20,16 @@ const RegisterRefugeeFurtherForm = () => {
     }
 
     const fillNewUserWithData = () => {
-        const userToBeRegistered = JSON.parse(localStorage.getItem('userToBeRegistered'));
+        const userToBeRegistered = JSON.parse(sessionStorage.getItem('userToBeRegistered'));
         userToBeRegistered.phoneNumber = state["phone"];
         userToBeRegistered.sex = state["sex"].value.toUpperCase();
         userToBeRegistered.birthDate = state["dateOfBirth"];
-        userToBeRegistered.isAccountVerified = true;
-        userToBeRegistered.accountType = "REFUGEE";
         return userToBeRegistered;
+    }
+
+    const registerUser = async () => {
+        const userToBeRegistered = fillNewUserWithData();
+        await AuthService.register(userToBeRegistered);
     }
 
     // temporary alert-based error handling
@@ -44,15 +43,13 @@ const RegisterRefugeeFurtherForm = () => {
             window.alert("Chosen date is invalid");
             return;
         }
-        const userToBeRegistered = fillNewUserWithData();
-        AuthService.register(userToBeRegistered)
+        registerUser()
             .then(() => {
-                localStorage.removeItem('userToBeRegistered');
+                sessionStorage.removeItem('userToBeRegistered');
                 navigate("/main/search");
-            })
-            .catch((error) => {
-                window.alert("Registration failed: " + error.response.data);
-            });
+            }).catch((error) => {
+            window.alert("Registration failed: " + error.response.data);
+        });
     }
 
     return (
@@ -80,7 +77,7 @@ const RegisterRefugeeFurtherForm = () => {
             </RegisterSection>
             <PustePole20px/>
             <RegisterSection>
-            <Checkbox inputLabel="I have a physical disability and require a wheelchair"/>
+                <Checkbox inputLabel="I have a physical disability and require a wheelchair"/>
             </RegisterSection>
             <RegisterSection>
                 <Checkbox inputLabel="I have a pet"/>
