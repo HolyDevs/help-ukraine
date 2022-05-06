@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {InputFormFilled} from "../../../components/widgets/Inputs";
 import {useNavigate} from "react-router-dom";
 import AppButton from "../../../components/styled-components/AppButton";
-import {PustePoleJakLebBrzezinskiego20px, RegisterSection} from "../../../components/styled-components/Sections";
+import {PustePole20px, RegisterSection} from "../../../components/styled-components/Sections";
 import {RegisterHeader} from "../../../components/styled-components/Headers";
 import {RegisterBody} from "../../../components/styled-components/Screens";
 import ValidationService from "../../../services/ValidationService";
@@ -54,9 +54,9 @@ const RegisterRefugeeAccountForm = () => {
                     handleStateChanged(e, "confirmPassword");
                 }} inputLabel="Confirm password:" type="password"/>
             </RegisterSection>
-            <PustePoleJakLebBrzezinskiego20px>
+            <PustePole20px>
 
-            </PustePoleJakLebBrzezinskiego20px>
+            </PustePole20px>
             <RegisterSection>
                 <AppButton onClick={handleRegisterButton}>Create an account</AppButton>
             </RegisterSection>

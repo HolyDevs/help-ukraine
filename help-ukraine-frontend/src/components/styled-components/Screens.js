@@ -7,6 +7,7 @@ export const RegisterBody = styled.div`
     font-size:20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
-    padding: 10%;`;
+    padding: 10%;
+    padding-bottom: 20%;`;
