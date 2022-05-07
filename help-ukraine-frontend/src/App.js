@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react';
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import {Routes, Route, HashRouter} from "react-router-dom";
 import RolePicker from "./screens/RolePicker";
 import Volunteer from "./screens/Volunteer";
 import Login from "./screens/Login";
@@ -20,7 +20,7 @@ import RegisterVolunteerFurtherForm from "./screens/register/volunteer/RegisterV
 function App() {
 
     return (
-        <BrowserRouter>
+        <HashRouter>
             <Routes>
                 <Route path="/" element={<Login />}/>
                 <Route path="/rolePicker" element={<RolePicker/>}/>
@@ -38,7 +38,7 @@ function App() {
                 <Route path="/registerVolunteer" element={<RegisterVolunteer/>}/>
                 <Route path="/registerVolunteer/volunteer-further-info" element={<RegisterVolunteerFurtherForm/>}/>
             </Routes>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 

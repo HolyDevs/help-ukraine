@@ -1,7 +1,7 @@
 import axios from "axios";
 import AuthService from "./AuthService";
 
-const API_URL = "http://localhost:8080/api/";
+const API_URL = "/api/";
 
 class PremiseOfferService {
     createPremiseOffer(premiseOfferData) {

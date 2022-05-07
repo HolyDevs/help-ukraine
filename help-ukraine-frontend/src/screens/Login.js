@@ -61,7 +61,6 @@ const Login = () => {
                         navigate("/volunteer");
                         break;
                 }
-              window.location.reload();
             },
             error => {
                 window.alert("Incorrect login or password");
