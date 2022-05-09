@@ -4,6 +4,7 @@ import qs from "qs";
 const API_URL = "/api/";
 
 class AuthService {
+
     doLogin(username, password) {
         const data = {'password': password, 'username': username};
         const options = {
@@ -71,7 +72,7 @@ class AuthService {
     getAccessToken() {
         const decodedAccessToken = JSON.parse(sessionStorage.getItem("decoded_access_token"));
         const expiryTimestamp = decodedAccessToken.exp;
-        if (new Date(expiryTimestamp) < Date.now()) {
+        if (new Date(expiryTimestamp * 1000) < Date.now()) {
             this.refreshToken();
         }
         return sessionStorage.getItem("access_token");
