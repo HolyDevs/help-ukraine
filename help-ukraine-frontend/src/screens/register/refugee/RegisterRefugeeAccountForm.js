@@ -28,14 +28,25 @@ const RegisterRefugeeAccountForm = () => {
 
     // temporary alert-based error handling
     // todo: create proper error info
-    const handleRegisterButton = () => {
+    const validateInputs = () => {
         const stringForms = [state["email"], state["password"], state["confirmPassword"]];
         if (!ValidationService.areStringsValid(stringForms)) {
             window.alert("Text input cannot be empty");
-            return;
+            return false;
+        }
+        if (!ValidationService.isEmailValid(state["email"])) {
+            window.alert("Entered email is invalid");
+            return false;
         }
         if (state["password"] !== state["confirmPassword"]) {
             window.alert("Passwords do not match");
+            return false;
+        }
+        return true;
+    }
+
+    const handleRegisterButton = () => {
+        if (!validateInputs()) {
             return;
         }
         const userToBeRegistered = createNewUser();

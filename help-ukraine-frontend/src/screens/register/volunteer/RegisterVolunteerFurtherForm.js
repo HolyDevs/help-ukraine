@@ -46,11 +46,18 @@ const RegisterVolunteerFurtherForm = () => {
 
     // temporary alert-based error handling
     // todo: create proper error info
-    const handleProceedButton = () => {
+    const validateInputs = () => {
         const stringForms = [state["street"], state["city"], state["houseNumber"],
             state["postcode"], state["description"]]
         if (!ValidationService.areStringsValid(stringForms)) {
             window.alert("Text input cannot be empty");
+            return false;
+        }
+        return true;
+    }
+
+    const handleProceedButton = () => {
+        if (!validateInputs()) {
             return;
         }
         registerUserAndCreateNewPremiseOffer().then(() => {

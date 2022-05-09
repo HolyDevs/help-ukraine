@@ -33,19 +33,30 @@ const RegisterVolunteer = () => {
 
     // temporary alert-based error handling
     // todo: create proper error info
-    const handleSubmitButton = () => {
-        const stringForms = [state["name"], state["surname"], state["email"],
-            state["password"], state["confirmPassword"], state["phone"]]
+    const validateInputs = () => {
+        const stringForms = [state["name"], state["surname"], state["password"],
+            state["confirmPassword"], state["phone"], state["email"]]
         if (!ValidationService.areStringsValid(stringForms)) {
             window.alert("Text input cannot be empty");
-            return;
+            return false;
+        }
+        if (!ValidationService.isEmailValid(state["email"])) {
+            window.alert("Entered email is invalid");
+            return false;
         }
         if (!ValidationService.isDateValid(state["dateOfBirth"])) {
             window.alert("Chosen date is invalid");
-            return;
+            return false;
         }
         if (state["password"] !== state["confirmPassword"]) {
             window.alert("Passwords do not match");
+            return false;
+        }
+        return true;
+    }
+
+    const handleSubmitButton = () => {
+        if (!validateInputs()) {
             return;
         }
         const userToBeRegistered = createNewUser();

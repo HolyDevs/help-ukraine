@@ -34,13 +34,20 @@ const RegisterRefugeeFurtherForm = () => {
 
     // temporary alert-based error handling
     // todo: create proper error info
-    const handleProceedButton = () => {
+    const validateInputs = () => {
         if (!ValidationService.isStringValid(state["phone"])) {
             window.alert("Text input cannot be empty");
-            return;
+            return false;
         }
         if (!ValidationService.isDateValid(state["dateOfBirth"])) {
             window.alert("Chosen date is invalid");
+            return false;
+        }
+        return true;
+    }
+
+    const handleProceedButton = () => {
+        if (!validateInputs()) {
             return;
         }
         registerUser()

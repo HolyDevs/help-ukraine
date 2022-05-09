@@ -19,9 +19,16 @@ const RegisterRefugeeBasicInfoForm = () => {
 
     // temporary alert-based error handling
     // todo: create proper error info
-    const handleSubmitButton = () => {
+    const validateInputs = () => {
         if (!ValidationService.areStringsValid([state["name"], state["surname"]])) {
             window.alert("Text input cannot be empty");
+            return false;
+        }
+        return true;
+    }
+
+    const handleSubmitButton = () => {
+        if (!validateInputs()) {
             return;
         }
         const userToBeRegistered = JSON.parse(sessionStorage.getItem('userToBeRegistered'))
