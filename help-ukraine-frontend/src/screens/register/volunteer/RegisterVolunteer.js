@@ -10,45 +10,46 @@ import ValidationService from "../../../services/ValidationService";
 const RegisterVolunteer = () => {
 
     let navigate = useNavigate();
-    const [state, setState] = useState({});
-
-    const handleStateChanged = (event, key) => {
-        state[key] = event.target.value;
-        setState(state);
-    }
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
+    const [phone, setPhone] = useState("");
+    const [sex, setSex] = useState("MALE");
+    const [birthDate, setBirthDate] = useState();
 
     const createNewUser = () => {
         return {
-            email: state["email"],
-            password: state["password"],
-            name: state["name"],
-            surname: state["surname"],
-            phoneNumber: state["phone"],
-            sex: state["sex"].value.toUpperCase(),
+            email: email,
+            password: password,
+            name: name,
+            surname: surname,
+            phoneNumber: phone,
+            sex: sex.toUpperCase(),
             isAccountVerified: true,
             accountType: "HOST",
-            birthDate: state["dateOfBirth"]
+            birthDate: birthDate
         };
     }
 
     // temporary alert-based error handling
     // todo: create proper error info
     const validateInputs = () => {
-        const stringForms = [state["name"], state["surname"], state["password"],
-            state["confirmPassword"], state["phone"], state["email"]]
+        const stringForms = [name, surname, password, confirmPassword, phone, email]
         if (!ValidationService.areStringsValid(stringForms)) {
             window.alert("Text input cannot be empty");
             return false;
         }
-        if (!ValidationService.isEmailValid(state["email"])) {
+        if (!ValidationService.isEmailValid(email)) {
             window.alert("Entered email is invalid");
             return false;
         }
-        if (!ValidationService.isDateValid(state["dateOfBirth"])) {
+        if (!ValidationService.isDateValid(birthDate)) {
             window.alert("Chosen date is invalid");
             return false;
         }
-        if (state["password"] !== state["confirmPassword"]) {
+        if (password !== confirmPassword) {
             window.alert("Passwords do not match");
             return false;
         }
@@ -68,46 +69,46 @@ const RegisterVolunteer = () => {
         <RegisterBody>
             <RegisterHeader>Enter form to continue.</RegisterHeader>
             <RegisterSection>
-                <InputFormFilled value={state["name"]} onChange={(e) => {
-                    handleStateChanged(e, "name");
+                <InputFormFilled value={name} onChange={(e) => {
+                    setName(e.target.value);
                 }} inputLabel="Name:" type="text"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["surname"]} onChange={(e) => {
-                    handleStateChanged(e, "surname");
+                <InputFormFilled value={surname} onChange={(e) => {
+                    setSurname(e.target.value);
                 }} inputLabel="Surname:" type="text"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["dateOfBirth"]} onChange={(e) => {
-                    handleStateChanged(e, "dateOfBirth");
+                <InputFormFilled value={birthDate} onChange={(e) => {
+                    setBirthDate(e.target.value);
                 }} inputLabel="Date of birth:" type="date"/>
             </RegisterSection>
             <RegisterSection>
-                <Dropdown value={state["sex"] = {value: "Male"}} inputLabel="Sex:"
-                          onChange={(e) => handleStateChanged(e, 'sex')}
+                <Dropdown inputLabel="Sex:"
+                          onChangeCallback={(value) => setSex(value)}
                           options={[
                               {key: "male", value: "Male"},
                               {key: "female", value: "Female"}
                           ]}/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["phone"]} onChange={(e) => {
-                    handleStateChanged(e, "phone");
+                <InputFormFilled value={phone} onChange={(e) => {
+                    setPhone(e.target.value);
                 }} inputLabel="Phone:" type="tel"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["email"]} onChange={(e) => {
-                    handleStateChanged(e, "email");
+                <InputFormFilled value={email} onChange={(e) => {
+                    setEmail(e.target.value);
                 }} inputLabel="Email:" type="mail"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["password"]} onChange={(e) => {
-                    handleStateChanged(e, "password");
+                <InputFormFilled value={password} onChange={(e) => {
+                    setPassword(e.target.value);
                 }} inputLabel="Password:" type="password"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["confirmPassword"]} onChange={(e) => {
-                    handleStateChanged(e, "confirmPassword");
+                <InputFormFilled value={confirmPassword} onChange={(e) => {
+                    setConfirmPassword(e.target.value);
                 }} inputLabel="Confirm password:" type="password"/>
             </RegisterSection>
             <PustePole20px/>

@@ -12,12 +12,14 @@ import ValidationService from "../../../services/ValidationService";
 const RegisterVolunteerFurtherForm = () => {
 
     let navigate = useNavigate();
-    const [state, setState] = useState({});
-
-    const handleStateChanged = (event, key) => {
-        state[key] = event.target.value;
-        setState(state);
-    }
+    const [peopleToTake, setPeopleToTake] = useState(1);
+    const [wheelchairFriendly, setWheelchairFriendly] = useState(false);
+    const [animalsAllowed, setAnimalsAllowed] = useState(false);
+    const [description, setDescription] = useState("");
+    const [city, setCity] = useState("");
+    const [houseNumber, setHouseNumber] = useState("");
+    const [street, setStreet] = useState("");
+    const [postcode, setPostcode] = useState("");
 
     const registerUserAndCreateNewPremiseOffer = async () => {
         const userToBeRegistered = JSON.parse(sessionStorage.getItem('userToBeRegistered'));
@@ -31,24 +33,24 @@ const RegisterVolunteerFurtherForm = () => {
         return {
             hostId: hostId,
             active: true,
-            peopleToTake: state["peopleToTake"].value,
-            animalsAllowed: state["animalsAllowed"],
-            wheelchairFriendly: state["wheelchairFriendly"],
+            verified: true,
+            peopleToTake: peopleToTake,
+            animalsAllowed: animalsAllowed,
+            wheelchairFriendly: wheelchairFriendly,
             premiseAddress: address,
-            description: state["description"]
+            description: description
         }
     }
 
     const parseAddress = () => {
-        return state["city"] + ", " + state["street"] + " "
-            + state["houseNumber"] + ", " + state["postcode"];
+        return city + ", " + street + " "
+            + houseNumber + ", " + postcode;
     }
 
     // temporary alert-based error handling
     // todo: create proper error info
     const validateInputs = () => {
-        const stringForms = [state["street"], state["city"], state["houseNumber"],
-            state["postcode"], state["description"]]
+        const stringForms = [street, city, houseNumber, postcode, description];
         if (!ValidationService.areStringsValid(stringForms)) {
             window.alert("Text input cannot be empty");
             return false;
@@ -64,7 +66,7 @@ const RegisterVolunteerFurtherForm = () => {
             sessionStorage.removeItem('userToBeRegistered');
             navigate("/volunteer");
         }).catch((error) => {
-            window.alert("Registration failed: " + error.response.data);
+            window.alert("Registration failed: " + error.response?.data);
         });
     }
 
@@ -75,8 +77,7 @@ const RegisterVolunteerFurtherForm = () => {
             </RegisterHeader>
             <RegisterSection>
                 <Dropdown inputLabel="Number of residents:"
-                          value={state["peopleToTake"] = {value: "1"}}
-                          onChange={(e) => handleStateChanged(e, 'peopleToTake')}
+                          onChangeCallback={(value) => setPeopleToTake(value)}
                           options={[
                               {key: "1", value: "1"},
                               {key: "2", value: "2"},
@@ -95,38 +96,36 @@ const RegisterVolunteerFurtherForm = () => {
                 Additional information about equipment for the apartment
             </TextSection>
             <RegisterSection>
-                <TextareaContent value={state["description"]}
-                                 onChange={(e) => handleStateChanged(e, 'description')}/>
+                <TextareaContent value={description}
+                                 onChange={(e) => setDescription(e.target.value)}/>
             </RegisterSection>
             <PustePole20px/>
             <RegisterSection>
-                <Checkbox defaultChecked={state["wheelchairFriendly"]}
-                          onChange={(e) => handleStateChanged(e, 'wheelchairFriendly')}
+                <Checkbox onCheckCallback={(value) => setWheelchairFriendly(value)}
                           inputLabel="Prepared for people with physical disabilities"/>
             </RegisterSection>
             <RegisterSection>
-                <Checkbox defaultChecked={state["animalsAllowed"]}
-                          onChange={(e) => handleStateChanged(e, 'animalsAllowed')}
+                <Checkbox onCheckCallback={(value) => setAnimalsAllowed(value)}
                           inputLabel="Accept pets."/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["street"]} onChange={(e) => {
-                    handleStateChanged(e, "street");
+                <InputFormFilled value={street} onChange={(e) => {
+                    setStreet(e.target.value);
                 }} inputLabel="Street:" type="text"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["houseNumber"]} onChange={(e) => {
-                    handleStateChanged(e, "houseNumber");
+                <InputFormFilled value={houseNumber} onChange={(e) => {
+                    setHouseNumber(e.target.value);
                 }} inputLabel="House No." type="text"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["postcode"]} onChange={(e) => {
-                    handleStateChanged(e, "postcode");
+                <InputFormFilled value={postcode} onChange={(e) => {
+                    setPostcode(e.target.value);
                 }} inputLabel="Post code:" type="text"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["city"]} onChange={(e) => {
-                    handleStateChanged(e, "city");
+                <InputFormFilled value={city} onChange={(e) => {
+                    setCity(e.target.value);
                 }} inputLabel="City:" type="text"/>
             </RegisterSection>
             <PustePole20px/>

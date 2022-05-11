@@ -145,11 +145,18 @@ const Dropdown = (props) => {
 
     const toggling = () => setIsOpen(!isOpen);
 
-    const onOptionClicked = value => () => {
-        setSelectedOption(value);
+    const onOptionClicked = (e, option) => {
+        setSelectedOption(option);
         setIsOpen(false);
-        console.log(selectedOption);
+        valueChangedCallback(option.value);
     };
+
+    const valueChangedCallback = (value) => {
+        if (!props.onChangeCallback) {
+            return;
+        }
+        props.onChangeCallback(value);
+    }
 
     return (
         <DropDownWrapper>
@@ -157,7 +164,7 @@ const Dropdown = (props) => {
         <DropDownContainer>
             <DropDownHeaderRow onClick={toggling}>
                 <DropDownHeaderLabel>
-                    {selectedOption.value || "Sex:"}
+                    {selectedOption.value}
                 </DropDownHeaderLabel>
                 <DropDownHeaderButton rotate={!isOpen}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M192 384c-8.188 0-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L192 306.8l137.4-137.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-160 160C208.4 380.9 200.2 384 192 384z"/></svg>
@@ -167,7 +174,7 @@ const Dropdown = (props) => {
             {isOpen && (
                     <DropDownList>
                         {props.options.map(option => (
-                            <ListItem onClick={onOptionClicked(option)} key={option.key}>
+                            <ListItem onClick={(e) => onOptionClicked(e, option)} key={option.key}>
                                 {option.value}
                             </ListItem>
                         ))}
@@ -220,11 +227,22 @@ const CheckboxLabel = styled.div`
 
 const Checkbox = (props) => {
     const [isChecked, setIsChecked] = useState(false);
-    const toggling = () => setIsChecked(!isChecked);
+    const toggling = (e) => {
+        setIsChecked(!isChecked);
+        valueChangedCallback(!isChecked);
+    }
+
+    const valueChangedCallback = (isChecked) => {
+        if (!props.onCheckCallback) {
+            return;
+        }
+        props.onCheckCallback(isChecked);
+    }
+
     return (
         <CheckboxSection>
             <div>
-                <CheckboxDot onClick={toggling}>
+                <CheckboxDot onClick={(e) => toggling(e)}>
                     {isChecked ? <ToggledMark/>  : <CheckboxDotUnchecked/>  }
                 </CheckboxDot>
             </div>
