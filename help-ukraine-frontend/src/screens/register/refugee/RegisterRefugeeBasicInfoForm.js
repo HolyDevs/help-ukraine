@@ -10,17 +10,15 @@ import {useNavigate} from "react-router-dom";
 const RegisterRefugeeBasicInfoForm = () => {
 
     let navigate = useNavigate();
-    const [state, setState] = useState({});
-
-    const handleStateChanged = (event, key) => {
-        state[key] = event.target.value;
-        setState(state);
-    }
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
+    const [adults, setAdults] = useState(0);
+    const [children, setChildren] = useState(0);
 
     // temporary alert-based error handling
     // todo: create proper error info
     const validateInputs = () => {
-        if (!ValidationService.areStringsValid([state["name"], state["surname"]])) {
+        if (!ValidationService.areStringsValid([name, surname])) {
             window.alert("Text input cannot be empty");
             return false;
         }
@@ -32,8 +30,8 @@ const RegisterRefugeeBasicInfoForm = () => {
             return;
         }
         const userToBeRegistered = JSON.parse(sessionStorage.getItem('userToBeRegistered'))
-        userToBeRegistered.name = state["name"]
-        userToBeRegistered.surname = state["surname"]
+        userToBeRegistered.name = name;
+        userToBeRegistered.surname = surname;
         sessionStorage.setItem('userToBeRegistered', JSON.stringify(userToBeRegistered))
         navigate("/registerRefugee/account-further-info");
     }
@@ -42,24 +40,24 @@ const RegisterRefugeeBasicInfoForm = () => {
         <RegisterBody>
             <RegisterHeader>Tell us about your situation.</RegisterHeader>
             <RegisterSection>
-                <InputFormFilled value={state["name"]} onChange={(e) => {
-                    handleStateChanged(e, "name");
+                <InputFormFilled value={name} onChange={(e) => {
+                    setName(e.target.value);
                 }} inputLabel="Name:" type="text"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["surname"]} onChange={(e) => {
-                    handleStateChanged(e, "surname");
+                <InputFormFilled value={surname} onChange={(e) => {
+                    setSurname(e.target.value);
                 }} inputLabel="Surname:" type="text"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["adults"]} onChange={(e) => {
-                    handleStateChanged(e, "adults");
+                <InputFormFilled value={adults} onChange={(e) => {
+                    setAdults(e.target.value);
                 }} inputLabel="Adults:" type="number"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["children"]} onChange={(e) => {
-                    handleStateChanged(e, "children");
-                }} inputLabel="Children:" type="text"/>
+                <InputFormFilled value={children} onChange={(e) => {
+                    setChildren(e.target.value);
+                }} inputLabel="Children:" type="number"/>
             </RegisterSection>
             <RegisterSection>
                 <PustePole20px>

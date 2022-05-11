@@ -12,18 +12,15 @@ import AuthService from "../../../services/AuthService";
 const RegisterRefugeeFurtherForm = () => {
 
     let navigate = useNavigate();
-    const [state, setState] = useState({});
-
-    const handleStateChanged = (event, key) => {
-        state[key] = event.target.value;
-        setState(state);
-    }
+    const [phone, setPhone] = useState("");
+    const [sex, setSex] = useState("MALE");
+    const [birthDate, setBirthDate] = useState();
 
     const fillNewUserWithData = () => {
         const userToBeRegistered = JSON.parse(sessionStorage.getItem('userToBeRegistered'));
-        userToBeRegistered.phoneNumber = state["phone"];
-        userToBeRegistered.sex = state["sex"].value.toUpperCase();
-        userToBeRegistered.birthDate = state["dateOfBirth"];
+        userToBeRegistered.phoneNumber = phone;
+        userToBeRegistered.sex = sex.toUpperCase();
+        userToBeRegistered.birthDate = birthDate;
         return userToBeRegistered;
     }
 
@@ -35,11 +32,11 @@ const RegisterRefugeeFurtherForm = () => {
     // temporary alert-based error handling
     // todo: create proper error info
     const validateInputs = () => {
-        if (!ValidationService.isStringValid(state["phone"])) {
+        if (!ValidationService.isStringValid(phone)) {
             window.alert("Text input cannot be empty");
             return false;
         }
-        if (!ValidationService.isDateValid(state["dateOfBirth"])) {
+        if (!ValidationService.isDateValid(birthDate)) {
             window.alert("Chosen date is invalid");
             return false;
         }
@@ -65,21 +62,21 @@ const RegisterRefugeeFurtherForm = () => {
                 We need some further information.
             </RegisterHeader>
             <RegisterSection>
-                <InputFormFilled value={state["dateOfBirth"]} onChange={(e) => {
-                    handleStateChanged(e, "dateOfBirth");
+                <InputFormFilled value={birthDate} onChange={(e) => {
+                    setBirthDate(e.target.value);
                 }} inputLabel="Date of birth:" type="date"/>
             </RegisterSection>
             <RegisterSection>
-                <Dropdown value={state["sex"] = {value: "Male"}} inputLabel="Sex:"
-                          onChange={(e) => handleStateChanged(e, 'sex')}
+                <Dropdown inputLabel="Sex:"
+                          onChangeCallback={(value) => setSex(value)}
                           options={[
                               {key: "male", value: "Male"},
                               {key: "female", value: "Female"}
                           ]}/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["phone"]} onChange={(e) => {
-                    handleStateChanged(e, "phone");
+                <InputFormFilled value={phone} onChange={(e) => {
+                    setPhone(e.target.value);
                 }} inputLabel="Phone number:" type="tel"/>
             </RegisterSection>
             <PustePole20px/>

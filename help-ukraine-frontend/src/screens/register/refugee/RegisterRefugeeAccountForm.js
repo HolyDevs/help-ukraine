@@ -10,17 +10,14 @@ import ValidationService from "../../../services/ValidationService";
 const RegisterRefugeeAccountForm = () => {
 
     let navigate = useNavigate();
-    const [state, setState] = useState({});
-
-    const handleStateChanged = (event, key) => {
-        state[key] = event.target.value;
-        setState(state);
-    }
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
     const createNewUser = () => {
         return {
-            email: state["email"],
-            password: state["password"],
+            email: email,
+            password: password,
             isAccountVerified: true,
             accountType: "REFUGEE"
         };
@@ -29,16 +26,16 @@ const RegisterRefugeeAccountForm = () => {
     // temporary alert-based error handling
     // todo: create proper error info
     const validateInputs = () => {
-        const stringForms = [state["email"], state["password"], state["confirmPassword"]];
+        const stringForms = [email, password, confirmPassword];
         if (!ValidationService.areStringsValid(stringForms)) {
             window.alert("Text input cannot be empty");
             return false;
         }
-        if (!ValidationService.isEmailValid(state["email"])) {
+        if (!ValidationService.isEmailValid(email)) {
             window.alert("Entered email is invalid");
             return false;
         }
-        if (state["password"] !== state["confirmPassword"]) {
+        if (password !== confirmPassword) {
             window.alert("Passwords do not match");
             return false;
         }
@@ -58,18 +55,18 @@ const RegisterRefugeeAccountForm = () => {
         <RegisterBody>
             <RegisterHeader>Account creation.</RegisterHeader>
             <RegisterSection>
-                <InputFormFilled value={state["email"]} onChange={(e) => {
-                    handleStateChanged(e, "email");
+                <InputFormFilled value={email} onChange={(e) => {
+                    setEmail(e.target.value);
                 }} inputLabel="Email:" type="text"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["password"]} onChange={(e) => {
-                    handleStateChanged(e, "password");
+                <InputFormFilled value={password} onChange={(e) => {
+                    setPassword(e.target.value);
                 }} inputLabel="Password:" type="password"/>
             </RegisterSection>
             <RegisterSection>
-                <InputFormFilled value={state["confirmPassword"]} onChange={(e) => {
-                    handleStateChanged(e, "confirmPassword");
+                <InputFormFilled value={confirmPassword} onChange={(e) => {
+                    setConfirmPassword(e.target.value);
                 }} inputLabel="Confirm password:" type="password"/>
             </RegisterSection>
             <PustePole20px>
