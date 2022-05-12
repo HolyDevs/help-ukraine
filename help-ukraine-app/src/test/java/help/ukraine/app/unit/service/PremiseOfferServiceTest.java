@@ -143,7 +143,7 @@ public class PremiseOfferServiceTest {
                 .id(PREMISE_OFFER_1_ID)
                 .host(HOST_ENTITY_1)
                 .offerImages(List.of(OFFER_IMAGE_1))
-                .premiseAddress(PREMISE_OFFER_1_ADDRESS)
+//                .premiseAddress(PREMISE_OFFER_1_ADDRESS)
                 .peopleToTake(PREMISE_OFFER_1_PEOPLE_COUNT)
                 .bathrooms(PREMISE_OFFER_1_BATHROOMS_COUNT)
                 .kitchens(PREMISE_OFFER_1_KITCHENS_COUNT)
@@ -161,7 +161,7 @@ public class PremiseOfferServiceTest {
                 .id(PREMISE_OFFER_2_ID)
                 .host(HOST_ENTITY_2)
                 .offerImages(List.of(OFFER_IMAGE_2))
-                .premiseAddress(PREMISE_OFFER_2_ADDRESS)
+//                .premiseAddress(PREMISE_OFFER_2_ADDRESS)
                 .peopleToTake(PREMISE_OFFER_2_PEOPLE_COUNT)
                 .bathrooms(PREMISE_OFFER_2_BATHROOMS_COUNT)
                 .kitchens(PREMISE_OFFER_2_KITCHENS_COUNT)
@@ -179,7 +179,7 @@ public class PremiseOfferServiceTest {
                 .id(PREMISE_OFFER_3_ID)
                 .host(HOST_ENTITY_1)
                 .offerImages(List.of(OFFER_IMAGE_3))
-                .premiseAddress(PREMISE_OFFER_3_ADDRESS)
+//                .premiseAddress(PREMISE_OFFER_3_ADDRESS)
                 .peopleToTake(PREMISE_OFFER_3_PEOPLE_COUNT)
                 .bathrooms(PREMISE_OFFER_3_BATHROOMS_COUNT)
                 .kitchens(PREMISE_OFFER_3_KITCHENS_COUNT)
@@ -274,7 +274,7 @@ public class PremiseOfferServiceTest {
         assertEquals(entity.getHost().getUserId(), model.getHostId());
         List<String> entityImageLocations = entity.getOfferImages().stream().map(OfferImageEntity::getImageLocation).collect(Collectors.toList());
         assertFalse(Collections.disjoint(entityImageLocations, model.getOfferImagesLocations()));
-        assertEquals(entity.getPremiseAddress(), model.getPremiseAddress());
+//        assertEquals(entity.getPremiseAddress(), model.getPremiseAddress());
         assertEquals(entity.getBathrooms(), model.getBathrooms());
         assertEquals(entity.getKitchens(), model.getKitchens());
         assertEquals(entity.getBedrooms(), model.getBedrooms());

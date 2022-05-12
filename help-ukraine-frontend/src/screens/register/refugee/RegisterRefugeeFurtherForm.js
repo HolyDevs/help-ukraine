@@ -36,7 +36,7 @@ const RegisterRefugeeFurtherForm = () => {
             window.alert("Text input cannot be empty");
             return false;
         }
-        if (!ValidationService.isDateValid(birthDate)) {
+        if (!ValidationService.isBirthDateValid(birthDate)) {
             window.alert("Chosen date is invalid");
             return false;
         }

@@ -16,7 +16,7 @@ const SearchListItem = ({ result }) => {
                 <SearchListItemContent result={result} />
             </div>
             <div className="searchItem__rightContent">
-                <SearchListItemImage src={result.imageUrl} />
+                <SearchListItemImage src={result.offerImagesLocations[0]} />
             </div>
         </li>
     );

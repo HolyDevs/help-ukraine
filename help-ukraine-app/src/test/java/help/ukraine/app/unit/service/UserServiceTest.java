@@ -24,6 +24,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -73,7 +74,7 @@ class UserServiceTest {
                 .name(NAME)
                 .surname("Testowy")
                 .accountType(AccountType.REFUGEE)
-                .birthDate(new Date())
+                .birthDate(LocalDate.now())
                 .hashedPassword(HASHED_PASSWORD)
                 .isAccountVerified(true)
                 .phoneNumber("666-666-666")
@@ -251,7 +252,7 @@ class UserServiceTest {
                 .name(NAME)
                 .surname("Testowy1")
                 .accountType(AccountType.REFUGEE)
-                .birthDate(new Date())
+                .birthDate(LocalDate.now())
                 .hashedPassword(HASHED_PASSWORD)
                 .isAccountVerified(true)
                 .phoneNumber("666-666-666")
@@ -265,7 +266,7 @@ class UserServiceTest {
                 .name(NAME)
                 .surname("Testowy1")
                 .accountType(AccountType.REFUGEE)
-                .birthDate(new Date())
+                .birthDate(LocalDate.now())
                 .password(PASSWORD)
                 .isAccountVerified(true)
                 .phoneNumber("666-666-666")
@@ -279,7 +280,7 @@ class UserServiceTest {
                 .name(MODIFIED_NAME)
                 .surname("Testowy")
                 .accountType(AccountType.REFUGEE)
-                .birthDate(new Date())
+                .birthDate(LocalDate.now())
                 .password(PASSWORD)
                 .isAccountVerified(true)
                 .phoneNumber("666-666-666")
@@ -294,7 +295,7 @@ class UserServiceTest {
                 .name(MODIFIED_NAME)
                 .surname("Testowy")
                 .accountType(AccountType.REFUGEE)
-                .birthDate(new Date())
+                .birthDate(LocalDate.now())
                 .hashedPassword(HASHED_PASSWORD)
                 .isAccountVerified(true)
                 .phoneNumber("666-666-666")
@@ -308,7 +309,7 @@ class UserServiceTest {
                 .name(NAME)
                 .surname("Testowy")
                 .accountType(AccountType.REFUGEE)
-                .birthDate(new Date())
+                .birthDate(LocalDate.now())
                 .password(MODIFIED_PASSWORD)
                 .isAccountVerified(true)
                 .phoneNumber("666-666-666")
@@ -323,7 +324,7 @@ class UserServiceTest {
                 .name(NAME)
                 .surname("Testowy")
                 .accountType(AccountType.REFUGEE)
-                .birthDate(new Date())
+                .birthDate(LocalDate.now())
                 .hashedPassword(HASHED_MODIFIED_PASSWORD)
                 .isAccountVerified(true)
                 .phoneNumber("666-666-666")
