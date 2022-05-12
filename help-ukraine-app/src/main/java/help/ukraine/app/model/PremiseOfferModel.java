@@ -21,13 +21,17 @@ public class PremiseOfferModel {
     private Long id;
     private Long hostId;
     private List<String> offerImagesLocations;
-    private String premiseAddress;
+    private String city;
+    private String street;
+    private String houseNumber;
+    private String postalCode;
     private int peopleToTake;
     private int bathrooms;
     private int kitchens;
     private int bedrooms;
     private boolean animalsAllowed;
     private boolean wheelchairFriendly;
+    private boolean smokingAllowed;
     private boolean active;
     private boolean verified;
     private String description;

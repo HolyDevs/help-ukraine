@@ -11,7 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +21,7 @@ import java.util.Date;
 public class UserModel {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String WARSAW_TIMEZONE = "Europe/Warsaw";
 
     private Long id;
 
@@ -40,9 +41,9 @@ public class UserModel {
     private String surname;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT, timezone = WARSAW_TIMEZONE)
     @DateTimeFormat(pattern = DATE_FORMAT)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @NotBlank
     private String phoneNumber;

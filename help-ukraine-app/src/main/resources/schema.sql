@@ -1,5 +1,4 @@
 create sequence hibernate_sequence start with 1 increment by 1;
-
 create table accepted
 (
     premise_offer_id   bigint not null,
@@ -8,13 +7,14 @@ create table accepted
 );
 create table hosts
 (
-    user_id bigint not null,
+    user_id            bigint not null,
+    family_description varchar(255),
     primary key (user_id)
 );
 create table offer_images
 (
     id               bigint not null,
-    image_location   varchar(255),
+    image_location   varchar(10000),
     premise_offer_id bigint,
     primary key (id)
 );
@@ -31,13 +31,17 @@ create table premise_offers
     animals_allowed     boolean not null,
     bathrooms           integer not null,
     bedrooms            integer not null,
+    city                varchar(255),
     description         varchar(255),
-    from_date           timestamp,
+    from_date           date,
     host_user_id        bigint,
+    house_number        varchar(255),
     kitchens            integer not null,
     people_to_take      integer not null,
-    premise_address     varchar(255),
-    to_date             timestamp,
+    postal_code         varchar(255),
+    smoking_allowed     boolean not null,
+    street              varchar(255),
+    to_date             date,
     verified            boolean not null,
     wheelchair_friendly boolean not null,
     primary key (id)
@@ -52,16 +56,16 @@ create table searching_offers
     id                                  bigint  not null,
     additional_info                     TEXT,
     animals_involved                    boolean,
-    refugee_user_id                     bigint,
     people_total                        integer not null,
     preferred_location                  varchar(255),
-    range_from_preferred_location_in_km double precision,
+    range_from_preferred_location_in_km DOUBLE PRECISION,
+    refugee_user_id                     bigint,
     primary key (id)
 );
 create table searching_people
 (
     id                 bigint  not null,
-    birth_date         timestamp,
+    birth_date         date,
     moving_issues      boolean not null,
     name               varchar(255),
     searching_offer_id bigint,
@@ -71,12 +75,12 @@ create table searching_people
 );
 create table users
 (
-    id                  bigint  not null,
+    id                  bigint not null,
     account_type        varchar(255),
-    birth_date          timestamp,
+    birth_date          date,
     email               varchar(255),
     hashed_password     varchar(255),
-    is_account_verified boolean not null,
+    is_account_verified boolean,
     name                varchar(255),
     phone_number        varchar(255),
     sex                 varchar(255),
