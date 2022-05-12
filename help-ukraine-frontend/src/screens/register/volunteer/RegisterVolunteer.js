@@ -45,7 +45,7 @@ const RegisterVolunteer = () => {
             window.alert("Entered email is invalid");
             return false;
         }
-        if (!ValidationService.isDateValid(birthDate)) {
+        if (!ValidationService.isBirthDateValid(birthDate)) {
             window.alert("Chosen date is invalid");
             return false;
         }

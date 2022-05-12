@@ -20,13 +20,13 @@ const Details = () => {
     const generateTags = () => {
         return (
             <>
-                <Tag icon={numOfPeopleIcon} tagName={details.numOfPeople + ""} />
-                <Tag icon={locationIcon} tagName={details.location} />
-                <Tag icon={dateFromIcon} tagName={"from: " + details.dateFrom} />
-                <Tag icon={dateToIcon} tagName={"to: " + details.dateTo} />
-                <Tag icon={numOfBedroomsIcon} tagName={"bedrooms: " + details.numOfBedrooms + ""} />
-                <Tag icon={numOfBathroomsIcon} tagName={"bathrooms: " + details.numOfBathrooms + ""} />
-                <Tag icon={numOfKitchensIcon} tagName={"kitchens: " + details.numOfKitchens + ""} />
+                <Tag icon={numOfPeopleIcon} tagName={details.peopleToTake + ""} />
+                <Tag icon={locationIcon} tagName={details.city} />
+                <Tag icon={dateFromIcon} tagName={"from: " + details.fromDate} />
+                <Tag icon={dateToIcon} tagName={"to: " + details.toDate} />
+                <Tag icon={numOfBedroomsIcon} tagName={"bedrooms: " + details.bedrooms + ""} />
+                <Tag icon={numOfBathroomsIcon} tagName={"bathrooms: " + details.bathrooms + ""} />
+                <Tag icon={numOfKitchensIcon} tagName={"kitchens: " + details.kitchens + ""} />
                 {details.animalsAllowed && <Tag icon={animalsAllowedIcon} tagName={"Pet friendly"} />}
                 {details.wheelchairFriendly && <Tag icon={wheelchairFriendlyIcon} tagName={"Wheelchair adjusted"} />}
                 {details.smokingAllowed && <Tag icon={smokingAllowedIcon} tagName={"Smoking allowed"} />}
@@ -36,17 +36,17 @@ const Details = () => {
 
     return (
     <div className="details">
-        <img src={details.imageUrl} />
+        <img src={details.offerImagesLocations[0]} />
         <div className="details__content">
-            <h2>{details.name}</h2>
+            <h2>{details.city + " - " + details.peopleToTake + " accommodation(s)"}</h2>
             <div className="separator"/>
             <div className="details__content__tags">
                 {generateTags()}
             </div>
             <h3>About family</h3>
-            <p>{details.familyDescription}</p>
+            <p>{details.description}</p>
             <h3>About home</h3>
-            <p>{details.homeDescription}</p>
+            <p>{details.description}</p>
             <Button>Make contact</Button>
         </div>
     </div>
