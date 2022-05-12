@@ -4,12 +4,22 @@ import AuthService from "./AuthService";
 const API_URL = "/api/";
 
 class PremiseOfferService {
-    createPremiseOffer(premiseOfferData) {
+
+    getAuthHeader() {
         const accessToken = AuthService.getAccessToken();
-        const options = {
+        return {
             headers: {'Authorization': 'Bearer ' + accessToken},
         }
-        return  axios.post(API_URL + "premise-offers", premiseOfferData, options).then(res => res.data);
+    }
+
+    createPremiseOffer(premiseOfferData) {
+        const options = this.getAuthHeader();
+        return axios.post(API_URL + "premise-offers", premiseOfferData, options).then(res => res.data);
+    }
+
+    fetchPremiseOffers() {
+        const options = this.getAuthHeader();
+        return axios.get(API_URL + "premise-offers", options).then(res => res.data);
     }
 }
 

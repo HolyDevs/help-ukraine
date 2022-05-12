@@ -4,15 +4,15 @@ import placeIcon from '../../assets/place-icon.png';
 const SearchListItemContent = ({ result }) => {
     return (
         <div className="searchListItemContent">
-            <div className="searchListItemContent__date">{result.dateFrom}</div>
-            <div className="searchListItemContent__date">{result.dateTo}</div>
+            <div className="searchListItemContent__date">{result.fromDate}</div>
+            <div className="searchListItemContent__date">{result.toDate}</div>
             <div className="spacer"/>
-            <div className="searchListItemContent__name">{result.name}</div>
+            <div className="searchListItemContent__name">{result.city + " - " + result.peopleToTake + " accommodation(s)"}</div>
             <div className="searchListItemContent__details">
                 <img src={personIcon}/>
-                <span>{result.numOfPeople}</span>
+                <span>{result.peopleToTake}</span>
                 <img src={placeIcon}/>
-                <span>{result.location}</span>
+                <span>{result.city}</span>
             </div>
         </div>
     );

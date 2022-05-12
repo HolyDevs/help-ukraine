@@ -17,9 +17,15 @@ class ValidationService {
         return this.#emailPattern.test(value);
     }
 
-    isDateValid = (date) => {
-        const momentDate = moment(date, 'YYYY-MM-DD',true);
+    isBirthDateValid = (date) => {
+        const momentDate = moment(date, 'YYYY-MM-DD', true);
         return momentDate.isBefore(moment.now()) && momentDate.isAfter(moment('1900-01-01', 'YYYY-MM-DD'));
+    }
+
+    areFromToDatesValid = (fromDate, toDate) => {
+        const fromMoment = moment(fromDate, 'YYYY-MM-DD', true);
+        const toMoment = moment(toDate, 'YYYY-MM-DD', true);
+        return toMoment.isAfter(moment.now()) && fromMoment.isBefore(toMoment);
     }
 
     areStringsValid = (values) => {
@@ -31,4 +37,5 @@ class ValidationService {
         return true;
     }
 }
+
 export default new ValidationService();

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const RegisterBody = styled.div`
-    height: 100vh;
+    height: fit-content;
     background-color: var(--ukrainski-niebieski);
     color: white;
     font-size:20px;
