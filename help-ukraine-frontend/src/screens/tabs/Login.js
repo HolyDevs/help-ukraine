@@ -5,7 +5,7 @@ import {InputFormOutlined} from "../../components/widgets/Inputs";
 import AppButton from "../../components/styled-components/AppButton";
 import AuthService from "../../services/AuthService";
 import {AppSection} from "../../components/styled-components/Sections";
-import LogoImg from "../assets/logo.png";
+import LogoImg from "../../assets/logo.png";
 
 const LoginLogoHeader = styled.div`
     height: 40vh;
