@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const RegisterSection = styled.div`
+export const AppSection = styled.div`
     margin-bottom: 10px;
     width: 38vh;`;
 export const TextSection = styled.div`
