@@ -16,6 +16,7 @@ import Details from './screens/tabs/Details';
 import RegisterHostFurtherForm from "./screens/register/host/RegisterHostFurtherForm";
 import Host from "./screens/tabs/host/Host";
 import Offers from "./screens/tabs/host/Offers";
+import HostDetails from "./screens/tabs/HostDetails";
 
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
                 <Route path="/host" element={<Host/>}>
                     <Route path="profile" element={<Profile/>}/>
                     <Route path="offers" element={<Offers/>}/>
-                    <Route path="offers/:id" element={<Details/>}/>
+                    <Route path="offers/:id" element={<HostDetails/>}/>
                 </Route>
                 <Route path="/refugee" element={<Refugee/>}>
                     <Route path="family" element={<Family/>}/>
