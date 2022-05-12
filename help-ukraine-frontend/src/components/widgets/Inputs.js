@@ -49,6 +49,12 @@ const FilledInputLabel = styled.div`
     padding-left: 20px;
     padding-bottom: 3px;
 `
+const FilledInputLabelDark = styled.div`
+    color: var(--ukrainski-niebieski);
+    font-size: 14px;
+    padding-left: 20px;
+    padding-bottom: 3px;
+`
 const BottomLabel = styled.div`
     font-size: 12px;
     text-align: right;
@@ -74,7 +80,8 @@ const InputFormOutlined = (props) => {
 const InputFormFilled = (props) => {
     return (
         <div>
-            <FilledInputLabel>{props.inputLabel}</FilledInputLabel>
+            {props.dark ?  <FilledInputLabelDark>{props.inputLabel}</FilledInputLabelDark> :
+                <FilledInputLabel>{props.inputLabel}</FilledInputLabel> }
             <InputFilled value={props.value} onChange={props.onChange} type={props.type}>
             </InputFilled>
             <BottomLabel><Link path={props.bottomLabelUrl}>{props.bottomLabel}</Link></BottomLabel>
@@ -259,7 +266,7 @@ const TextareaContent = styled.textarea`
     width: 90%;
     height: 100px;
     border-radius: 10px;
-    color: --var(ukrainski-niebieski);
+    color: var(--ukrainski-niebieski);
     padding: 5%;
 `;
 
