@@ -11,3 +11,14 @@ export const RegisterBody = styled.div`
     align-items: center;
     padding: 10%;
     padding-bottom: 20%;`;
+
+export const ProfileBody = styled.div`
+    height: 100vh;
+    color: --var(ukrainski-niebieski);
+    font-size:20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    padding: 10%;
+    padding-bottom: 20%;`;

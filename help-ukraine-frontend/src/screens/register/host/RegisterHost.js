@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {RegisterBody} from "../../../components/styled-components/Screens";
 import {RegisterHeader} from "../../../components/styled-components/Headers";
-import {PustePole20px, RegisterSection} from "../../../components/styled-components/Sections";
+import {PustePole20px, AppSection} from "../../../components/styled-components/Sections";
 import {Dropdown, InputFormFilled} from "../../../components/widgets/Inputs";
 import {useNavigate} from "react-router-dom";
 import AppButton from "../../../components/styled-components/AppButton";
@@ -68,55 +68,55 @@ const RegisterHost = () => {
     return (
         <RegisterBody>
             <RegisterHeader>Enter form to continue.</RegisterHeader>
-            <RegisterSection>
+            <AppSection>
                 <InputFormFilled value={name} onChange={(e) => {
                     setName(e.target.value);
                 }} inputLabel="Name:" type="text"/>
-            </RegisterSection>
-            <RegisterSection>
+            </AppSection>
+            <AppSection>
                 <InputFormFilled value={surname} onChange={(e) => {
                     setSurname(e.target.value);
                 }} inputLabel="Surname:" type="text"/>
-            </RegisterSection>
-            <RegisterSection>
+            </AppSection>
+            <AppSection>
                 <InputFormFilled value={birthDate} onChange={(e) => {
                     setBirthDate(e.target.value);
                 }} inputLabel="Date of birth:" type="date"/>
-            </RegisterSection>
-            <RegisterSection>
+            </AppSection>
+            <AppSection>
                 <Dropdown inputLabel="Sex:"
                           onChangeCallback={(value) => setSex(value)}
                           options={[
                               {key: "male", value: "Male"},
                               {key: "female", value: "Female"}
                           ]}/>
-            </RegisterSection>
-            <RegisterSection>
+            </AppSection>
+            <AppSection>
                 <InputFormFilled value={phone} onChange={(e) => {
                     setPhone(e.target.value);
                 }} inputLabel="Phone:" type="tel"/>
-            </RegisterSection>
-            <RegisterSection>
+            </AppSection>
+            <AppSection>
                 <InputFormFilled value={email} onChange={(e) => {
                     setEmail(e.target.value);
                 }} inputLabel="Email:" type="mail"/>
-            </RegisterSection>
-            <RegisterSection>
+            </AppSection>
+            <AppSection>
                 <InputFormFilled value={password} onChange={(e) => {
                     setPassword(e.target.value);
                 }} inputLabel="Password:" type="password"/>
-            </RegisterSection>
-            <RegisterSection>
+            </AppSection>
+            <AppSection>
                 <InputFormFilled value={confirmPassword} onChange={(e) => {
                     setConfirmPassword(e.target.value);
                 }} inputLabel="Confirm password:" type="password"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <PustePole20px>
                 </PustePole20px>
                 <AppButton onClick={handleSubmitButton}>Submit</AppButton>
-            </RegisterSection>
+            </AppSection>
         </RegisterBody>
     );
 }

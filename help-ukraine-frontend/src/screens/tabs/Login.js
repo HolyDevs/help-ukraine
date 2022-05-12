@@ -4,8 +4,8 @@ import {Link, useNavigate} from "react-router-dom";
 import {InputFormOutlined} from "../../components/widgets/Inputs";
 import AppButton from "../../components/styled-components/AppButton";
 import AuthService from "../../services/AuthService";
-import {RegisterSection} from "../../components/styled-components/Sections";
-import LogoImg from "../../assets/logo.png";
+import {AppSection} from "../../components/styled-components/Sections";
+import LogoImg from "../assets/logo.png";
 
 const LoginLogoHeader = styled.div`
     height: 40vh;
@@ -85,14 +85,14 @@ const Login = () => {
                                        bottomLabelUrl={"/error"}
                                        type="password"/>
                 </Section>
-                <RegisterSection>
+                <AppSection>
                 <AppButton onClick={handleClick}>Login</AppButton>
-                </RegisterSection>
-                <RegisterSection>
+                </AppSection>
+                <AppSection>
                 <Link to="/rolePicker">
                 <AppButton>Register</AppButton>
                 </Link>
-                </RegisterSection>
+                </AppSection>
             </LoginBottom>
         </>
     )

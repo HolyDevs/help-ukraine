@@ -1,12 +1,7 @@
-import { RegisterSection } from "../../components/styled-components/Sections";
-import { InputFormFilled, Dropdown } from "../../components/widgets/Inputs";
 import React, {useEffect, useState} from 'react';
-import Select from 'react-select'
 import InputTextRow from "../Common/InputTextRow";
 
 const AddNewMember = ({member}) => {
-
-    const [state, setState] = useState({});
     const [gender, setGender] = useState("");
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");

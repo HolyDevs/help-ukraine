@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Checkbox, Dropdown, InputFormFilled, TextareaContent} from "../../../components/widgets/Inputs";
 import {useNavigate} from "react-router-dom";
 import AppButton from "../../../components/styled-components/AppButton";
-import {PustePole20px, RegisterSection, TextSection} from "../../../components/styled-components/Sections";
+import {PustePole20px, AppSection, TextSection} from "../../../components/styled-components/Sections";
 import {RegisterHeader} from "../../../components/styled-components/Headers";
 import {RegisterBody} from "../../../components/styled-components/Screens";
 import ValidationService from "../../../services/ValidationService";
@@ -61,44 +61,44 @@ const RegisterRefugeeFurtherForm = () => {
             <RegisterHeader>
                 We need some further information.
             </RegisterHeader>
-            <RegisterSection>
+            <AppSection>
                 <InputFormFilled value={birthDate} onChange={(e) => {
                     setBirthDate(e.target.value);
                 }} inputLabel="Date of birth:" type="date"/>
-            </RegisterSection>
-            <RegisterSection>
+            </AppSection>
+            <AppSection>
                 <Dropdown inputLabel="Sex:"
                           onChangeCallback={(value) => setSex(value)}
                           options={[
                               {key: "male", value: "Male"},
                               {key: "female", value: "Female"}
                           ]}/>
-            </RegisterSection>
-            <RegisterSection>
+            </AppSection>
+            <AppSection>
                 <InputFormFilled value={phone} onChange={(e) => {
                     setPhone(e.target.value);
                 }} inputLabel="Phone number:" type="tel"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <Checkbox inputLabel="I have a physical disability and require a wheelchair"/>
-            </RegisterSection>
-            <RegisterSection>
+            </AppSection>
+            <AppSection>
                 <Checkbox inputLabel="I have a pet"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
             <TextSection>
                 Additional information that might be important about you (allergies, diseases, requiring special
                 treatment, etc.)
             </TextSection>
-            <RegisterSection>
+            <AppSection>
                 <TextareaContent/>
-            </RegisterSection>
-            <RegisterSection>
+            </AppSection>
+            <AppSection>
                 <AppButton onClick={handleProceedButton}>
                     Proceed
                 </AppButton>
-            </RegisterSection>
+            </AppSection>
         </RegisterBody>
 
     )

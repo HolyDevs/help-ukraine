@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {RegisterBody} from "../../../components/styled-components/Screens";
 import {RegisterHeader} from "../../../components/styled-components/Headers";
-import {PustePole20px, RegisterSection, TextSection} from "../../../components/styled-components/Sections";
+import {PustePole20px, AppSection, TextSection} from "../../../components/styled-components/Sections";
 import {Checkbox, Dropdown, InputFormFilled, TextareaContent} from "../../../components/widgets/Inputs";
 import {useNavigate} from "react-router-dom";
 import AppButton from "../../../components/styled-components/AppButton";
@@ -89,19 +89,19 @@ const RegisterHostFurtherForm = () => {
             <RegisterHeader>
                 We need some information about your house.
             </RegisterHeader>
-            <RegisterSection>
+            <AppSection>
                 <InputFormFilled value={fromDate} onChange={(e) => {
                     setFromDate(e.target.value);
                 }} inputLabel="Offer active from:" type="date"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <InputFormFilled value={toDate} onChange={(e) => {
                     setToDate(e.target.value);
                 }} inputLabel="Offer active to:" type="date"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <Dropdown inputLabel="Number of residents:"
                           onChangeCallback={(value) => setPeopleToTake(value)}
                           options={[
@@ -116,9 +116,9 @@ const RegisterHostFurtherForm = () => {
                               {key: "9", value: "9"},
                               {key: "10", value: "10"}
                           ]}/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <Dropdown inputLabel="Number of bathrooms:"
                           onChangeCallback={(value) => setBathrooms(value)}
                           options={[
@@ -133,9 +133,9 @@ const RegisterHostFurtherForm = () => {
                               {key: "9", value: "9"},
                               {key: "10", value: "10"}
                           ]}/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <Dropdown inputLabel="Number of kitchens:"
                           onChangeCallback={(value) => setKitchens(value)}
                           options={[
@@ -150,9 +150,9 @@ const RegisterHostFurtherForm = () => {
                               {key: "9", value: "9"},
                               {key: "10", value: "10"}
                           ]}/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <Dropdown inputLabel="Number of bedrooms:"
                           onChangeCallback={(value) => setBedrooms(value)}
                           options={[
@@ -167,61 +167,61 @@ const RegisterHostFurtherForm = () => {
                               {key: "9", value: "9"},
                               {key: "10", value: "10"}
                           ]}/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
             <TextSection>
                 Additional information about equipment for the apartment
             </TextSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <TextareaContent value={description}
                                  onChange={(e) => setDescription(e.target.value)}/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <Checkbox onCheckCallback={(value) => setWheelchairFriendly(value)}
                           inputLabel="Prepared for people with physical disabilities"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <Checkbox onCheckCallback={(value) => setAnimalsAllowed(value)}
                           inputLabel="Accept pets"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <Checkbox onCheckCallback={(value) => setSmokingAllowed(value)}
                           inputLabel="Smoking allowed"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <InputFormFilled value={street} onChange={(e) => {
                     setStreet(e.target.value);
                 }} inputLabel="Street:" type="text"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <InputFormFilled value={houseNumber} onChange={(e) => {
                     setHouseNumber(e.target.value);
                 }} inputLabel="House No." type="text"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <InputFormFilled value={postalCode} onChange={(e) => {
                     setPostalCode(e.target.value);
                 }} inputLabel="Post code:" type="text"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <InputFormFilled value={city} onChange={(e) => {
                     setCity(e.target.value);
                 }} inputLabel="City:" type="text"/>
-            </RegisterSection>
+            </AppSection>
             <PustePole20px/>
-            <RegisterSection>
+            <AppSection>
                 <AppButton onClick={handleProceedButton}>
                     Proceed
                 </AppButton>
-            </RegisterSection>
+            </AppSection>
         </RegisterBody>
 
     )
