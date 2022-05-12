@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Date;
 
 import static help.ukraine.app.controller.UserController.*;
@@ -84,7 +85,7 @@ class UserApiTest {
                 .name("Jan")
                 .surname("Testowy")
                 .accountType(AccountType.REFUGEE)
-                .birthDate(new Date())
+                .birthDate(LocalDate.now())
                 .hashedPassword("$2a$10$.2hoSJVTOkQAbU1BLy09Y.LycOAOjb3513D9ON6Q/gUjuT8GShZa.") // hashed "aaa"
                 .isAccountVerified(true)
                 .phoneNumber("666-666-666")

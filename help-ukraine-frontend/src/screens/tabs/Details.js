@@ -43,8 +43,8 @@ const Details = () => {
             <div className="details__content__tags">
                 {generateTags()}
             </div>
-            <h3>About family</h3>
-            <p>{details.description}</p>
+            {/*<h3>About family</h3>*/}
+            {/*<p>{details.description}</p>*/}
             <h3>About home</h3>
             <p>{details.description}</p>
             <Button>Make contact</Button>

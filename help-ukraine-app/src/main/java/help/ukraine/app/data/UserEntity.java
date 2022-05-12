@@ -5,6 +5,7 @@ import help.ukraine.app.enumerator.Sex;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -33,7 +34,7 @@ public class UserEntity {
 
     private String name;
     private String surname;
-    private Date birthDate;
+    private LocalDate birthDate;
     private String phoneNumber;
     private String hashedPassword;
     private Boolean isAccountVerified;

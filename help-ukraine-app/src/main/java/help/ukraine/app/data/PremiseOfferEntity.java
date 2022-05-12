@@ -34,13 +34,17 @@ public class PremiseOfferEntity {
     @Fetch(FetchMode.SUBSELECT)
     private List<OfferImageEntity> offerImages;
 
-    private String premiseAddress;
+    private String city;
+    private String street;
+    private String houseNumber;
+    private String postalCode;
     private int peopleToTake;
     private int bathrooms;
     private int kitchens;
     private int bedrooms;
     private boolean animalsAllowed;
     private boolean wheelchairFriendly;
+    private boolean smokingAllowed;
     private LocalDate fromDate;
     private LocalDate toDate;
     private boolean active;
