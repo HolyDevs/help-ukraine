@@ -7,7 +7,7 @@ import {useNavigate} from "react-router-dom";
 import AppButton from "../../../components/styled-components/AppButton";
 import ValidationService from "../../../services/ValidationService";
 
-const RegisterVolunteer = () => {
+const RegisterHost = () => {
 
     let navigate = useNavigate();
     const [email, setEmail] = useState("");
@@ -62,7 +62,7 @@ const RegisterVolunteer = () => {
         }
         const userToBeRegistered = createNewUser();
         sessionStorage.setItem('userToBeRegistered', JSON.stringify(userToBeRegistered));
-        navigate("/registerVolunteer/volunteer-further-info");
+        navigate("/registerHost/host-further-info");
     }
 
     return (
@@ -120,4 +120,4 @@ const RegisterVolunteer = () => {
         </RegisterBody>
     );
 }
-export default RegisterVolunteer;
+export default RegisterHost;

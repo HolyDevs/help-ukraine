@@ -1,18 +1,18 @@
 import React from "react";
 import { Outlet } from "react-router";
-import Tabbar from "../../components/Tabbar";
-import "../../styles/Main.scss";
+import RefugeeTabbar from "../../../components/RefugeeTabbar";
+import "../../../styles/Main.scss";
 
-const Main = () => {
+const Refugee = () => {
 
     return (
         <div className="main">
             <div className="main__content">
                 <Outlet/>
             </div>
-            <Tabbar/>
+            <RefugeeTabbar/>
         </div>
     )
 }
 
-export default Main;
+export default Refugee;

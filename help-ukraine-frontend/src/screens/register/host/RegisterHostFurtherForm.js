@@ -9,7 +9,7 @@ import AuthService from "../../../services/AuthService";
 import PremiseOfferService from "../../../services/PremiseOfferService";
 import ValidationService from "../../../services/ValidationService";
 
-const RegisterVolunteerFurtherForm = () => {
+const RegisterHostFurtherForm = () => {
 
     let navigate = useNavigate();
     const [peopleToTake, setPeopleToTake] = useState(1);
@@ -78,7 +78,7 @@ const RegisterVolunteerFurtherForm = () => {
         }
         registerUserAndCreateNewPremiseOffer().then(() => {
             sessionStorage.removeItem('userToBeRegistered');
-            navigate("/volunteer");
+            navigate("/host/offers");
         }).catch((error) => {
             window.alert("Registration failed: " + error.response?.data);
         });
@@ -227,4 +227,4 @@ const RegisterVolunteerFurtherForm = () => {
     )
 }
 
-export default RegisterVolunteerFurtherForm;
+export default RegisterHostFurtherForm;
