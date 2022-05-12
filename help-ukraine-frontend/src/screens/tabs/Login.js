@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import styled from 'styled-components';
 import {Link, useNavigate} from "react-router-dom";
-import {InputFormOutlined} from "../components/widgets/Inputs";
-import AppButton from "../components/styled-components/AppButton";
-import AuthService from "../services/AuthService";
-import {RegisterSection} from "../components/styled-components/Sections";
-import LogoImg from "../assets/logo.png";
+import {InputFormOutlined} from "../../components/widgets/Inputs";
+import AppButton from "../../components/styled-components/AppButton";
+import AuthService from "../../services/AuthService";
+import {RegisterSection} from "../../components/styled-components/Sections";
+import LogoImg from "../../assets/logo.png";
 
 const LoginLogoHeader = styled.div`
     height: 40vh;
@@ -55,10 +55,10 @@ const Login = () => {
             (res) => {
                 switch (res.accountType) {
                     case 'REFUGEE':
-                        navigate("/main/search");
+                        navigate("/refugee/search");
                         break;
                     case 'HOST':
-                        navigate("/volunteer");
+                        navigate("/host/offers");
                         break;
                 }
             },

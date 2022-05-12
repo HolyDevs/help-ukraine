@@ -1,4 +1,4 @@
-const SearchListItemImage = ({ src }) => {
+const OfferListItemImage = ({ src }) => {
     return (
         <div className="searchListItem__image">
             <img src={src}></img>
@@ -6,4 +6,4 @@ const SearchListItemImage = ({ src }) => {
     );
 }
 
-export default SearchListItemImage;
+export default OfferListItemImage;

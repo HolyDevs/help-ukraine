@@ -21,6 +21,11 @@ class PremiseOfferService {
         const options = this.getAuthHeader();
         return axios.get(API_URL + "premise-offers", options).then(res => res.data);
     }
+
+    fetchPremiseOffersByHostId(hostId) {
+        const options = this.getAuthHeader();
+        return axios.get(API_URL + "premise-offers?hostId=" + hostId, options).then(res => res.data);
+    }
 }
 
 export default new PremiseOfferService();

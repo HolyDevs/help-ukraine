@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Card from '../components/styled-components/Card'
+import Card from '../../components/styled-components/Card'
 import {Link} from "react-router-dom";
 
 const RolePickerBody = styled.div`
@@ -39,7 +39,7 @@ const RolePicker = () => {
             </Link>
             <RolePickerButtonDistancer>
             </RolePickerButtonDistancer>
-            <Link to="/registerVolunteer">
+            <Link to="/registerHost">
                 <RolePickerButton className="card-1">
                     I can help
                 </RolePickerButton>

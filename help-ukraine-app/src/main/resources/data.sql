@@ -2,21 +2,22 @@ INSERT INTO users(id, name, surname, account_type, birth_date, email, hashed_pas
                   phone_number, sex)
 VALUES
 (123, 'Jan', 'Lokalny', 'REFUGEE', '1988-01-08', 'jan.lokalny@gmail.com','$2a$10$.2hoSJVTOkQAbU1BLy09Y.LycOAOjb3513D9ON6Q/gUjuT8GShZa.', true, '666-666-666', 'MALE'),
-(124, 'Anna', 'NaWindowsie', 'REFUGEE', '1988-01-08', 'anna.nawindowsie@gmail.com','$2a$10$.2hoSJVTOkQAbU1BLy09Y.LycOAOjb3513D9ON6Q/gUjuT8GShZa.', true, '666-666-666', 'FEMALE');
+(124, 'Anna', 'NaWindowsie', 'HOST', '1988-01-08', 'anna.nawindowsie@gmail.com','$2a$10$.2hoSJVTOkQAbU1BLy09Y.LycOAOjb3513D9ON6Q/gUjuT8GShZa.', true, '666-666-666', 'FEMALE'),
+(125, 'Jan', 'Pomocny', 'HOST', '1988-01-08', 'jan.pomocny@gmail.com','$2a$10$.2hoSJVTOkQAbU1BLy09Y.LycOAOjb3513D9ON6Q/gUjuT8GShZa.', true, '666-666-666', 'MALE');
 
 INSERT INTO hosts(user_id)
-VALUES(123), (124);
+VALUES(125), (124);
 
 INSERT INTO refugees(user_id) VALUES(123);
 
 INSERT INTO premise_offers(id, host_user_id, city, street, house_number, postal_code, people_to_take, bathrooms, kitchens, bedrooms, animals_allowed,
                            wheelchair_friendly, smoking_allowed, from_date, to_date, active, verified, description)
 VALUES
-(221, 123, 'Warsaw', 'Akacjowa', '1', '90-000', 1, 1, 1, 1, true, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
+(221, 125, 'Warsaw', 'Akacjowa', '1', '90-000', 1, 1, 1, 1, true, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
 (222, 124, 'Lodz', 'Akacjowa', '1', '90-000', 4, 1, 1, 1, false, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
 (223, 124, 'Warsaw', 'Akacjowa', '1', '90-000', 3, 1, 1, 1, false, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
 (224, 124, 'Wroclaw', 'Akacjowa', '1', '90-000', 3, 1, 1, 1, false, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
-(225, 123, 'Cracow', 'Akacjowa', '1', '90-000', 2, 1, 1, 1, false, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności');
+(225, 125, 'Cracow', 'Akacjowa', '1', '90-000', 2, 1, 1, 1, false, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności');
 
 
 INSERT INTO offer_images(id, image_location, premise_offer_id)

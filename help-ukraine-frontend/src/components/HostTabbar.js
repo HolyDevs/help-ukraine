@@ -1,13 +1,12 @@
 import "../styles/Main.scss";
-import familyIcon from "../assets/family-icon.png";
-import searchIcon from "../assets/search-icon.png";
+import offersIcon from "../assets/tag-date-icon.png";
 import profileIcon from "../assets/profile-icon.png";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-const Tabbar = () => {
+const HostTabbar = () => {
 
-    const [activeTabIndex, setActiveTabIndex] = useState(1);
+    const [activeTabIndex, setActiveTabIndex] = useState(0);
     const navigate = useNavigate();
 
     const getTabbarItemClass = (index) => {
@@ -21,14 +20,14 @@ const Tabbar = () => {
 
     const pushSubroute = (index) => {
         switch (index) {
+            // case 0:
+            //     navigate("/main/refugee/family");
+            //     break;
             case 0:
-                navigate("/main/family");
+                navigate("/host/offers");
                 break;
             case 1:
-                navigate("/main/search");
-                break;
-            case 2:
-                navigate("/main/profile");
+                navigate("/host/profile");
                 break;
         }
     }
@@ -37,15 +36,10 @@ const Tabbar = () => {
         <div className="tabbar">
             <div className={getTabbarItemClass(0)} onClick={() => onTabClicked(0)}>
                 <div className="tabbar__item__icon">
-                    <img src={familyIcon}></img>
+                    <img src={offersIcon}></img>
                 </div>
             </div>
             <div className={getTabbarItemClass(1)} onClick={() => onTabClicked(1)}>
-                <div className="tabbar__item__icon">
-                    <img src={searchIcon}></img>
-                </div>
-            </div>
-            <div className={getTabbarItemClass(2)} onClick={() => onTabClicked(2)}>
                 <div className="tabbar__item__icon">
                     <img src={profileIcon}></img>
                 </div>
@@ -54,4 +48,4 @@ const Tabbar = () => {
     )
 }
 
-export default Tabbar;
+export default HostTabbar;
