@@ -1,4 +1,4 @@
-import OfferList from "../../../components/Host/OfferList/OfferList";
+import OfferList from "../../../components/Host/OfferList";
 import React, {useEffect, useState} from "react";
 import PremiseOfferService from "../../../services/PremiseOfferService";
 import {Dropdown} from "../../../components/widgets/Inputs";
@@ -51,7 +51,7 @@ const Offers = () => {
                         ]}/>
                 </FilterWrapper>
             </h1>
-            {results && <OfferList detailsUrl={"/host/offers"} results={results}/>}
+            {results && <OfferList results={results}/>}
         </div>
     );
 }

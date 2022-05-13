@@ -1,5 +1,5 @@
 import OfferListItem from "./OfferListItem";
-import addIcon from "../../../assets/add-icon.png";
+import addIcon from "../../assets/add-icon.png";
 import styled from "styled-components";
 
 const AddIcon = styled.div`
@@ -12,10 +12,10 @@ const IMG = styled.img`
    height: 60px;
    `;
 
-const OfferList = ({ results, detailsUrl }) => {
+const OfferList = ({ results }) => {
 
     const generateResults = () => {
-        return results.map((result, index) => <OfferListItem key={index} result={result} detailsUrl={detailsUrl} />);
+        return results.map((result, index) => <OfferListItem key={index} result={result} />);
     }
 
     return (

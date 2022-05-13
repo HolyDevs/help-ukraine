@@ -32,6 +32,17 @@ class AuthService {
         return axios.post(API_URL + 'user', userData, options).then(res => res.data);
     }
 
+    doModify(username, userData, token) {
+        const options = {
+            headers: {
+                'Content-Type': 'application/json;charset=UTF-8',
+                'Accept': 'application/json;charset=UTF-8',
+                'Authorization': 'Bearer ' + token
+            },
+        };
+        return axios.put(API_URL + 'user?email=' + username, userData, options).then(res => res.data);
+    }
+
     fetchCurrentUser(username, token) {
         const options = {
             method: 'GET',
@@ -59,6 +70,13 @@ class AuthService {
     async register(userData) {
         await this.doRegister(userData);
         return await this.login(userData.email, userData.password);
+    }
+
+    async modifyCurrentUser(username, userData) {
+        const token = this.getAccessToken();
+        const userResponse = await this.doModify(username, userData, token);
+        sessionStorage.setItem("user", JSON.stringify(userResponse));
+        return userResponse;
     }
 
     logout() {

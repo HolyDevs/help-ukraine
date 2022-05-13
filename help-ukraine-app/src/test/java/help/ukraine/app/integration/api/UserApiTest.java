@@ -305,20 +305,20 @@ class UserApiTest {
                 .andExpect(status().isForbidden());
     }
 
-    @Transactional
-    @Test
-    void modifyUserNameParamAndBodyEmailsNotMatchBadRequestTest() throws Exception {
-        String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_NOT_EXISTING_EMAIL_PATH), StandardCharsets.UTF_8);
-
-        // PUT - BAD REQUEST
-        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-                        .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(userUploadPayload))
-                .andExpect(status().isBadRequest());
-    }
+//    @Transactional
+//    @Test
+//    void modifyUserNameParamAndBodyEmailsNotMatchBadRequestTest() throws Exception {
+//        String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_NOT_EXISTING_EMAIL_PATH), StandardCharsets.UTF_8);
+//
+//        // PUT - BAD REQUEST
+//        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+//                        .servletPath(USER_ENDPOINT)
+//                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .accept(MediaType.APPLICATION_JSON)
+//                        .content(userUploadPayload))
+//                .andExpect(status().isBadRequest());
+//    }
 
 
     @Transactional
