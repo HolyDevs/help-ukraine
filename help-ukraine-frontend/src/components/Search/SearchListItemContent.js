@@ -1,7 +1,7 @@
-import personIcon from '../../../assets/person-icon.png';
-import placeIcon from '../../../assets/place-icon.png';
+import personIcon from '../../assets/person-icon.png';
+import placeIcon from '../../assets/place-icon.png';
 
-const OfferListItemContent = ({ result }) => {
+const SearchListItemContent = ({ result }) => {
     return (
         <div className="searchListItemContent">
             <div className="searchListItemContent__date">{result.fromDate}</div>
@@ -18,4 +18,4 @@ const OfferListItemContent = ({ result }) => {
     );
 };
 
-export default OfferListItemContent;
+export default SearchListItemContent;

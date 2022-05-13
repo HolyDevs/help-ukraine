@@ -23,11 +23,11 @@ const SearchItemRightContent = styled.div`
     justify-content: center;
     align-items: center;`;
 
-const OfferListItem = ({ result, detailsUrl }) => {
+const OfferListItem = ({ result }) => {
 
     const navigate = useNavigate();
     const onSearchItemClicked = () => {
-        navigate(detailsUrl + "/" + result.id, { state: { details: result } });
+        navigate("/host/offers/" + result.id, { state: { details: result } });
     }
 
     return (

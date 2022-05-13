@@ -9,7 +9,7 @@ import numOfKitchensIcon from "../../assets/tag-num-of-kitchens-icon.png";
 import animalsAllowedIcon from "../../assets/tag-animals-allowed-icon.png";
 import wheelchairFriendlyIcon from "../../assets/tag-wheelchair-friendly-icon.png";
 import smokingAllowedIcon from "../../assets/tag-smoking-allowed-icon.png";
-import Tag from "../../components/Common/OfferList/Tag";
+import Tag from "../../components/Search/Tag";
 import Button from "../../components/Common/Button";
 
 const Details = () => {

@@ -1,7 +1,7 @@
-import personIcon from '../../../assets/person-icon.png';
-import placeIcon from '../../../assets/place-icon.png';
-import lock_open from '../../../assets/lock_open.png'
-import lock_closed from '../../../assets/lock_closed.png'
+import personIcon from '../../assets/person-icon.png';
+import placeIcon from '../../assets/place-icon.png';
+import lock_open from '../../assets/lock_open.png'
+import lock_closed from '../../assets/lock_closed.png'
 import styled from "styled-components";
 
 const Image = styled.img`
