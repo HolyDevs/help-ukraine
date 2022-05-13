@@ -167,7 +167,8 @@ const Dropdown = (props) => {
 
     return (
         <DropDownWrapper>
-        <FilledInputLabel>{props.inputLabel}</FilledInputLabel>
+            {props.dark ?  <FilledInputLabelDark>{props.inputLabel}</FilledInputLabelDark> :
+                <FilledInputLabel>{props.inputLabel}</FilledInputLabel> }
         <DropDownContainer>
             <DropDownHeaderRow onClick={toggling}>
                 <DropDownHeaderLabel>

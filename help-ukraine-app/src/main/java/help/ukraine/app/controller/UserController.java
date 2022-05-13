@@ -1,7 +1,7 @@
 package help.ukraine.app.controller;
 
 import help.ukraine.app.exception.UserNotExistsException;
-import help.ukraine.app.exception.UserAlreadyRegisteredException;
+import help.ukraine.app.exception.UserEmailNotUniqueException;
 import help.ukraine.app.exception.UserNoAccessException;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.security.constants.AuthUrls;
@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
@@ -41,15 +40,15 @@ public class UserController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserModel> modifyUser(@RequestParam(EMAIL_PARAM_NAME) String email, @Valid @RequestBody UserModel userModel) throws UserNoAccessException, UserNotExistsException {
+    public ResponseEntity<UserModel> modifyUser(@RequestParam(EMAIL_PARAM_NAME) String email, @Valid @RequestBody UserModel userModel) throws UserNoAccessException, UserNotExistsException, UserEmailNotUniqueException {
         log.debug("modify user endpoint hit");
-        badRequestIfParamAndBodyEmailsNotMatch(email, userModel);
-        UserModel modifiedUserModel = userService.updateUser(userModel);
+//        badRequestIfParamAndBodyEmailsNotMatch(email, userModel);
+        UserModel modifiedUserModel = userService.updateUser(email, userModel);
         return ResponseEntity.ok().body(modifiedUserModel);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserModel> registerUser(@Valid @RequestBody UserModel userModel) throws UserAlreadyRegisteredException {
+    public ResponseEntity<UserModel> registerUser(@Valid @RequestBody UserModel userModel) throws UserEmailNotUniqueException {
         log.debug("register user endpoint hit");
         UserModel registeredUserModel = userService.createUser(userModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredUserModel);
@@ -70,9 +69,9 @@ public class UserController {
         return exception.getMessage();
     }
 
-    @ExceptionHandler(UserAlreadyRegisteredException.class)
+    @ExceptionHandler(UserEmailNotUniqueException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleUserAlreadyRegisteredException(UserAlreadyRegisteredException exception) {
+    public String handleUserAlreadyRegisteredException(UserEmailNotUniqueException exception) {
         return exception.getMessage();
     }
 
@@ -82,13 +81,13 @@ public class UserController {
         return exception.getMessage();
     }
 
-    private void badRequestIfParamAndBodyEmailsNotMatch(String emailParam, UserModel userModel) {
-        if (emailParam.equals(userModel.getEmail())) {
-            return;
-        }
-        String msg = String.format(PARAM_AND_BODY_EMAILS_NOT_MATCH, emailParam, userModel.getEmail());
-        log.error(msg);
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msg);
-    }
+//    private void badRequestIfParamAndBodyEmailsNotMatch(String emailParam, UserModel userModel) {
+//        if (emailParam.equals(userModel.getEmail())) {
+//            return;
+//        }
+//        String msg = String.format(PARAM_AND_BODY_EMAILS_NOT_MATCH, emailParam, userModel.getEmail());
+//        log.error(msg);
+//        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msg);
+//    }
 
 }

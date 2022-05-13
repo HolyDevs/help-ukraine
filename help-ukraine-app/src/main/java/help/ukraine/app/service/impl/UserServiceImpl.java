@@ -4,14 +4,14 @@ import help.ukraine.app.data.HostEntity;
 import help.ukraine.app.data.RefugeeEntity;
 import help.ukraine.app.data.UserEntity;
 import help.ukraine.app.enumerator.AccountType;
-import help.ukraine.app.exception.UserNotExistsException;
-import help.ukraine.app.exception.UserAlreadyRegisteredException;
+import help.ukraine.app.exception.UserEmailNotUniqueException;
 import help.ukraine.app.exception.UserNoAccessException;
+import help.ukraine.app.exception.UserNotExistsException;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.repository.HostRepository;
 import help.ukraine.app.repository.RefugeeRepository;
 import help.ukraine.app.repository.UserRepository;
-import help.ukraine.app.security.AuthChecker;
+import help.ukraine.app.security.AuthService;
 import help.ukraine.app.security.constants.AuthMessages;
 import help.ukraine.app.security.constants.AuthRoles;
 import help.ukraine.app.service.UserService;
@@ -39,14 +39,14 @@ public class UserServiceImpl implements UserService {
     private static final String DELETED_USER_MSG = "User with email %s deleted";
     private static final String MODIFIED_USER_MSG = "User with email %s modified";
     private static final String CREATED_USER_MSG = "User with email %s created";
-    private static final String USER_ALREADY_REGISTERED_MSG = "User with email %s is already registered";
+    private static final String USER_EMAIL_NOT_UNIQUE_MSG = "User with email %s is already registered";
 
     private final MapperFacade userMapperFacade;
     private final UserRepository userRepository;
     private final HostRepository hostRepository;
     private final RefugeeRepository refugeeRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthChecker authChecker;
+    private final AuthService authService;
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -72,8 +72,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserModel createUser(UserModel userModel) throws UserAlreadyRegisteredException {
-        throwIfUserAlreadyRegistered(userModel.getEmail());
+    public UserModel createUser(UserModel userModel) throws UserEmailNotUniqueException {
+        throwIfUserEmailNotUnique(userModel.getEmail());
         encodePassword(userModel);
         UserEntity userEntity = userMapperFacade.map(userModel, UserEntity.class);
         userEntity = userRepository.save(userEntity);
@@ -87,11 +87,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    public UserModel updateUser(UserModel userModel) throws UserNoAccessException, UserNotExistsException {
-        String email = userModel.getEmail();
+    public UserModel updateUser(String email, UserModel userModel) throws UserNoAccessException, UserNotExistsException, UserEmailNotUniqueException {
         throwIfAuthNotBelongsToUser(email);
-        UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_MSG, email)));
+        throwIfNewUserEmailNotUnique(email, userModel);
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_MSG, email)));
         if (shouldPasswordBeModified(userModel, userEntity)) {
             encodePassword(userModel);
         } else {
@@ -138,13 +137,20 @@ public class UserServiceImpl implements UserService {
         userModel.setPassword(passwordEncoder.encode(password));
     }
 
-    private void throwIfUserAlreadyRegistered(String email) throws UserAlreadyRegisteredException {
+    private void throwIfUserEmailNotUnique(String email) throws UserEmailNotUniqueException {
         if (!userRepository.existsByEmail(email)) {
             return;
         }
-        String msg = String.format(USER_ALREADY_REGISTERED_MSG, email);
+        String msg = String.format(USER_EMAIL_NOT_UNIQUE_MSG, email);
         log.error(msg);
-        throw new UserAlreadyRegisteredException(msg);
+        throw new UserEmailNotUniqueException(msg);
+    }
+
+    private void throwIfNewUserEmailNotUnique(String email, UserModel userModel) throws UserEmailNotUniqueException {
+        if (email.equals(userModel.getEmail())) {
+            return;
+        }
+        throwIfUserEmailNotUnique(userModel.getEmail());
     }
 
     private String getOAuthRole(AccountType accountType) {
@@ -155,11 +161,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean shouldPasswordBeModified(UserModel userModel, UserEntity userEntity) {
-        return !passwordEncoder.matches(userModel.getPassword(), userEntity.getHashedPassword());
+        return !userModel.getPassword().equals(userEntity.getHashedPassword()) &&
+                !passwordEncoder.matches(userModel.getPassword(), userEntity.getHashedPassword());
     }
 
     private void throwIfAuthNotBelongsToUser(String email) throws UserNoAccessException {
-        if (authChecker.checkIfAuthBelongsToUser(email)) {
+        if (authService.checkIfAuthBelongsToUser(email)) {
             return;
         }
         log.error(AuthMessages.USER_NO_ACCESS_MSG);

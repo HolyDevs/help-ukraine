@@ -5,7 +5,7 @@ import help.ukraine.app.data.UserEntity;
 import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.enumerator.Sex;
 import help.ukraine.app.exception.UserNotExistsException;
-import help.ukraine.app.exception.UserAlreadyRegisteredException;
+import help.ukraine.app.exception.UserEmailNotUniqueException;
 import help.ukraine.app.exception.UserNoAccessException;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.repository.HostRepository;
@@ -25,7 +25,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -143,7 +142,7 @@ class UserServiceTest {
 
         // USER REGISTRATION ASSERTION
         UserModel userModelToRegister = buildUserModelToRegister();
-        assertThrows(UserAlreadyRegisteredException.class, () -> userService.createUser(userModelToRegister));
+        assertThrows(UserEmailNotUniqueException.class, () -> userService.createUser(userModelToRegister));
     }
 
     @Transactional
@@ -184,7 +183,7 @@ class UserServiceTest {
 
         // USER MODIFICATION ASSERTIONS
         UserModel userModelToModify = buildExistingUserModelWithModifiedName();
-        UserModel modifiedUserModel = userService.updateUser(userModelToModify);
+        UserModel modifiedUserModel = userService.updateUser(EXISTING_EMAIL, userModelToModify);
         assertEquals(MODIFIED_NAME, modifiedUserModel.getName());
         assertEquals(EXISTING_EMAIL, modifiedUserModel.getEmail());
     }
@@ -199,7 +198,7 @@ class UserServiceTest {
 
         // USER MODIFICATION ASSERTIONS
         UserModel userModelToModify = buildExistingUserModelWithModifiedName();
-        assertThrows(UserNoAccessException.class, () -> userService.updateUser(userModelToModify));
+        assertThrows(UserNoAccessException.class, () -> userService.updateUser(EXISTING_EMAIL, userModelToModify));
     }
 
     @Transactional
@@ -207,7 +206,7 @@ class UserServiceTest {
     @Test
     void modifyUserNameDataNotExistsExceptionTest() {
         UserModel userModelToModify = buildUserModelToRegister();
-        assertThrows(UserNotExistsException.class, () -> userService.updateUser(userModelToModify));
+        assertThrows(UserNotExistsException.class, () -> userService.updateUser(REGISTERED_EMAIL, userModelToModify));
     }
 
     @Transactional
@@ -220,7 +219,7 @@ class UserServiceTest {
 
         // USER MODIFICATION ASSERTIONS
         UserModel userModelToModify = buildExistingUserModelWithModifiedName();
-        assertThrows(AccessDeniedException.class, () -> userService.updateUser(userModelToModify));
+        assertThrows(AccessDeniedException.class, () -> userService.updateUser(EXISTING_EMAIL, userModelToModify));
     }
 
     @Transactional
@@ -233,7 +232,7 @@ class UserServiceTest {
 
         // USER MODIFICATION ASSERTIONS
         UserModel userModelToModify = buildExistingUserModelWithModifiedPassword();
-        UserModel modifiedUserModel = userService.updateUser(userModelToModify);
+        UserModel modifiedUserModel = userService.updateUser(EXISTING_EMAIL, userModelToModify);
         assertEquals(HASHED_MODIFIED_PASSWORD, modifiedUserModel.getPassword());
         assertEquals(EXISTING_EMAIL, modifiedUserModel.getEmail());
     }

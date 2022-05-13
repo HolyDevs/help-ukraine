@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -41,5 +42,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         GeneratedToken generatedToken = tokenGenerator.generateToken(user, issuer);
         log.info("Successful authentication for user: {}", user.getUsername());
         tokenGenerator.fillResponseWithGeneratedToken(generatedToken, response);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        super.unsuccessfulAuthentication(request, response, failed);
+        String username = request.getParameter(AuthTokenContents.USERNAME_PARAMETER);
+        log.info("Authentication failed for user {} because of: {}", username, failed.getMessage());
     }
 }
