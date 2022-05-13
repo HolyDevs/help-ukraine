@@ -75,13 +75,13 @@ const HostOfferDetails = () => {
     }
 
     const validateInputs = () => {
-        if (!ValidationService.areFromToDatesValid(fromDate, toDate)) {
-            window.alert("Chosen date is invalid");
-            return false;
-        }
         const stringForms = [street, city, houseNumber, postalCode, description];
         if (!ValidationService.areStringsValid(stringForms)) {
             window.alert("Text input cannot be empty");
+            return false;
+        }
+        if (!ValidationService.areFromToDatesValid(fromDate, toDate)) {
+            window.alert("Chosen date is invalid");
             return false;
         }
         return true;
