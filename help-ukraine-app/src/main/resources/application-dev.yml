@@ -26,3 +26,14 @@ spring:
         enabled: true
         database-name: ${db-name}
         instance-connection-name: ${db-connection}
+  mail:
+    host: smpt.gmail.com
+    port: 587
+    username: ${mail-username}
+    password: ${mail-password}
+    properties:
+      smpt:
+        auth: true
+        starttls:
+          enable: true
+
