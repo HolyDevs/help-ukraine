@@ -148,14 +148,14 @@ const DropDownWrapper = styled("div")`
  `;
 const Dropdown = (props) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState(props.options[0]);
+    const [selectedOption, setSelectedOption] = useState(props.options[props.initalValue ? props.initalValue : 1]);
 
     const toggling = () => setIsOpen(!isOpen);
 
     const onOptionClicked = (e, option) => {
         setSelectedOption(option);
         setIsOpen(false);
-        valueChangedCallback(option.value);
+        valueChangedCallback(option);
     };
 
     const valueChangedCallback = (value) => {
@@ -234,7 +234,7 @@ const CheckboxLabel = styled.div`
 `
 
 const Checkbox = (props) => {
-    const [isChecked, setIsChecked] = useState(false);
+    const [isChecked, setIsChecked] = useState(props.initialState);
     const toggling = () => {
         setIsChecked(!isChecked);
         valueChangedCallback(!isChecked);

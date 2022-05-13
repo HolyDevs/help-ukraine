@@ -85,7 +85,7 @@ const RegisterHost = () => {
             </AppSection>
             <AppSection>
                 <Dropdown inputLabel="Sex:"
-                          onChangeCallback={(value) => setSex(value)}
+                          onChangeCallback={(value) => setSex(value.value)}
                           options={[
                               {key: "male", value: "Male"},
                               {key: "female", value: "Female"}
