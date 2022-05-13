@@ -17,6 +17,11 @@ class PremiseOfferService {
         return axios.post(API_URL + "premise-offers", premiseOfferData, options).then(res => res.data);
     }
 
+    modifyPremiseOffer(premiseOfferData) {
+        const options = this.getAuthHeader();
+        return axios.put(API_URL + "premise-offers/" + premiseOfferData.id, premiseOfferData, options).then(res => res.data);
+    }
+
     fetchPremiseOffers() {
         const options = this.getAuthHeader();
         return axios.get(API_URL + "premise-offers", options).then(res => res.data);

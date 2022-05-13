@@ -12,11 +12,11 @@ import RegisterRefugeeBasicInfoForm from "./screens/register/refugee/RegisterRef
 import RegisterHost from "./screens/register/host/RegisterHost";
 import RegisterRefugeeAccountForm from "./screens/register/refugee/RegisterRefugeeAccountForm";
 import RegisterRefugeeFurtherForm from "./screens/register/refugee/RegisterRefugeeFurtherForm";
-import Details from './screens/tabs/Details';
+import SearchOfferDetails from './screens/tabs/SearchOfferDetails';
 import RegisterHostFurtherForm from "./screens/register/host/RegisterHostFurtherForm";
 import Host from "./screens/tabs/host/Host";
 import Offers from "./screens/tabs/host/Offers";
-import HostDetails from "./screens/tabs/HostDetails";
+import HostOfferDetails from "./screens/tabs/HostOfferDetails";
 
 
 function App() {
@@ -29,13 +29,13 @@ function App() {
                 <Route path="/host" element={<Host/>}>
                     <Route path="profile" element={<Profile/>}/>
                     <Route path="offers" element={<Offers/>}/>
-                    <Route path="offers/:id" element={<HostDetails/>}/>
+                    <Route path="offers/:id" element={<HostOfferDetails/>}/>
                 </Route>
                 <Route path="/refugee" element={<Refugee/>}>
                     <Route path="family" element={<Family/>}/>
                     <Route path="profile" element={<Profile/>}/>
                     <Route path="search" element={<Search/>}/>
-                    <Route path="search/:id" element={<Details/>}/>
+                    <Route path="search/:id" element={<SearchOfferDetails/>}/>
                 </Route>
                 <Route path="/error" element={<Error/>}/>
                 <Route path="/registerRefugee/account-creation" element={<RegisterRefugeeAccountForm/>}/>

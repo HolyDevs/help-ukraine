@@ -23,11 +23,11 @@ const ImageWrapper = styled.div`
 
 
 
-const SearchListItemContentDate = styled.div`
+const OfferListItemContentDate = styled.div`
     color: var(--ukrainski-szary);
 `;
 
-const SearchListItemContentName = styled.div`
+const OfferListItemContentName = styled.div`
    flex: 1;
    font-size: 18px;
    font-weight: bolder;
@@ -54,7 +54,7 @@ const OfferListItemContent = ({ result }) => {
     console.log(result);
     return (
         <>
-            <SearchListItemContentName>{result.city + " - " + result.peopleToTake + " accommodation(s)"}</SearchListItemContentName>
+            <OfferListItemContentName>{result.city + " - " + result.peopleToTake + " accommodation(s)"}</OfferListItemContentName>
             <Panel>
                 <ImageWrapper>
                     <ImageWrapperRow>
@@ -72,8 +72,8 @@ const OfferListItemContent = ({ result }) => {
                 </ImageWrapper>
             </Panel>
             <Column>
-                <SearchListItemContentDate><b>Opens: </b>{result.fromDate}</SearchListItemContentDate>
-                <SearchListItemContentDate><b>Closes: </b>{result.toDate}</SearchListItemContentDate>
+                <OfferListItemContentDate><b>Opens: </b>{result.fromDate}</OfferListItemContentDate>
+                <OfferListItemContentDate><b>Closes: </b>{result.toDate}</OfferListItemContentDate>
             </Column>
         </>
     );
