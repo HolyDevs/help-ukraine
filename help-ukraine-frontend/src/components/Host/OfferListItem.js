@@ -3,13 +3,13 @@ import OfferListItemContent from "./OfferListItemContent";
 import OfferListItemImage from "./OfferListItemImage";
 import styled from "styled-components";
 
-const SearchItem = styled.li`
+const OfferItem = styled.li`
     display: flex;
     box-shadow: 0px 0px 4px 0px rgba(66, 68, 90, 0.25);
     border-radius: 10px;
     margin-top: 13px;
     padding: 5px;`;
-const SearchItemLeftContent = styled.div`
+const OfferItemLeftContent = styled.div`
     font-size: 14px;
     flex: 4 1 auto;
     display: flex;
@@ -17,7 +17,7 @@ const SearchItemLeftContent = styled.div`
     justify-content: start;
     align-items: start;`;
 
-const SearchItemRightContent = styled.div`
+const OfferItemRightContent = styled.div`
     flex: 1 1 auto;
     display: flex;
     justify-content: center;
@@ -31,14 +31,14 @@ const OfferListItem = ({ result }) => {
     }
 
     return (
-        <SearchItem onClick={() => onSearchItemClicked()}>
-            <SearchItemLeftContent>
+        <OfferItem onClick={() => onSearchItemClicked()}>
+            <OfferItemLeftContent>
                 <OfferListItemContent result={result} />
-            </SearchItemLeftContent>
-            <SearchItemRightContent>
+            </OfferItemLeftContent>
+            <OfferItemRightContent>
                 <OfferListItemImage src={result.offerImagesLocations[0]} />
-            </SearchItemRightContent>
-        </SearchItem>
+            </OfferItemRightContent>
+        </OfferItem>
     );
 }
 

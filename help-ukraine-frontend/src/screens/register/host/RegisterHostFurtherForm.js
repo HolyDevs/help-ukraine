@@ -30,11 +30,11 @@ const RegisterHostFurtherForm = () => {
     const registerUserAndCreateNewPremiseOffer = async () => {
         const userToBeRegistered = JSON.parse(sessionStorage.getItem('userToBeRegistered'));
         const registerRes = await AuthService.register(userToBeRegistered);
-        const premiseOffer = createNewPremiseOffer(registerRes.id);
+        const premiseOffer = buildNewPremiseOffer(registerRes.id);
         await PremiseOfferService.createPremiseOffer(premiseOffer);
     }
 
-    const createNewPremiseOffer = (hostId) => {
+    const buildNewPremiseOffer = (hostId) => {
         return {
             hostId: hostId,
             active: true,

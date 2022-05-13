@@ -5,11 +5,14 @@ import {AppSection, PustePole20px, TextSection} from "../../components/styled-co
 import {Checkbox, Dropdown, InputFormFilled, TextareaContent} from "../../components/widgets/Inputs";
 import AppButton from "../../components/styled-components/AppButton";
 import React, {useState} from "react";
+import ValidationService from "../../services/ValidationService";
+import AuthService from "../../services/AuthService";
+import PremiseOfferService from "../../services/PremiseOfferService";
 
-const HostDetails = () => {
+const HostOfferDetails = () => {
 
-    const {state} = useLocation();
-    const {details} = state;
+    let {state} = useLocation();
+    let {details} = state;
 
     const [peopleToTake, setPeopleToTake] = useState(details.peopleToTake);
     const [bathrooms, setBathrooms] = useState(details.bathrooms);
@@ -23,13 +26,66 @@ const HostDetails = () => {
     const [houseNumber, setHouseNumber] = useState(details.houseNumber);
     const [street, setStreet] = useState(details.street);
     const [postalCode, setPostalCode] = useState(details.postalCode);
-    const [fromDate, setFromDate] = useState();
-    const [toDate, setToDate] = useState();
+    const [fromDate, setFromDate] = useState(details.fromDate);
+    const [toDate, setToDate] = useState(details.toDate);
 
-    const handleProceedButton = () => {
-
+    const buildModifiedPremiseOfferData = () => {
+        const updatedPremiseOfferData = Object.assign({}, details);
+        updatedPremiseOfferData.peopleToTake = peopleToTake;
+        updatedPremiseOfferData.bathrooms = bathrooms;
+        updatedPremiseOfferData.kitchens = kitchens;
+        updatedPremiseOfferData.animalsAllowed = animalsAllowed;
+        updatedPremiseOfferData.city = city;
+        updatedPremiseOfferData.street = street;
+        updatedPremiseOfferData.postalCode = postalCode;
+        updatedPremiseOfferData.houseNumber = houseNumber;
+        updatedPremiseOfferData.description = description;
+        updatedPremiseOfferData.fromDate = fromDate;
+        updatedPremiseOfferData.toDate = toDate;
+        return updatedPremiseOfferData;
     }
-    console.log(details);
+
+    const rebuildDataForms = () => {
+        setPeopleToTake(details.peopleToTake);
+        setBathrooms(details.bathrooms);
+        setKitchens(details.kitchens);
+        setBedrooms(details.bedrooms);
+        setAnimalsAllowed(details.animalsAllowed);
+        setCity(details.city);
+        setStreet(details.street);
+        setPostalCode(details.postalCode);
+        setHouseNumber(details.houseNumber);
+        setDescription(details.description);
+        setFromDate(details.fromDate);
+        setToDate(details.toDate);
+    }
+
+    const handleSaveButton = () => {
+        if (!validateInputs()) {
+            return;
+        }
+        const updatedOfferData = buildModifiedPremiseOfferData();
+        PremiseOfferService.modifyPremiseOffer(updatedOfferData).then(res => {
+            details = res;
+            rebuildDataForms(details);
+        }).catch(error => {
+            rebuildDataForms(details);
+            window.alert("Offer edition failed: " + error.response?.data);
+        })
+    }
+
+    const validateInputs = () => {
+        if (!ValidationService.areFromToDatesValid(fromDate, toDate)) {
+            window.alert("Chosen date is invalid");
+            return false;
+        }
+        const stringForms = [street, city, houseNumber, postalCode, description];
+        if (!ValidationService.areStringsValid(stringForms)) {
+            window.alert("Text input cannot be empty");
+            return false;
+        }
+        return true;
+    }
 
     return (
     <div className="details">
@@ -173,7 +229,7 @@ const HostDetails = () => {
 
             <PustePole20px/>
             <AppSection>
-                <AppButton onClick={handleProceedButton}>
+                <AppButton onClick={handleSaveButton}>
                     Save
                 </AppButton>
             </AppSection>
@@ -182,4 +238,4 @@ const HostDetails = () => {
     );
 }
 
-export default HostDetails;
+export default HostOfferDetails;

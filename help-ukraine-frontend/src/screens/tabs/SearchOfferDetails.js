@@ -12,7 +12,7 @@ import smokingAllowedIcon from "../../assets/tag-smoking-allowed-icon.png";
 import Tag from "../../components/Search/Tag";
 import Button from "../../components/Common/Button";
 
-const Details = () => {
+const SearchOfferDetails = () => {
 
     const {state} = useLocation();
     const {details} = state;
@@ -53,4 +53,4 @@ const Details = () => {
     );
 }
 
-export default Details;
+export default SearchOfferDetails;
