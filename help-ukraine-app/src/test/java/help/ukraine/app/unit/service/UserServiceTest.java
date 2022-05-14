@@ -19,6 +19,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -64,6 +65,9 @@ class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     @BeforeEach
     void setUpMock() {

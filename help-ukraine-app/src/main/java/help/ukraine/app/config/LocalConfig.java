@@ -15,7 +15,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @Configuration
-@Profile("local")
+@Profile({"local", "intergrationtest", "unittest"})
 public class LocalConfig {
     @Bean
     public JavaMailSender javaMailSender() {
