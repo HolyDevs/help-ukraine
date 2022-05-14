@@ -34,13 +34,3 @@ spring:
     gcp:
       sql:
         enabled: false
-  mail:
-    host: smpt.gmail.com
-    port: 587
-    username: homeseek.helpukraine@gmail.com
-    password:
-    properties:
-      smpt:
-        auth: true
-        starttls:
-          enable: true

@@ -42,7 +42,7 @@ const Section = styled.div`
 
 const Login = () => {
     let navigate = useNavigate();
-    const [login, setLogin] = useState("jan.lokalny@gmail.com");
+    const [login, setLogin] = useState("jan.uciekinier@gmail.com");
     const [password, setPassword] = useState("aaa");
     const handleLoginChanged = (event)  => {
         setLogin(event.target.value);

@@ -19,8 +19,8 @@ const SearchOfferDetails = () => {
 
     const handleMakeContact =  () => {
         MailService.sendHelpRequest(details.id)
-            .then(r => {
-            alert("Request send successfully!");
+            .then(res => {
+            alert("Mail send successfully!");
             }
         ).catch(error => {
             window.alert("Something went wrong - cannot send request");
