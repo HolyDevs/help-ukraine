@@ -34,6 +34,7 @@ const HostOfferDetails = () => {
         const updatedPremiseOfferData = Object.assign({}, offerDetails);
         updatedPremiseOfferData.peopleToTake = peopleToTake;
         updatedPremiseOfferData.bathrooms = bathrooms;
+        updatedPremiseOfferData.bedrooms= bedrooms;
         updatedPremiseOfferData.kitchens = kitchens;
         updatedPremiseOfferData.animalsAllowed = animalsAllowed;
         updatedPremiseOfferData.city = city;
@@ -131,7 +132,7 @@ const HostOfferDetails = () => {
             <PustePole20px/>
             <AppSection>
                 <Dropdown
-                    initalValue={peopleToTake - 1}
+                    initalValue={peopleToTake}
                     inputLabel="Number of residents:"
                           onChangeCallback={(value) => setPeopleToTake(value.value)}
                           options={[

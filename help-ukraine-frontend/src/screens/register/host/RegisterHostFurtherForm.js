@@ -104,6 +104,7 @@ const RegisterHostFurtherForm = () => {
             <AppSection>
                 <Dropdown
                     inputLabel="Number of residents:"
+                    initalValue={peopleToTake}
                           onChangeCallback={(value) => setPeopleToTake(value.value)}
                           options={[
                               {key: "1", value: "1"},
@@ -121,7 +122,8 @@ const RegisterHostFurtherForm = () => {
             <PustePole20px/>
             <AppSection>
                 <Dropdown inputLabel="Number of bathrooms:"
-                          onChangeCallback={(value) => setBathrooms(value)}
+                          initalValue={bathrooms}
+                          onChangeCallback={(value) => setBathrooms(value.value)}
                           options={[
                               {key: "1", value: "1"},
                               {key: "2", value: "2"},
@@ -138,7 +140,8 @@ const RegisterHostFurtherForm = () => {
             <PustePole20px/>
             <AppSection>
                 <Dropdown inputLabel="Number of kitchens:"
-                          onChangeCallback={(value) => setKitchens(value)}
+                          initalValue={kitchens}
+                          onChangeCallback={(value) => setKitchens(value.value)}
                           options={[
                               {key: "1", value: "1"},
                               {key: "2", value: "2"},
@@ -155,7 +158,8 @@ const RegisterHostFurtherForm = () => {
             <PustePole20px/>
             <AppSection>
                 <Dropdown inputLabel="Number of bedrooms:"
-                          onChangeCallback={(value) => setBedrooms(value)}
+                          initalValue={bedrooms}
+                          onChangeCallback={(value) => setBedrooms(value.value)}
                           options={[
                               {key: "1", value: "1"},
                               {key: "2", value: "2"},
@@ -175,22 +179,25 @@ const RegisterHostFurtherForm = () => {
             </TextSection>
             <PustePole20px/>
             <AppSection>
-                <TextareaContent value={description}
-                                 onChange={(e) => setDescription(e.target.value)}/>
+                <TextareaContent value={description} onChange={(e) => setDescription(e.target.value)}/>
             </AppSection>
             <PustePole20px/>
             <AppSection>
-                <Checkbox onCheckCallback={(value) => setWheelchairFriendly(value)}
+                <Checkbox
+                    initialState={wheelchairFriendly}
+                          onCheckCallback={(value) => setWheelchairFriendly(value)}
                           inputLabel="Prepared for people with physical disabilities"/>
             </AppSection>
             <PustePole20px/>
             <AppSection>
                 <Checkbox onCheckCallback={(value) => setAnimalsAllowed(value)}
+                          initialState={animalsAllowed}
                           inputLabel="Accept pets"/>
             </AppSection>
             <PustePole20px/>
             <AppSection>
                 <Checkbox onCheckCallback={(value) => setSmokingAllowed(value)}
+                          initialState={smokingAllowed}
                           inputLabel="Smoking allowed"/>
             </AppSection>
             <PustePole20px/>

@@ -41,7 +41,7 @@ const Offers = () => {
                     <Dropdown
                         onChangeCallback={(value) => {setFilter(value.value);
                             console.log(value.value);}}
-                        initalValue="0"
+                        initalValue="All"
                         inputLabel="Number of residents:"
                         // onChangeCallback={(value) => setPeopleToTake(value)}
                         options={[
