@@ -14,7 +14,7 @@ const Profile = () => {
     const [birthDate, setBirthDate] = useState("");
     const [phone, setPhoneNumber] = useState("");
     const [email, setEmail] = useState("");
-    const [sex, setSex] = useState("Male");
+    const [sex, setSex] = useState("");
 
     React.useEffect(() => {
         const user = AuthService.getCurrentUser();
@@ -56,7 +56,7 @@ const Profile = () => {
         setBirthDate(userData.birthDate);
         setEmail(userData.email);
         setPhoneNumber(userData.phoneNumber);
-        setSex(userData.sex);
+        setSex(userData.sex === 'MALE'? 'Male': 'Female');
     }
 
     const handleSaveButton = () => {
