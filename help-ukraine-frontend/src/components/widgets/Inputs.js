@@ -234,24 +234,20 @@ const CheckboxLabel = styled.div`
 `
 
 const Checkbox = (props) => {
-    const [isChecked, setIsChecked] = useState(props.initialState);
     const toggling = () => {
-        setIsChecked(!isChecked);
-        valueChangedCallback(!isChecked);
+        valueChangedCallback(!props.initialState);
     }
-
     const valueChangedCallback = (isChecked) => {
         if (!props.onCheckCallback) {
             return;
         }
         props.onCheckCallback(isChecked);
     }
-
     return (
         <CheckboxSection>
             <div>
                 <CheckboxDot onClick={toggling}>
-                    {isChecked ? <ToggledMark/>  : <CheckboxDotUnchecked/>  }
+                    {props.initialState ? <ToggledMark/>  : <CheckboxDotUnchecked/>  }
                 </CheckboxDot>
             </div>
             <CheckboxLabel>
