@@ -34,7 +34,8 @@ import java.util.Collections;
 @Log4j2
 @Transactional
 public class UserServiceImpl implements UserService {
-    private static final String MISSING_USER_MSG = "There is no user with email %s";
+    private static final String MISSING_USER_EMAIL_MSG = "There is no user with email %s";
+    private static final String MISSING_USER_ID_MSG = "There is no user with id %d";
     private static final String FETCHED_USER_MSG = "User with email %s fetched";
     private static final String DELETED_USER_MSG = "User with email %s deleted";
     private static final String MODIFIED_USER_MSG = "User with email %s modified";
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            UserModel userModel = getUser(username);
+            UserModel userModel = getUserByEmail(username);
             String oAuthRole = getOAuthRole(userModel.getAccountType());
             Collection<SimpleGrantedAuthority> authorities =
                     Collections.singletonList(new SimpleGrantedAuthority(oAuthRole));
@@ -64,11 +65,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    public UserModel fetchUser(String email) throws UserNotExistsException, UserNoAccessException {
+    public UserModel fetchUserByEmail(String email) throws UserNotExistsException, UserNoAccessException {
         throwIfAuthNotBelongsToUser(email);
-        UserModel userModel = getUser(email);
+        UserModel userModel = getUserByEmail(email);
         log.info(String.format(FETCHED_USER_MSG, email));
         return userModel;
+    }
+
+    @Override
+    public UserModel fetchUserById(Long id) throws UserNotExistsException {
+        return getUserById(id);
     }
 
     @Override
@@ -90,7 +96,7 @@ public class UserServiceImpl implements UserService {
     public UserModel updateUser(String email, UserModel userModel) throws UserNoAccessException, UserNotExistsException, UserEmailNotUniqueException {
         throwIfAuthNotBelongsToUser(email);
         throwIfNewUserEmailNotUnique(email, userModel);
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_MSG, email)));
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_ID_MSG, email)));
         if (shouldPasswordBeModified(userModel, userEntity)) {
             encodePassword(userModel);
         } else {
@@ -107,7 +113,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String email) throws UserNotExistsException, UserNoAccessException {
         throwIfAuthNotBelongsToUser(email);
         UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_MSG, email)));
+                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_ID_MSG, email)));
         switch (userEntity.getAccountType()) {
             case HOST -> hostRepository.deleteById(userEntity.getId());
             case REFUGEE -> refugeeRepository.deleteById(userEntity.getId());
@@ -116,9 +122,15 @@ public class UserServiceImpl implements UserService {
         log.info(String.format(DELETED_USER_MSG, email));
     }
 
-    private UserModel getUser(String email) throws UserNotExistsException {
+    private UserModel getUserByEmail(String email) throws UserNotExistsException {
         UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_MSG, email)));
+                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_ID_MSG, email)));
+        return userMapperFacade.map(userEntity, UserModel.class);
+    }
+
+    private UserModel getUserById(Long id) throws UserNotExistsException {
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_ID_MSG, id)));
         return userMapperFacade.map(userEntity, UserModel.class);
     }
 

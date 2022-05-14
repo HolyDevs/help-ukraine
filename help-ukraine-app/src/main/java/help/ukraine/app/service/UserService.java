@@ -15,7 +15,10 @@ public interface UserService extends UserDetailsService {
     User loadUserByUsername(String username) throws UsernameNotFoundException;
 
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    UserModel fetchUser(String email) throws UserNotExistsException, UserNoAccessException;
+    UserModel fetchUserByEmail(String email) throws UserNotExistsException, UserNoAccessException;
+
+    @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
+    UserModel fetchUserById(Long id) throws UserNotExistsException;
 
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
     UserModel updateUser(String email, UserModel userModel) throws UserNoAccessException, UserNotExistsException, UserEmailNotUniqueException;

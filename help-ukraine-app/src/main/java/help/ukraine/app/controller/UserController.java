@@ -35,7 +35,7 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserModel> getUser(@RequestParam(EMAIL_PARAM_NAME) String email) throws UserNoAccessException, UserNotExistsException {
         log.debug("fetch user endpoint hit");
-        UserModel userModel = userService.fetchUser(email);
+        UserModel userModel = userService.fetchUserByEmail(email);
         return ResponseEntity.ok().body(userModel);
     }
 

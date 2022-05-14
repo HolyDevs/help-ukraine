@@ -26,3 +26,16 @@ spring:
         enabled: true
         database-name: ${db-name}
         instance-connection-name: ${db-connection}
+  mail:
+    host: 142.251.1.108
+    port: 587
+    username: ${mail-username}
+    password: ${mail-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    test-connection: true
+
