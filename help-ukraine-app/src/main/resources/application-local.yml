@@ -38,7 +38,7 @@ spring:
     host: smpt.gmail.com
     port: 587
     username: homeseek.helpukraine@gmail.com
-    password: idi-na-chuj
+    password:
     properties:
       smpt:
         auth: true

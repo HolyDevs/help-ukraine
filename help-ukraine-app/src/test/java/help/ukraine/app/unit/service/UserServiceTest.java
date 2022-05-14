@@ -89,7 +89,7 @@ class UserServiceTest {
     @WithMockUser(username = EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
     void fetchUserOkTest() throws Exception {
-        UserModel userModel = userService.fetchUser(EXISTING_EMAIL);
+        UserModel userModel = userService.fetchUserByEmail(EXISTING_EMAIL);
         assertEquals(EXISTING_EMAIL, userModel.getEmail());
     }
 
@@ -97,21 +97,21 @@ class UserServiceTest {
     @WithMockUser(username = NOT_EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
     void fetchUserDataNotExistsExceptionTest() {
-        assertThrows(UserNotExistsException.class, () -> userService.fetchUser(NOT_EXISTING_EMAIL));
+        assertThrows(UserNotExistsException.class, () -> userService.fetchUserByEmail(NOT_EXISTING_EMAIL));
     }
 
     @Transactional
     @WithMockUser(username = NOT_EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
     void fetchUserUserNoAccessExceptionTest() {
-        assertThrows(UserNoAccessException.class, () -> userService.fetchUser(EXISTING_EMAIL));
+        assertThrows(UserNoAccessException.class, () -> userService.fetchUserByEmail(EXISTING_EMAIL));
     }
 
     @Transactional
     @WithMockUser(username = EXISTING_EMAIL)
     @Test
     void fetchUserAccessDeniedExceptionTest() {
-        assertThrows(AccessDeniedException.class, () -> userService.fetchUser(EXISTING_EMAIL));
+        assertThrows(AccessDeniedException.class, () -> userService.fetchUserByEmail(EXISTING_EMAIL));
     }
 
     @Transactional
