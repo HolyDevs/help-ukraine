@@ -8,7 +8,7 @@ import {AppSection} from "../../components/styled-components/Sections";
 import LogoImg from "../../assets/logo.png";
 
 const LoginLogoHeader = styled.div`
-    height: 40vh;
+    height: 20vh;
     background-color: var(--bialy);
     color: white;
     font-size:20px;
@@ -20,15 +20,15 @@ const LoginLogoHeader = styled.div`
 
 const LoginBottom = styled.div`
     margin-top: 20px;
-    padding-top: 15px;
-    height: 60vh;
+    padding-top: 30px;
+    height: 80vh;
     color: var(--ukrainski-bialy);
     background-color: var(--ukrainski-niebieski);
     color: white;
     font-size:20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;`;
 
 const Logo = styled.img`
