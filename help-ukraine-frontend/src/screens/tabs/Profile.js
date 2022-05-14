@@ -14,7 +14,7 @@ const Profile = () => {
     const [birthDate, setBirthDate] = useState("");
     const [phone, setPhoneNumber] = useState("");
     const [email, setEmail] = useState("");
-    const [sex, setSex] = useState("");
+    const [sex, setSex] = useState("Male");
 
     React.useEffect(() => {
         const user = AuthService.getCurrentUser();
@@ -102,12 +102,14 @@ const Profile = () => {
                 </AppSection>
                 <PustePole20px/>
                 <AppSection>
-                    <Dropdown inputLabel="Sex:" dark="true"
-                              onChangeCallback={(value) => setSex(value)}
-                              options={[
-                                  {key: "male", value: "Male"},
-                                  {key: "female", value: "Female"}
-                              ]}/>
+                    <Dropdown
+                        initalValue={sex}
+                        inputLabel="Sex:" dark="true"
+                          onChangeCallback={(value) => setSex(value.value)}
+                          options={[
+                              {key: "male", value: "Male"},
+                              {key: "female", value: "Female"}
+                          ]}/>
                 </AppSection>
                 <AppSection>
                     <InputFormFilled value={birthDate} onChange={(e) => {
