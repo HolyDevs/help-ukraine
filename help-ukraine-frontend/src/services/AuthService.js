@@ -92,7 +92,9 @@ class AuthService {
         const expiryTimestamp = decodedAccessToken.exp;
         if (new Date(expiryTimestamp * 1000) < Date.now()) {
             this.refreshToken();
+            console.log('Refreshed user token')
         }
+
         return sessionStorage.getItem("access_token");
     }
 

@@ -16,7 +16,7 @@ const RegisterHost = () => {
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [phone, setPhone] = useState("");
-    const [sex, setSex] = useState("MALE");
+    const [sex, setSex] = useState("Male");
     const [birthDate, setBirthDate] = useState();
 
     const createNewUser = () => {
@@ -85,6 +85,7 @@ const RegisterHost = () => {
             </AppSection>
             <AppSection>
                 <Dropdown inputLabel="Sex:"
+                          initalValue={sex}
                           onChangeCallback={(value) => setSex(value.value)}
                           options={[
                               {key: "male", value: "Male"},

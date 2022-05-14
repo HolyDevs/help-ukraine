@@ -13,9 +13,10 @@ const RegisterRefugeeFurtherForm = () => {
 
     let navigate = useNavigate();
     const [phone, setPhone] = useState("");
-    const [sex, setSex] = useState("MALE");
+    const [sex, setSex] = useState("Male");
     const [birthDate, setBirthDate] = useState();
-
+    const [petAllowed, setPetAllowed] = useState(false);
+    const [wheelchairRequired, setWheelchairRequired] = useState(false);
     const fillNewUserWithData = () => {
         const userToBeRegistered = JSON.parse(sessionStorage.getItem('userToBeRegistered'));
         userToBeRegistered.phoneNumber = phone;
@@ -68,6 +69,7 @@ const RegisterRefugeeFurtherForm = () => {
             </AppSection>
             <AppSection>
                 <Dropdown inputLabel="Sex:"
+                          initalValue={sex}
                           onChangeCallback={(value) => setSex(value.value)}
                           options={[
                               {key: "male", value: "Male"},
@@ -81,10 +83,10 @@ const RegisterRefugeeFurtherForm = () => {
             </AppSection>
             <PustePole20px/>
             <AppSection>
-                <Checkbox inputLabel="I have a physical disability and require a wheelchair"/>
+                <Checkbox initialState={wheelchairRequired} onCheckCallback={(value) => setWheelchairRequired(value)}  inputLabel="I have a physical disability and require a wheelchair"/>
             </AppSection>
             <AppSection>
-                <Checkbox inputLabel="I have a pet"/>
+                <Checkbox initialState={petAllowed} onCheckCallback={(value) => setPetAllowed(value)} inputLabel="I have a pet"/>
             </AppSection>
             <PustePole20px/>
             <TextSection>
