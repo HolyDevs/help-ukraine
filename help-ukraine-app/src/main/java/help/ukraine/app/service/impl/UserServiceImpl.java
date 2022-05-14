@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
     public UserModel updateUser(String email, UserModel userModel) throws UserNoAccessException, UserNotExistsException, UserEmailNotUniqueException {
         throwIfAuthNotBelongsToUser(email);
         throwIfNewUserEmailNotUnique(email, userModel);
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_ID_MSG, email)));
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_EMAIL_MSG, email)));
         if (shouldPasswordBeModified(userModel, userEntity)) {
             encodePassword(userModel);
         } else {
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String email) throws UserNotExistsException, UserNoAccessException {
         throwIfAuthNotBelongsToUser(email);
         UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_ID_MSG, email)));
+                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_EMAIL_MSG, email)));
         switch (userEntity.getAccountType()) {
             case HOST -> hostRepository.deleteById(userEntity.getId());
             case REFUGEE -> refugeeRepository.deleteById(userEntity.getId());
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
 
     private UserModel getUserByEmail(String email) throws UserNotExistsException {
         UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_ID_MSG, email)));
+                .orElseThrow(() -> new UserNotExistsException(String.format(MISSING_USER_EMAIL_MSG, email)));
         return userMapperFacade.map(userEntity, UserModel.class);
     }
 

@@ -15,7 +15,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -39,6 +41,9 @@ public class PremiseOfferServiceTest {
 
     @Autowired
     private PremiseOfferService premiseOfferService;
+
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     private static PremiseOfferEntity PREMISE_OFFER_1;
     private static final Long PREMISE_OFFER_1_ID = 1L;

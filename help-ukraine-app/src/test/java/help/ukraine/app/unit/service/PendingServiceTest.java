@@ -9,7 +9,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 import javax.transaction.Transactional;
 
@@ -24,6 +26,8 @@ public class PendingServiceTest {
     private SearchingOfferRepository searchingOfferRepository;
     @MockBean
     private PendingRepository pendingRepository;
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     @Autowired
     private PendingService pendingService;
