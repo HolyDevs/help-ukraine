@@ -78,6 +78,7 @@ const HostOfferDetails = () => {
         PremiseOfferService.modifyPremiseOffer(updatedOfferData).then(res => {
             offerDetails = res;
             rebuildDataForms(offerDetails);
+            alert("Saved!");
         }).catch(error => {
             rebuildDataForms(offerDetails);
             window.alert("Offer edition failed: " + error.response?.data);
