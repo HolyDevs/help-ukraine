@@ -11,13 +11,26 @@ import wheelchairFriendlyIcon from "../../assets/tag-wheelchair-friendly-icon.pn
 import smokingAllowedIcon from "../../assets/tag-smoking-allowed-icon.png";
 import Tag from "../../components/Search/Tag";
 import Button from "../../components/Common/Button";
-
+import MailService from "../../services/MailService";
 const SearchOfferDetails = () => {
 
     const {state} = useLocation();
     const {details} = state;
 
+    const handleMakeContact =  () => {
+        MailService.sendHelpRequest(details.id)
+            .then(r => {
+            alert("Request send successfully!");
+            }
+        ).catch(error => {
+            window.alert("Something went wrong - cannot send request");
+            console.log(error);
+        });
+
+    }
+
     const generateTags = () => {
+        console.log(details);
         return (
             <>
                 <Tag icon={numOfPeopleIcon} tagName={details.peopleToTake + ""} />
@@ -47,7 +60,7 @@ const SearchOfferDetails = () => {
             {/*<p>{details.description}</p>*/}
             <h3>About home</h3>
             <p>{details.description}</p>
-            <Button>Make contact</Button>
+            <Button onClick={handleMakeContact}>Make contact</Button>
         </div>
     </div>
     );
