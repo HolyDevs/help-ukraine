@@ -1,30 +1,13 @@
 package help.ukraine.app.service;
 
-import help.ukraine.app.exception.UserNotExistsException;
 import help.ukraine.app.exception.UserEmailNotUniqueException;
-import help.ukraine.app.exception.UserNoAccessException;
+import help.ukraine.app.exception.UserNotExistsException;
 import help.ukraine.app.model.UserModel;
-import help.ukraine.app.security.constants.AuthRoles;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public interface UserService extends UserDetailsService {
-    @Override
-    User loadUserByUsername(String username) throws UsernameNotFoundException;
-
-    @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    UserModel fetchUserByEmail(String email) throws UserNotExistsException, UserNoAccessException;
-
-    @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    UserModel fetchUserById(Long id) throws UserNotExistsException;
-
-    @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    UserModel updateUser(String email, UserModel userModel) throws UserNoAccessException, UserNotExistsException, UserEmailNotUniqueException;
-
-    @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    void deleteUser(String email) throws UserNotExistsException, UserNoAccessException;
-
+public interface UserService {
+    UserModel getUserByEmail(String email) throws UserNotExistsException;
+    UserModel getUserById(Long id) throws UserNotExistsException;
+    UserModel updateUser(UserModel userModel) throws UserNotExistsException, UserEmailNotUniqueException;
+    void deleteUserById(Long id) throws UserNotExistsException;
     UserModel createUser(UserModel userModel) throws UserEmailNotUniqueException;
 }

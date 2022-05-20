@@ -6,7 +6,7 @@ import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.enumerator.Sex;
 import help.ukraine.app.exception.UserNotExistsException;
 import help.ukraine.app.exception.UserEmailNotUniqueException;
-import help.ukraine.app.exception.UserNoAccessException;
+import help.ukraine.app.security.exception.UserNoAccessException;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.repository.HostRepository;
 import help.ukraine.app.repository.RefugeeRepository;
@@ -41,6 +41,7 @@ class UserServiceTest {
     // IDS
     private static final Long EXISTING_ID = 1L;
     private static final Long REGISTERED_ID = 100L;
+    private static final Long NOT_EXISTING_ID = 999L;
     // EMAILS
     private static final String EXISTING_EMAIL = "jan.testowy@gmail.com";
     private static final String REGISTERED_EMAIL = "jan.testowy1@gmail.com";
@@ -83,39 +84,26 @@ class UserServiceTest {
                 .phoneNumber("666-666-666")
                 .sex(Sex.MALE)
                 .build();
-        doReturn(Optional.of(userEntity)).when(userRepository).findByEmail(EXISTING_EMAIL);
+        doReturn(Optional.of(userEntity)).when(userRepository).findById(EXISTING_ID);
         doReturn(true).when(userRepository).existsByEmail(EXISTING_EMAIL);
-        doReturn(Optional.empty()).when(userRepository).findByEmail(NOT_EXISTING_EMAIL);
+        doReturn(true).when(userRepository).existsById(EXISTING_ID);
+        doReturn(Optional.empty()).when(userRepository).findById(NOT_EXISTING_ID);
         doReturn(false).when(userRepository).existsByEmail(NOT_EXISTING_EMAIL);
+        doReturn(false).when(userRepository).existsById(NOT_EXISTING_ID);
     }
 
     @Transactional
     @WithMockUser(username = EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
     void fetchUserOkTest() throws Exception {
-        UserModel userModel = userService.fetchUserByEmail(EXISTING_EMAIL);
+        UserModel userModel = userService.getUserById(EXISTING_ID);
         assertEquals(EXISTING_EMAIL, userModel.getEmail());
     }
 
     @Transactional
-    @WithMockUser(username = NOT_EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
-    void fetchUserDataNotExistsExceptionTest() {
-        assertThrows(UserNotExistsException.class, () -> userService.fetchUserByEmail(NOT_EXISTING_EMAIL));
-    }
-
-    @Transactional
-    @WithMockUser(username = NOT_EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
-    @Test
-    void fetchUserUserNoAccessExceptionTest() {
-        assertThrows(UserNoAccessException.class, () -> userService.fetchUserByEmail(EXISTING_EMAIL));
-    }
-
-    @Transactional
-    @WithMockUser(username = EXISTING_EMAIL)
-    @Test
-    void fetchUserAccessDeniedExceptionTest() {
-        assertThrows(AccessDeniedException.class, () -> userService.fetchUserByEmail(EXISTING_EMAIL));
+    void fetchUserNotExistsExceptionTest() {
+        assertThrows(UserNotExistsException.class, () -> userService.getUserById(NOT_EXISTING_ID));
     }
 
     @Transactional
@@ -140,7 +128,7 @@ class UserServiceTest {
 
     @Transactional
     @Test
-    void registerUserAlreadyRegisteredExceptionTest() {
+    void registerUserUserEmailNotUniqueExceptionTest() {
         // MOCKS SETUP
         doReturn(true).when(userRepository).existsByEmail(REGISTERED_EMAIL);
 
@@ -153,32 +141,16 @@ class UserServiceTest {
     @WithMockUser(username = EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
     void deleteUserTest() {
-        assertDoesNotThrow(() -> userService.deleteUser(EXISTING_EMAIL));
+        assertDoesNotThrow(() -> userService.deleteUserById(EXISTING_ID));
     }
 
     @Transactional
-    @WithMockUser(username = NOT_EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
-    void deleteUserDataNotExistsExceptionTest() {
-        assertThrows(UserNotExistsException.class, () -> userService.deleteUser(NOT_EXISTING_EMAIL));
+    void deleteUserNotExistsExceptionExceptionTest() {
+        assertThrows(UserNotExistsException.class, () -> userService.deleteUserById(NOT_EXISTING_ID));
     }
 
     @Transactional
-    @WithMockUser(username = NOT_EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
-    @Test
-    void deleteUserUserNoAccessExceptionTest() {
-        assertThrows(UserNoAccessException.class, () -> userService.deleteUser(EXISTING_EMAIL));
-    }
-
-    @Transactional
-    @WithMockUser(username = EXISTING_EMAIL)
-    @Test
-    void deleteUserAccessDeniedExceptionTest() {
-        assertThrows(AccessDeniedException.class, () -> userService.deleteUser(EXISTING_EMAIL));
-    }
-
-    @Transactional
-    @WithMockUser(username = EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
     void modifyUserNameTest() throws Exception {
         // MOCKS SETUP
@@ -187,47 +159,19 @@ class UserServiceTest {
 
         // USER MODIFICATION ASSERTIONS
         UserModel userModelToModify = buildExistingUserModelWithModifiedName();
-        UserModel modifiedUserModel = userService.updateUser(EXISTING_EMAIL, userModelToModify);
+        UserModel modifiedUserModel = userService.updateUser(userModelToModify);
         assertEquals(MODIFIED_NAME, modifiedUserModel.getName());
         assertEquals(EXISTING_EMAIL, modifiedUserModel.getEmail());
     }
 
     @Transactional
-    @WithMockUser(username = NOT_EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
-    @Test
-    void modifyUserNameUserNoAccessExceptionTest() {
-        // MOCKS SETUP
-        UserEntity modifiedUserEntity = buildModifiedExistingUserEntityWithModifiedName();
-        doReturn(modifiedUserEntity).when(userRepository).save(any());
-
-        // USER MODIFICATION ASSERTIONS
-        UserModel userModelToModify = buildExistingUserModelWithModifiedName();
-        assertThrows(UserNoAccessException.class, () -> userService.updateUser(EXISTING_EMAIL, userModelToModify));
-    }
-
-    @Transactional
-    @WithMockUser(username = REGISTERED_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
     void modifyUserNameDataNotExistsExceptionTest() {
         UserModel userModelToModify = buildUserModelToRegister();
-        assertThrows(UserNotExistsException.class, () -> userService.updateUser(REGISTERED_EMAIL, userModelToModify));
+        assertThrows(UserNotExistsException.class, () -> userService.updateUser(userModelToModify));
     }
 
     @Transactional
-    @WithMockUser(username = EXISTING_EMAIL)
-    @Test
-    void modifyUserNameAccessDeniedExceptionTest() {
-        // MOCKS SETUP
-        UserEntity modifiedUserEntity = buildModifiedExistingUserEntityWithModifiedName();
-        doReturn(modifiedUserEntity).when(userRepository).save(any());
-
-        // USER MODIFICATION ASSERTIONS
-        UserModel userModelToModify = buildExistingUserModelWithModifiedName();
-        assertThrows(AccessDeniedException.class, () -> userService.updateUser(EXISTING_EMAIL, userModelToModify));
-    }
-
-    @Transactional
-    @WithMockUser(username = EXISTING_EMAIL, authorities = AuthRoles.REFUGEE_ROLE)
     @Test
     void modifyUserPasswordTest() throws Exception {
         // MOCKS SETUP
@@ -236,7 +180,7 @@ class UserServiceTest {
 
         // USER MODIFICATION ASSERTIONS
         UserModel userModelToModify = buildExistingUserModelWithModifiedPassword();
-        UserModel modifiedUserModel = userService.updateUser(EXISTING_EMAIL, userModelToModify);
+        UserModel modifiedUserModel = userService.updateUser(userModelToModify);
         assertEquals(HASHED_MODIFIED_PASSWORD, modifiedUserModel.getPassword());
         assertEquals(EXISTING_EMAIL, modifiedUserModel.getEmail());
     }
@@ -279,6 +223,7 @@ class UserServiceTest {
 
     private UserModel buildExistingUserModelWithModifiedName() {
         return UserModel.builder()
+                .id(EXISTING_ID)
                 .email(EXISTING_EMAIL)
                 .name(MODIFIED_NAME)
                 .surname("Testowy")
@@ -308,6 +253,7 @@ class UserServiceTest {
 
     private UserModel buildExistingUserModelWithModifiedPassword() {
         return UserModel.builder()
+                .id(EXISTING_ID)
                 .email(EXISTING_EMAIL)
                 .name(NAME)
                 .surname("Testowy")

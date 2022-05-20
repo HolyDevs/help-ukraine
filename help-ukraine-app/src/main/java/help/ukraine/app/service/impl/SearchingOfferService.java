@@ -13,9 +13,11 @@ import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class SearchingOfferService {
     private final SearchingOfferRepository searchingOfferRepository;

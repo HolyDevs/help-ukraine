@@ -5,11 +5,13 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import help.ukraine.app.security.constants.AuthTokenContents;
 import help.ukraine.app.security.dto.GeneratedToken;
+import help.ukraine.app.security.model.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
@@ -30,33 +32,34 @@ public class TokenGenerator {
         objectMapper.writeValue(response.getOutputStream(), generatedToken);
     }
 
-    public GeneratedToken generateToken(User user, String issuer) {
+    public GeneratedToken generateToken(UserPrincipal userPrincipal, String issuer) {
         Algorithm algorithm = Algorithm.HMAC256(authSecret);
-        String accessToken = generateAccessToken(user, issuer, algorithm);
-        String refreshToken = generateRefreshToken(user, issuer, algorithm);
+        String accessToken = generateAccessToken(userPrincipal, issuer, algorithm);
+        String refreshToken = generateRefreshToken(userPrincipal, issuer, algorithm);
         return GeneratedToken.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
 
-    private String generateAccessToken(User user, String issuer, Algorithm algorithm) {
-        Optional<GrantedAuthority> authority = user.getAuthorities().stream().findFirst();
+    private String generateAccessToken(UserPrincipal userPrincipal, String issuer, Algorithm algorithm) {
+        Optional<GrantedAuthority> authority = userPrincipal.getAuthorities().stream().findFirst();
         String role = null;
         if (authority.isPresent()) {
             role = authority.get().getAuthority();
         }
         return JWT.create()
-                .withSubject(user.getUsername())
+                .withSubject(userPrincipal.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + AuthTokenContents.ACCESS_TOKEN_EXPIRATION))
                 .withIssuer(issuer)
                 .withClaim(AuthTokenContents.ROLE_CLAIM, role)
+                .withClaim(AuthTokenContents.ID_CLAIM, userPrincipal.getId())
                 .sign(algorithm);
     }
 
-    private String generateRefreshToken(User user, String issuer, Algorithm algorithm) {
+    private String generateRefreshToken(UserPrincipal userPrincipal, String issuer, Algorithm algorithm) {
         return JWT.create()
-                .withSubject(user.getUsername())
+                .withSubject(userPrincipal.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + AuthTokenContents.REFRESH_TOKEN_EXPIRATION))
                 .withIssuer(issuer)
                 .sign(algorithm);

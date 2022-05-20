@@ -1,7 +1,6 @@
 package help.ukraine.app.controller;
 
 import help.ukraine.app.exception.PremiseOfferNotFoundException;
-import help.ukraine.app.exception.UserNoAccessException;
 import help.ukraine.app.exception.UserNotExistsException;
 import help.ukraine.app.model.PremiseOfferModel;
 import help.ukraine.app.model.UserModel;
@@ -30,34 +29,23 @@ public class MailController {
     @PostMapping(path = "/{premiseOfferId}/{refugeeId}")
     public ResponseEntity<String> sendOfferNotificationMail(@PathVariable Long premiseOfferId, @PathVariable Long refugeeId) throws PremiseOfferNotFoundException, UserNotExistsException, MessagingException {
         PremiseOfferModel premiseOfferModel = premiseOfferService.getPremiseOfferById(premiseOfferId);
-        UserModel refugee = userService.fetchUserById(refugeeId);
-        UserModel host = userService.fetchUserById(premiseOfferModel.getHostId());
-        String offerAddress = parseAddress(premiseOfferModel);
-        mailService.sendOfferNotificationMail(host.getEmail(), host.getName(), refugee.getName(), offerAddress);
+        UserModel refugee = userService.getUserById(refugeeId);
+        UserModel host = userService.getUserById(premiseOfferModel.getHostId());
+        mailService.sendOfferNotificationMail(host, refugee, premiseOfferModel);
         return ResponseEntity.ok("Message sent");
     }
 
-    @ExceptionHandler(UserNotExistsException.class)
+    @ExceptionHandler({
+            UserNotExistsException.class,
+            PremiseOfferNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleUserNotExistsException(UserNotExistsException exception) {
-        return exception.getMessage();
-    }
-
-    @ExceptionHandler(PremiseOfferNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handlePremiseOfferNotFoundException(PremiseOfferNotFoundException exception) {
+    public String handleNotFoundExceptions(Exception exception) {
         return exception.getMessage();
     }
 
     @ExceptionHandler(MessagingException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleMessagingExceptionException(MessagingException exception) {
+    public String handleBadRequestExceptions(Exception exception) {
         return exception.getMessage();
-    }
-
-    private String parseAddress(PremiseOfferModel premiseOfferModel) {
-        return premiseOfferModel.getCity() + ", " + premiseOfferModel.getStreet() + " "
-                + premiseOfferModel.getHouseNumber() + ", "
-                + premiseOfferModel.getPostalCode();
     }
 }

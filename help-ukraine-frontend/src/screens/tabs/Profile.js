@@ -65,7 +65,7 @@ const Profile = () => {
         }
         const userData = AuthService.getCurrentUser();
         const updatedUserData = buildModifiedUserData(userData);
-        AuthService.modifyCurrentUser(userData.email, updatedUserData).then(res => {
+        AuthService.modifyCurrentUser(updatedUserData).then(res => {
             if (isEmailModified(userData.email, res.email)) {
                 logOut();
                 window.alert("Email was modified - you have to login again");

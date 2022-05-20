@@ -5,8 +5,8 @@ const API_URL = "/api/";
 
 class AuthService {
 
-    doLogin(username, password) {
-        const data = {'password': password, 'username': username};
+    doLogin(email, password) {
+        const data = {'password': password, 'email': email};
         const options = {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         };
@@ -32,7 +32,7 @@ class AuthService {
         return axios.post(API_URL + 'user', userData, options).then(res => res.data);
     }
 
-    doModify(username, userData, token) {
+    doModify(userData, token) {
         const options = {
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
@@ -40,28 +40,28 @@ class AuthService {
                 'Authorization': 'Bearer ' + token
             },
         };
-        return axios.put(API_URL + 'user?email=' + username, userData, options).then(res => res.data);
+        return axios.put(API_URL + 'user/' + userData.id, userData, options).then(res => res.data);
     }
 
-    fetchCurrentUser(username, token) {
+    fetchCurrentUser(id, token) {
         const options = {
             method: 'GET',
             headers: {'Authorization': 'Bearer ' + token},
-            url: API_URL + 'user?email=' + username
+            url: API_URL + 'user/' + id
         }
         return axios(options).then(res => res.data);
     }
 
-    async login(username, password) {
-        const loginResponse = await this.doLogin(username, password);
-        const userResponse = await this.fetchCurrentUser(username, loginResponse.access_token)
+    async login(email, password) {
+        const loginResponse = await this.doLogin(email, password);
+        const decodedAccessToken = this.parseJwt(loginResponse.access_token);
+        this.fillTokenData(loginResponse, decodedAccessToken);
+        const userResponse = await this.fetchCurrentUser(decodedAccessToken.user_id, loginResponse.access_token)
         sessionStorage.setItem("user", JSON.stringify(userResponse));
-        this.fillTokenData(loginResponse);
         return userResponse;
     }
 
-    fillTokenData(loginResponse) {
-        const decodedAccessToken = this.parseJwt(loginResponse.access_token);
+    fillTokenData(loginResponse, decodedAccessToken) {
         sessionStorage.setItem("decoded_access_token", JSON.stringify(decodedAccessToken));
         sessionStorage.setItem("access_token", loginResponse.access_token);
         sessionStorage.setItem("refresh_token", loginResponse.refresh_token);
@@ -72,9 +72,9 @@ class AuthService {
         return await this.login(userData.email, userData.password);
     }
 
-    async modifyCurrentUser(username, userData) {
+    async modifyCurrentUser(userData) {
         const token = this.getAccessToken();
-        const userResponse = await this.doModify(username, userData, token);
+        const userResponse = await this.doModify(userData, token);
         sessionStorage.setItem("user", JSON.stringify(userResponse));
         return userResponse;
     }

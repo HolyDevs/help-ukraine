@@ -6,6 +6,8 @@ import help.ukraine.app.security.TokenGenerator;
 import help.ukraine.app.security.constants.AuthMessages;
 import help.ukraine.app.security.constants.AuthUrls;
 import help.ukraine.app.security.dto.GeneratedToken;
+import help.ukraine.app.security.model.UserPrincipal;
+import help.ukraine.app.security.service.UserPrincipalService;
 import help.ukraine.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,7 +29,7 @@ public class AuthController {
 
     private final TokenGenerator tokenGenerator;
     private final TokenDecoder tokenDecoder;
-    private final UserService userService;
+    private final UserPrincipalService userPrincipalService;
 
     @PostMapping(AuthUrls.LOGIN_URL)
     public void login() {}
@@ -43,9 +45,10 @@ public class AuthController {
         try {
             UsernamePasswordAuthenticationToken authenticationToken = tokenDecoder.decodeToken(authHeader);
             String issuer = request.getRequestURL().toString();
-            User user = userService.loadUserByUsername(authenticationToken.getName());
-            GeneratedToken generatedToken = tokenGenerator.generateToken(user, issuer);
-            log.info("Successful token renewal for user: {}", user.getUsername());
+            UserPrincipal userPrincipal = userPrincipalService.loadUserByUsername(authenticationToken.getName());
+            GeneratedToken generatedToken = tokenGenerator.generateToken(userPrincipal, issuer);
+            log.info("Successful token renewal for user - email : {}, id : {}",
+                    userPrincipal.getUsername(), userPrincipal.getId());
             tokenGenerator.fillResponseWithGeneratedToken(generatedToken, response);
         } catch (JWTVerificationException e) {
             tokenDecoder.fillResponseWithTokenVerificationError(response, AuthMessages.ACCESS_TOKEN_FAIL);
