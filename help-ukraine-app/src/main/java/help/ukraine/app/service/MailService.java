@@ -1,5 +1,7 @@
 package help.ukraine.app.service;
 
+import help.ukraine.app.model.PremiseOfferModel;
+import help.ukraine.app.model.UserModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,13 +21,20 @@ public class MailService {
 
     private static final String OFFER_MSG_SUBJECT = "Someone is interested in your offer! \uD83D\uDC40";
 
-    public void sendOfferNotificationMail(String hostMail, String hostName, String refugeeName, String address) throws MessagingException {
+    public void sendOfferNotificationMail(UserModel host, UserModel refugee, PremiseOfferModel premiseOfferModel) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-        mimeMessageHelper.setTo(hostMail);
+        mimeMessageHelper.setTo(host.getEmail());
         mimeMessageHelper.setSubject(OFFER_MSG_SUBJECT);
-        mimeMessageHelper.setText(String.format(OFFER_MSG, hostName, refugeeName, address), false);
+        String offerAddress = parseAddress(premiseOfferModel);
+        mimeMessageHelper.setText(String.format(OFFER_MSG, host.getName(), refugee.getName(), offerAddress), false);
         javaMailSender.send(mimeMessage);
+    }
+
+    private String parseAddress(PremiseOfferModel premiseOfferModel) {
+        return premiseOfferModel.getCity() + ", " + premiseOfferModel.getStreet() + " "
+                + premiseOfferModel.getHouseNumber() + ", "
+                + premiseOfferModel.getPostalCode();
     }
 
 

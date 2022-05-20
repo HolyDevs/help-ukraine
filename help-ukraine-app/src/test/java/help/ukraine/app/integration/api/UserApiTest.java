@@ -21,17 +21,16 @@ import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.Date;
 
-import static help.ukraine.app.controller.UserController.*;
+import static help.ukraine.app.controller.UserController.USER_ENDPOINT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,10 +42,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles(profiles = "integrationtest")
 class UserApiTest {
 
+    // IDS
+    private static final Long EXISTING_USER_ID = 1L;
+    private static final Long REGISTERED_USER_ID = 2L;
+    private static final Long NOT_EXISTING_USER_ID = 100L;
     // EMAILS
-    private static final String EXISTING_EMAIL = "jan.testowy@gmail.com";
-    private static final String REGISTERED_EMAIL = "jan.testowy1@gmail.com";
-    private static final String NOT_EXISTING_EMAIL = "aaa.bbb@ccc.com";
+    private static final String EXISTING_USER_EMAIL = "jan.testowy@gmail.com";
+    private static final String REGISTERED_USER_EMAIL = "jan.testowy1@gmail.com";
+    private static final String NOT_EXISTING_USER_EMAIL = "aaa.bbb@ccc.com";
     // NAMES
     private static final String NAME = "Jan";
     private static final String MODIFIED_NAME = "Andrzej";
@@ -60,14 +63,18 @@ class UserApiTest {
     private static final String USER_MODIFY_NAME_PAYLOAD_PATH = "payloads/users/modify/userModifyNamePayload.json";
     private static final String USER_MODIFY_NAME_PAYLOAD_NOT_EXISTING_EMAIL_PATH = "payloads/users/modify/userModifyNamePayloadNotExistingEmail.json";
     private static final String USER_MODIFY_PASSWORD_PAYLOAD_PATH = "payloads/users/modify/userModifyPasswordPayload.json";
-    // TOKENS - VALID TOKENS ARE GENERATED FOR LOCAL SECRET 'SECRET' AND ARE VALID FOR 60 YRS
-    private static final String VALID_AUTH_HEADER_EXISTING_EMAIL_REFUGEE_ROLE = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYW4udGVzdG93eUBnbWFpbC5jb20iLCJyb2xlIjoiUk9MRV9SRUZVR0VFIiwiaXNzIjoiaXNzdWVyIiwiZXhwIjozNTQxMzY1OTMzfQ.S7nqWrLC13dQ-Pdl_SX0HZi-8-95pGAv4FaVDSwEHfw";
-    private static final String VALID_AUTH_HEADER_EXISTING_EMAIL_NO_ROLE = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYW4udGVzdG93eUBnbWFpbC5jb20iLCJpc3MiOiJpc3N1ZXIiLCJleHAiOjM1NDEzNjU5ODV9.2yOeL-UHYn-nQu9gjqxiS5v2WG43WJiDI-Lbf1VhCTU";
-    private static final String VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYWEuYmJiQGNjYy5jb20iLCJyb2xlIjoiUk9MRV9SRUZVR0VFIiwiaXNzIjoiaXNzdWVyIiwiZXhwIjozNTQxMzY1ODY2fQ.qPvmMiltCRYPIg9sAdbwqHBhJz1NGWdJvn-3B4x-cQo";
+    // TOKENS - VALID TOKENS ARE GENERATED FOR LOCAL SECRET 'SECRET' AND ARE VALID FOR 100 YRS
+    private static final String VALID_AUTH_HEADER_EXISTING_USER_REFUGEE_ROLE = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYW4udGVzdG93eUBnbWFpbC5jb20iLCJ1c2VyX3JvbGUiOiJST0xFX1JFRlVHRUUiLCJ1c2VyX2lkIjoxLCJpc3MiOiJpc3N1ZXIiLCJleHAiOjQ4MDg2NDI0NTZ9.tj5jxN8HD4hoUCuWqirvApzwW5le1NkP4VsjIlmz6Qs";
+    private static final String VALID_AUTH_HEADER_EXISTING_USER_NO_ROLE = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYW4udGVzdG93eUBnbWFpbC5jb20iLCJ1c2VyX2lkIjoxLCJpc3MiOiJpc3N1ZXIiLCJleHAiOjQ4MDg2NDI1NDh9.bPF_4q2phSjF5cA4Yf8AO1dcIyz8AMcvdxPelnXWP90";
+    private static final String VALID_AUTH_HEADER_NOT_EXISTING_USER_REFUGEE_ROLE = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYWEuYmJiQGNjYy5jb20iLCJ1c2VyX3JvbGUiOiJST0xFX1JFRlVHRUUiLCJ1c2VyX2lkIjoxMDAsImlzcyI6Imlzc3VlciIsImV4cCI6NDgwODY0MzE1Mn0.BN8pMUUVB3ZOriWw5kTkNuFdPrHX_nuVGPHy5VNFR88";
     private static final String NOT_VALID_AUTH_HEADER = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYW4udGVzdG93eUBnbWFpbC5jb20iLCJyb2xlIjoiUmVmdWdlZSIsImlzcyI6Imlzc3VlciIsImV4cCI6NDgwMjQzNDY5OX0.Gwh34iQtUzO1a1uKK";
+
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Autowired
     private UserRepository userRepository;
@@ -86,8 +93,11 @@ class UserApiTest {
 
     @BeforeEach
     void saveUser() {
+        entityManager
+                .createNativeQuery("ALTER SEQUENCE hibernate_sequence RESTART WITH 1")
+                .executeUpdate();
         UserEntity userEntity = UserEntity.builder()
-                .email(EXISTING_EMAIL)
+                .email(EXISTING_USER_EMAIL)
                 .name("Jan")
                 .surname("Testowy")
                 .accountType(AccountType.REFUGEE)
@@ -106,16 +116,17 @@ class UserApiTest {
     @Test
     void fetchUserOkTest() throws Exception {
         // GET - OK
-        MvcResult mvcGetResult = mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-                        .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_REFUGEE_ROLE)
+        MvcResult mvcGetResult = mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "/"  + EXISTING_USER_ID)
+                        .servletPath(USER_ENDPOINT + "/"  + EXISTING_USER_ID)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_USER_REFUGEE_ROLE)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         String body = mvcGetResult.getResponse().getContentAsString();
 
         UserModel userModel = objectMapper.readValue(body, UserModel.class);
-        assertEquals(EXISTING_EMAIL, userModel.getEmail());
+        assertEquals(EXISTING_USER_EMAIL, userModel.getEmail());
+        assertEquals(EXISTING_USER_ID, userModel.getId());
         assertEquals(NAME, userModel.getName());
     }
 
@@ -123,9 +134,9 @@ class UserApiTest {
     @Test
     void fetchUserNotFoundTest() throws Exception {
         // GET - NOT FOUND
-        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "/" + NOT_EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NOT_EXISTING_USER_REFUGEE_ROLE)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -134,7 +145,7 @@ class UserApiTest {
     @Test
     void fetchUserNotValidTokenForbiddenTest() throws Exception {
         // GET - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "/" + NOT_EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, NOT_VALID_AUTH_HEADER)
                         .accept(MediaType.APPLICATION_JSON))
@@ -145,9 +156,9 @@ class UserApiTest {
     @Test
     void fetchUserTokenWithNoRoleForbiddenTest() throws Exception {
         // GET - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "/" + EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_NO_ROLE)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_USER_NO_ROLE)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
@@ -156,9 +167,9 @@ class UserApiTest {
     @Test
     void fetchUserTokenForWrongUserForbiddenTest() throws Exception {
         // GET - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.get(USER_ENDPOINT + "/" + EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NOT_EXISTING_USER_REFUGEE_ROLE)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
@@ -179,7 +190,7 @@ class UserApiTest {
 
         String postContent = mvcPostResult.getResponse().getContentAsString();
         UserModel registeredUserModel = objectMapper.readValue(postContent, UserModel.class);
-        assertEquals(REGISTERED_EMAIL, registeredUserModel.getEmail());
+        assertEquals(REGISTERED_USER_EMAIL, registeredUserModel.getEmail());
         assertEquals(AccountType.REFUGEE, registeredUserModel.getAccountType());
         assertEquals(NAME, registeredUserModel.getName());
         assertTrue(passwordEncoder.matches(PASSWORD, registeredUserModel.getPassword()));
@@ -211,9 +222,9 @@ class UserApiTest {
     @Test
     void deleteUserNoContentTest() throws Exception {
         // DELETE - NO CONTENT
-        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "/" + EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_REFUGEE_ROLE))
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_USER_REFUGEE_ROLE))
                 .andExpect(status().isNoContent());
     }
 
@@ -221,10 +232,9 @@ class UserApiTest {
     @Test
     void deleteUserNotFoundTest() throws Exception {
         // DELETE - NOT FOUND
-        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "/" + NOT_EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
-                        .accept(MediaType.APPLICATION_JSON))
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NOT_EXISTING_USER_REFUGEE_ROLE))
                 .andExpect(status().isNotFound());
     }
 
@@ -232,7 +242,7 @@ class UserApiTest {
     @Test
     void deleteUserNotValidTokenForbiddenTest() throws Exception {
         // DELETE - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "/" + NOT_EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, NOT_VALID_AUTH_HEADER))
                 .andExpect(status().isForbidden());
@@ -242,9 +252,9 @@ class UserApiTest {
     @Test
     void deleteUserTokenWithNoRoleForbiddenTest() throws Exception {
         // DELETE - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "/" + EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_NO_ROLE))
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_USER_NO_ROLE))
                 .andExpect(status().isForbidden());
     }
 
@@ -252,9 +262,9 @@ class UserApiTest {
     @Test
     void deleteUserTokenForWrongUserForbiddenTest() throws Exception {
         // DELETE - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.delete(USER_ENDPOINT + "/" + EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE))
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NOT_EXISTING_USER_REFUGEE_ROLE))
                 .andExpect(status().isForbidden());
     }
 
@@ -264,9 +274,9 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // PUT - OK
-        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "/" + EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_REFUGEE_ROLE)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_USER_REFUGEE_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userUploadPayload))
@@ -275,7 +285,7 @@ class UserApiTest {
 
         String postContent = mvcPostResult.getResponse().getContentAsString();
         UserModel modifiedUserModel = objectMapper.readValue(postContent, UserModel.class);
-        assertEquals(EXISTING_EMAIL, modifiedUserModel.getEmail());
+        assertEquals(EXISTING_USER_EMAIL, modifiedUserModel.getEmail());
         assertEquals(AccountType.REFUGEE, modifiedUserModel.getAccountType());
         assertEquals(MODIFIED_NAME, modifiedUserModel.getName());
         assertTrue(passwordEncoder.matches(PASSWORD, modifiedUserModel.getPassword()));
@@ -287,9 +297,9 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_NOT_EXISTING_EMAIL_PATH), StandardCharsets.UTF_8);
 
         // PUT - NOT FOUND
-        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + NOT_EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "/" + NOT_EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NOT_EXISTING_USER_REFUGEE_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userUploadPayload))
@@ -302,7 +312,7 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // PUT - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "/" + EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
                         .header(HttpHeaders.AUTHORIZATION, NOT_VALID_AUTH_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -311,20 +321,20 @@ class UserApiTest {
                 .andExpect(status().isForbidden());
     }
 
-//    @Transactional
-//    @Test
-//    void modifyUserNameParamAndBodyEmailsNotMatchBadRequestTest() throws Exception {
-//        String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_NOT_EXISTING_EMAIL_PATH), StandardCharsets.UTF_8);
-//
-//        // PUT - BAD REQUEST
-//        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
-//                        .servletPath(USER_ENDPOINT)
-//                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON)
-//                        .content(userUploadPayload))
-//                .andExpect(status().isBadRequest());
-//    }
+    @Transactional
+    @Test
+    void modifyUserNameIdAndBodyIdNotMatchBadRequestTest() throws Exception {
+        String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_NOT_EXISTING_EMAIL_PATH), StandardCharsets.UTF_8);
+
+        // PUT - BAD REQUEST
+        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "/" + EXISTING_USER_ID)
+                        .servletPath(USER_ENDPOINT)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NOT_EXISTING_USER_REFUGEE_ROLE)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(userUploadPayload))
+                .andExpect(status().isBadRequest());
+    }
 
 
     @Transactional
@@ -333,9 +343,9 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // PUT - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "/" + EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_NO_ROLE)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_USER_NO_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userUploadPayload))
@@ -348,9 +358,9 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_NAME_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // PUT - FORBIDDEN
-        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+        mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "/" + EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NO_EXISTING_EMAIL_REFUGEE_ROLE)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_NOT_EXISTING_USER_REFUGEE_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userUploadPayload))
@@ -364,9 +374,9 @@ class UserApiTest {
         String userUploadPayload = Resources.toString(Resources.getResource(USER_MODIFY_PASSWORD_PAYLOAD_PATH), StandardCharsets.UTF_8);
 
         // PUT - OK
-        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "?" + EMAIL_PARAM_NAME + "=" + EXISTING_EMAIL)
+        MvcResult mvcPostResult = mvc.perform(MockMvcRequestBuilders.put(USER_ENDPOINT + "/" + EXISTING_USER_ID)
                         .servletPath(USER_ENDPOINT)
-                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_EMAIL_REFUGEE_ROLE)
+                        .header(HttpHeaders.AUTHORIZATION, VALID_AUTH_HEADER_EXISTING_USER_REFUGEE_ROLE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(userUploadPayload))
@@ -375,7 +385,7 @@ class UserApiTest {
 
         String postContent = mvcPostResult.getResponse().getContentAsString();
         UserModel modifiedUserModel = objectMapper.readValue(postContent, UserModel.class);
-        assertEquals(EXISTING_EMAIL, modifiedUserModel.getEmail());
+        assertEquals(EXISTING_USER_EMAIL, modifiedUserModel.getEmail());
         assertEquals(AccountType.REFUGEE, modifiedUserModel.getAccountType());
         assertEquals(NAME, modifiedUserModel.getName());
         assertTrue(passwordEncoder.matches(MODIFIED_PASSWORD, modifiedUserModel.getPassword()));

@@ -54,8 +54,10 @@ public class TokenDecoder {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         Optional<String> roleOptional = Optional.ofNullable(decodedJWT.getClaim(AuthTokenContents.ROLE_CLAIM).asString());
         roleOptional.ifPresent(role -> authorities.add(new SimpleGrantedAuthority(role)));
-        return new UsernamePasswordAuthenticationToken(username, null,
+        UsernamePasswordAuthenticationToken decodedToken = new UsernamePasswordAuthenticationToken(username, null,
                 Collections.unmodifiableCollection(authorities));
+        decodedToken.setDetails(decodedJWT.getClaim(AuthTokenContents.ID_CLAIM).asLong());
+        return decodedToken;
     }
 
 

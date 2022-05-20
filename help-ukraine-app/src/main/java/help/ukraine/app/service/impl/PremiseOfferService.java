@@ -13,10 +13,12 @@ import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PremiseOfferService {
     private final static String PREMISE_OFFER_NOT_FOUND_EXCEPTION_MSG = "Premise offer with id %s not found";
