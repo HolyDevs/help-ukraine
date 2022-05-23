@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(AuthUrls.BACKEND_ROOT + "/refugee-offers")
+@RequestMapping(AuthUrls.BACKEND_ROOT + "/searching-offers")
 @RequiredArgsConstructor
 @Log4j2
 public class SearchingOfferController {

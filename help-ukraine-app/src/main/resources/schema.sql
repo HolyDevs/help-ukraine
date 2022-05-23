@@ -56,7 +56,7 @@ create table searching_offers
     id                                  bigint  not null,
     additional_info                     TEXT,
     animals_involved                    boolean,
-    people_total                        integer not null,
+    user_moving_issues                  boolean,
     preferred_location                  varchar(255),
     range_from_preferred_location_in_km DOUBLE PRECISION,
     refugee_user_id                     bigint,

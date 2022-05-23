@@ -29,4 +29,13 @@ VALUES
 (334, 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Family_trip_to_Oregon.jpg/1200px-Family_trip_to_Oregon.jpg', 224),
 (335, 'https://ocalenie.org.pl/wp-content/uploads/2018/11/m07.png', 225);
 
+INSERT INTO searching_offers(id, additional_info, animals_involved, user_moving_issues, preferred_location,
+                             range_from_preferred_location_in_km, refugee_user_id)
+VALUES(441, 'I have diabetes', true, false, 'Warsaw', 20, 123);
+
+INSERT INTO searching_people(id, birth_date, moving_issues, name, searching_offer_id,
+                             sex, surname)
+VALUES (551, '1997-01-01', false, 'Andrzej', 441, 'MALE', 'Uciekienier'),
+(552, '1999-01-01', true, 'Joanna', 441, 'FEMALE', 'Uciekienier');
+
 

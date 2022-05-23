@@ -30,7 +30,7 @@ public class SearchingOfferEntity {
     @Column(columnDefinition = "TEXT")
     private String additionalInfo;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = SearchingPersonEntity.SEARCHING_OFFER_FIELD_NAME)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = SearchingPersonEntity.SEARCHING_OFFER_FIELD_NAME)
     private List<SearchingPersonEntity> searchingPeople;
 
     private String preferredLocation;
@@ -39,5 +39,6 @@ public class SearchingOfferEntity {
     private Double rangeFromPreferredLocationInKm;
 
     private Boolean animalsInvolved;
-    private int peopleTotal;
+
+    private Boolean userMovingIssues;
 }
