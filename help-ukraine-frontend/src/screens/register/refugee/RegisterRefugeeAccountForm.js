@@ -11,12 +11,16 @@ const RegisterRefugeeAccountForm = () => {
 
     let navigate = useNavigate();
     const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const createNewUser = () => {
         return {
             email: email,
+            name: name,
+            surname: surname,
             password: password,
             isAccountVerified: true,
             accountType: "REFUGEE"
@@ -26,7 +30,7 @@ const RegisterRefugeeAccountForm = () => {
     // temporary alert-based error handling
     // todo: create proper error info
     const validateInputs = () => {
-        const stringForms = [email, password, confirmPassword];
+        const stringForms = [email, password, confirmPassword, name, surname];
         if (!ValidationService.areStringsValid(stringForms)) {
             window.alert("Text input cannot be empty");
             return false;
@@ -48,7 +52,7 @@ const RegisterRefugeeAccountForm = () => {
         }
         const userToBeRegistered = createNewUser();
         sessionStorage.setItem('userToBeRegistered', JSON.stringify(userToBeRegistered));
-        navigate("/registerRefugee/account-basic-info");
+        navigate("/registerRefugee/account-family");
     }
 
     return (
@@ -58,6 +62,16 @@ const RegisterRefugeeAccountForm = () => {
                 <InputFormFilled value={email} onChange={(e) => {
                     setEmail(e.target.value);
                 }} inputLabel="Email:" type="text"/>
+            </AppSection>
+            <AppSection>
+                <InputFormFilled value={name} onChange={(e) => {
+                    setName(e.target.value);
+                }} inputLabel="Name:" type="text"/>
+            </AppSection>
+            <AppSection>
+                <InputFormFilled value={surname} onChange={(e) => {
+                    setSurname(e.target.value);
+                }} inputLabel="Surname:" type="text"/>
             </AppSection>
             <AppSection>
                 <InputFormFilled value={password} onChange={(e) => {

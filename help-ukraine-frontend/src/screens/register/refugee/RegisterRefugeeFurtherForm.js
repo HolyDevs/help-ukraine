@@ -60,7 +60,7 @@ const RegisterRefugeeFurtherForm = () => {
     return (
         <RegisterBody>
             <RegisterHeader>
-                We need some further information.
+                We need some further information about you.
             </RegisterHeader>
             <AppSection>
                 <InputFormFilled value={birthDate} onChange={(e) => {
@@ -94,7 +94,7 @@ const RegisterRefugeeFurtherForm = () => {
                 treatment, etc.)
             </TextSection>
             <AppSection>
-                <TextareaContent/>
+                <TextareaContent />
             </AppSection>
             <AppSection>
                 <AppButton onClick={handleProceedButton}>

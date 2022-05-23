@@ -1,12 +1,81 @@
 import React, {useEffect, useState} from 'react';
 import InputTextRow from "../Common/InputTextRow";
+import ValidationService from "../../services/ValidationService";
 
-const AddNewMember = ({member}) => {
-    const [gender, setGender] = useState("");
+const AddNewMember = ({member, membersList, onSave}) => {
+    const [gender, setGender] = useState("Female");
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [birthDate, setBirthDate] = useState("");
     const [movingIssues, setMovingIssues] = useState(false);
+
+
+    const onSaveButton = () => {
+        if (member) {
+            modifyMember();
+            return;
+        }
+        addNewMember();
+    }
+
+    const modifyMember = () => {
+        if (!validateInputs()) {
+            return;
+        }
+        fillMemberWithData();
+        resetForm();
+        onSave(membersList);
+    }
+
+    const fillMemberWithData = () => {
+        member.name = name;
+        member.surname = surname;
+        member.birthDate = birthDate;
+        member.movingIssues = movingIssues
+    }
+
+    const createNewMember = () => {
+        return {
+            name: name,
+            surname: surname,
+            gender: gender,
+            birthDate: birthDate,
+            movingIssues: movingIssues
+        }
+    }
+
+    const addNewMember = () => {
+        if (!validateInputs()) {
+            return;
+        }
+        const newMember = createNewMember();
+        membersList.push(newMember);
+        resetForm();
+        onSave(membersList);
+    }
+
+    const resetForm = () => {
+        setName("");
+        setSurname("");
+        setGender("Female");
+        setBirthDate("");
+        setMovingIssues(false);
+    }
+
+    // temporary alert-based error handling
+    // todo: create proper error info
+    const validateInputs = () => {
+        const stringForms = [name, surname]
+        if (!ValidationService.areStringsValid(stringForms)) {
+            window.alert("Text input cannot be empty");
+            return false;
+        }
+        if (!ValidationService.isBirthDateValid(birthDate)) {
+            window.alert("Chosen date is invalid");
+            return false;
+        }
+        return true;
+    }
 
     useEffect(() => {
         if (member) {
@@ -20,7 +89,7 @@ const AddNewMember = ({member}) => {
             setName("");
             setSurname("");
             setGender("");
-            setBirthDate("dd.MM.yyyy")
+            setBirthDate("")
             setMovingIssues(false);
         }
         
@@ -45,7 +114,7 @@ const AddNewMember = ({member}) => {
             <div className="spacer"/>
             <div className="saveMemberBox">
                 <div className="spacer"/>
-                <div className="saveMember"> Save </div>
+                <div className="saveMember" onClick={onSaveButton}> Save </div>
                 <div className="spacer"/>
             </div>
             

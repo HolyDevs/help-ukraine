@@ -102,8 +102,7 @@ const HostOfferDetails = () => {
     React.useEffect(() => {
        PremiseOfferService.getPremiseOfferById(details.id).then(
            (res) => {
-                 console.log('aaaa');   
-                 console.log(res);
+               console.log(res);
                offerDetails = res;
                rebuildDataForms();
            });

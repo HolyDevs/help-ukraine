@@ -6,6 +6,7 @@ import AppButton from "../../components/styled-components/AppButton";
 import AuthService from "../../services/AuthService";
 import {AppSection} from "../../components/styled-components/Sections";
 import LogoImg from "../../assets/logo.png";
+import SearchingOfferService from "../../services/SearchingOfferService";
 
 const LoginLogoHeader = styled.div`
     height: 20vh;
@@ -44,21 +45,36 @@ const Login = () => {
     let navigate = useNavigate();
     const [login, setLogin] = useState("jan.uciekinier@gmail.com");
     const [password, setPassword] = useState("aaa");
+
     const handleLoginChanged = (event)  => {
         setLogin(event.target.value);
     }
+
     const handlePasswordChanged = (event) => {
         setPassword(event.target.value);
     }
+
+    const loginHost = () => {
+        navigate("/host/offers");
+    }
+
+    const loginRefugee = () => {
+        SearchingOfferService.fetchCurrentSearchingOffer().then(res => {
+            navigate("/refugee/search");
+        }).catch(err => {
+            window.alert("Something went wrong - cannot fetch your data")
+        })
+    }
+
     function handleClick() {
         AuthService.login(login, password).then(
             (res) => {
                 switch (res.accountType) {
                     case 'REFUGEE':
-                        navigate("/refugee/search");
+                        loginRefugee();
                         break;
                     case 'HOST':
-                        navigate("/host/offers");
+                        loginHost();
                         break;
                 }
             },

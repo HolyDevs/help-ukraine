@@ -25,7 +25,7 @@ export const HostDetailsBody = styled.div`
     padding-bottom: 20%;`;
 
 export const ProfileBody = styled.div`
-    height: 100vh;
+    height: fit-content;
     color: --var(ukrainski-niebieski);
     font-size:20px;
     display: flex;
