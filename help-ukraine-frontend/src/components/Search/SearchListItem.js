@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import {useNavigate} from "react-router";
 import SearchListItemContent from "./SearchListItemContent";
 import SearchListItemImage from "./SearchListItemImage";
 

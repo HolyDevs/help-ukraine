@@ -1,32 +1,47 @@
-import { useLocation } from "react-router";
-import numOfPeopleIcon from "../../assets/tag-num-of-people-icon.png";
-import locationIcon from "../../assets/tag-location-icon.png";
-import dateFromIcon from "../../assets/tag-date-icon.png";
-import dateToIcon from "../../assets/tag-date-icon.png";
-import numOfBedroomsIcon from "../../assets/tag-num-of-bedrooms-icon.png";
-import numOfBathroomsIcon from "../../assets/tag-num-of-bathrooms-icon.png";
-import numOfKitchensIcon from "../../assets/tag-num-of-kitchens-icon.png";
-import animalsAllowedIcon from "../../assets/tag-animals-allowed-icon.png";
-import wheelchairFriendlyIcon from "../../assets/tag-wheelchair-friendly-icon.png";
-import smokingAllowedIcon from "../../assets/tag-smoking-allowed-icon.png";
-import Tag from "../../components/Search/Tag";
-import Button from "../../components/Common/Button";
-import MailService from "../../services/MailService";
+import {useLocation} from "react-router";
+import numOfPeopleIcon from "../../../assets/tag-num-of-people-icon.png";
+import locationIcon from "../../../assets/tag-location-icon.png";
+import dateFromIcon from "../../../assets/tag-date-icon.png";
+import dateToIcon from "../../../assets/tag-date-icon.png";
+import numOfBedroomsIcon from "../../../assets/tag-num-of-bedrooms-icon.png";
+import numOfBathroomsIcon from "../../../assets/tag-num-of-bathrooms-icon.png";
+import numOfKitchensIcon from "../../../assets/tag-num-of-kitchens-icon.png";
+import animalsAllowedIcon from "../../../assets/tag-animals-allowed-icon.png";
+import wheelchairFriendlyIcon from "../../../assets/tag-wheelchair-friendly-icon.png";
+import smokingAllowedIcon from "../../../assets/tag-smoking-allowed-icon.png";
+import Tag from "../../../components/Search/Tag";
+import Button from "../../../components/Common/Button";
+import MailService from "../../../services/MailService";
+import PendingService from "../../../services/PendingService";
+
 const SearchOfferDetails = () => {
 
     const {state} = useLocation();
     const {details} = state;
 
-    const handleMakeContact =  () => {
-        MailService.sendHelpRequest(details.id)
-            .then(res => {
-            alert("Mail send successfully!");
-            }
-        ).catch(error => {
-            window.alert("Something went wrong - cannot send request");
-            console.log(error);
-        });
+    const sendMailAndCreatePending = async () => {
+        await PendingService.createPendingForCurrentSearchingOffer(details.id);
+        await MailService.sendHelpRequest(details.id);
+    }
 
+    const handleMakeContact =  () => {
+        sendMailAndCreatePending().then(() => {
+            window.alert("Your contact request was sent!");
+        }).catch(err => {
+            handleErrorResponse(err);
+        });
+    }
+
+    const handleErrorResponse = (err) => {
+        if (!err.response) {
+            console.error(err);
+            return;
+        }
+        if (err.response.status === 409) {
+            window.alert("Your contact request to this offer was already sent!");
+            return;
+        }
+        window.alert("Something went wrong - cannot send request");
     }
 
     const generateTags = () => {
@@ -56,8 +71,6 @@ const SearchOfferDetails = () => {
             <div className="details__content__tags">
                 {generateTags()}
             </div>
-            {/*<h3>About family</h3>*/}
-            {/*<p>{details.description}</p>*/}
             <h3>About home</h3>
             <p>{details.description}</p>
             <Button onClick={handleMakeContact}>Make contact</Button>

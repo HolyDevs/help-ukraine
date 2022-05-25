@@ -1,8 +1,8 @@
 import "../styles/Main.scss";
 import offersIcon from "../assets/tag-date-icon.png";
 import profileIcon from "../assets/profile-icon.png";
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import {useState} from "react";
+import {useNavigate} from "react-router";
 
 const HostTabbar = () => {
 

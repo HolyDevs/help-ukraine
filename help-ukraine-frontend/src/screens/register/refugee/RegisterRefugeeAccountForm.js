@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {InputFormFilled} from "../../../components/widgets/Inputs";
 import {useNavigate} from "react-router-dom";
 import AppButton from "../../../components/styled-components/AppButton";
-import {PustePole20px, AppSection} from "../../../components/styled-components/Sections";
+import {AppSection, PustePole20px} from "../../../components/styled-components/Sections";
 import {RegisterHeader} from "../../../components/styled-components/Headers";
 import {RegisterBody} from "../../../components/styled-components/Screens";
 import ValidationService from "../../../services/ValidationService";

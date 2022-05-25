@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {RegisterBody} from "../../../components/styled-components/Screens";
 import {RegisterHeader} from "../../../components/styled-components/Headers";
-import {PustePole20px, AppSection, TextSection} from "../../../components/styled-components/Sections";
+import {AppSection, PustePole20px, TextSection} from "../../../components/styled-components/Sections";
 import {Checkbox, Dropdown, InputFormFilled, TextareaContent} from "../../../components/widgets/Inputs";
 import {useNavigate} from "react-router-dom";
 import AppButton from "../../../components/styled-components/AppButton";

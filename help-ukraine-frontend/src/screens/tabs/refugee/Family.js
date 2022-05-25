@@ -2,7 +2,7 @@ import FamilyMembers from "../../../components/Family/FamilyMembers";
 import addIcon from "../../../assets/add-icon.png"
 import Modal from "../../../components/Common/Modal";
 import AddNewMember from "../../../components/Family/AddNewMember";
-import React, { useState } from "react";
+import React, {useState} from "react";
 import SearchingOfferService from "../../../services/SearchingOfferService";
 
 const Family = () => {

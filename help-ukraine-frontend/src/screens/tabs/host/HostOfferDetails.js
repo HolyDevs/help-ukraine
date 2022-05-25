@@ -1,12 +1,12 @@
-import { useLocation } from "react-router";
+import {useLocation} from "react-router";
 
-import {HostDetailsBody} from "../../components/styled-components/Screens";
-import {AppSection, PustePole20px, TextSection} from "../../components/styled-components/Sections";
-import {Checkbox, Dropdown, InputFormFilled, TextareaContent} from "../../components/widgets/Inputs";
-import AppButton from "../../components/styled-components/AppButton";
+import {HostDetailsBody} from "../../../components/styled-components/Screens";
+import {AppSection, PustePole20px, TextSection} from "../../../components/styled-components/Sections";
+import {Checkbox, Dropdown, InputFormFilled, TextareaContent} from "../../../components/widgets/Inputs";
+import AppButton from "../../../components/styled-components/AppButton";
 import React, {useState} from "react";
-import ValidationService from "../../services/ValidationService";
-import PremiseOfferService from "../../services/PremiseOfferService";
+import ValidationService from "../../../services/ValidationService";
+import PremiseOfferService from "../../../services/PremiseOfferService";
 
 const HostOfferDetails = () => {
 
