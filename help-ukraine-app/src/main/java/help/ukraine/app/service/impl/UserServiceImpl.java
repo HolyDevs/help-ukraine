@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
     private static final String MODIFIED_USER_MSG = "User with id %d modified";
     private static final String CREATED_USER_MSG = "User with id %d created";
     private static final String USER_EMAIL_NOT_UNIQUE_MSG = "User with email %s already exists";
-    private static final String USER_ID_ALREADY_EXISTS_MSG = "User with id %d already exists";
 
     private final MapperFacade userMapperFacade;
     private final UserRepository userRepository;

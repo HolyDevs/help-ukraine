@@ -4,9 +4,8 @@ import help.ukraine.app.data.RefugeeEntity;
 import help.ukraine.app.data.UserEntity;
 import help.ukraine.app.enumerator.AccountType;
 import help.ukraine.app.enumerator.Sex;
-import help.ukraine.app.exception.UserNotExistsException;
 import help.ukraine.app.exception.UserEmailNotUniqueException;
-import help.ukraine.app.security.exception.UserNoAccessException;
+import help.ukraine.app.exception.UserNotExistsException;
 import help.ukraine.app.model.UserModel;
 import help.ukraine.app.repository.HostRepository;
 import help.ukraine.app.repository.RefugeeRepository;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 

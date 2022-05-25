@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @ExceptionHandler(UserEmailNotUniqueException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public String handleBadRequestExceptions(Exception exception) {
         return exception.getMessage();
     }

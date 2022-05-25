@@ -7,7 +7,6 @@ import help.ukraine.app.exception.HostDoesNotExistException;
 import help.ukraine.app.exception.PremiseOfferNotFoundException;
 import help.ukraine.app.model.PremiseOfferModel;
 import help.ukraine.app.repository.HostRepository;
-import help.ukraine.app.repository.OfferImagesRepository;
 import help.ukraine.app.repository.PremiseOfferRepository;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;

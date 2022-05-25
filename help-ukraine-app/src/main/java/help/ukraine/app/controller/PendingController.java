@@ -50,7 +50,7 @@ public class PendingController {
 
     @DeleteMapping("/{searchingOfferId}/{pendingOfferId}")
     public ResponseEntity<PendingModel> deletePending(@PathVariable Long searchingOfferId,
-                                                      @PathVariable Long pendingOfferId) throws PremiseOfferNotFoundException, SearchingOfferNotFoundException {
+                                                      @PathVariable Long pendingOfferId) throws PremiseOfferNotFoundException, SearchingOfferNotFoundException, PendingNotExistsException {
         pendingService.deletePending(searchingOfferId, pendingOfferId);
         return ResponseEntity.noContent().build();
     }
@@ -82,7 +82,7 @@ public class PendingController {
     }
 
     @ExceptionHandler(PendingAlreadyCreatedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public String handlePendingAlreadyCreatedException(PendingAlreadyCreatedException exception) {
         return exception.getMessage();
     }

@@ -2,8 +2,8 @@ package help.ukraine.app.service.impl;
 
 import help.ukraine.app.data.PendingEntity;
 import help.ukraine.app.data.PremiseOfferEntity;
-import help.ukraine.app.data.SearchingPremiseOfferId;
 import help.ukraine.app.data.SearchingOfferEntity;
+import help.ukraine.app.data.SearchingPremiseOfferId;
 import help.ukraine.app.exception.PendingAlreadyCreatedException;
 import help.ukraine.app.exception.PendingNotExistsException;
 import help.ukraine.app.exception.PremiseOfferNotFoundException;
@@ -34,6 +34,7 @@ public class PendingService {
     private static final String SEARCHING_OFFER_NOT_FOUND_MSG = "Searching offer with id %s not found";
     private static final String PREMISE_OFFER_NOT_FOUND_EXCEPTION_MSG = "Premise offer with id %s not found";
     private static final String PENDING_NOT_FOUND_EXCEPTION_MSG = "Pending with searching offer id %s and premise offer id %s not found";
+    private static final String PENDING_ALREADY_CREATED_EXCEPTION_MSG = "Pending with searching offer id %s and premise offer id %s is already created";
 
     public PendingModel createPending(PendingModel pendingModel) throws SearchingOfferNotFoundException, PremiseOfferNotFoundException, PendingAlreadyCreatedException {
         SearchingPremiseOfferId composedId = getComposedId(pendingModel.getSearchingOfferId(), pendingModel.getPremiseOfferId());
@@ -43,8 +44,9 @@ public class PendingService {
         return pendingFacade.map(pendingEntity, PendingModel.class);
     }
 
-    public void deletePending(Long searchingOfferId, Long premiseOfferId) throws PremiseOfferNotFoundException, SearchingOfferNotFoundException {
+    public void deletePending(Long searchingOfferId, Long premiseOfferId) throws PremiseOfferNotFoundException, SearchingOfferNotFoundException, PendingNotExistsException {
         SearchingPremiseOfferId composedId = getComposedId(searchingOfferId, premiseOfferId);
+        throwIfPendingNotExists(composedId);
         pendingRepository.deleteBySearchingPremiseOfferId(composedId);
     }
 
@@ -78,10 +80,21 @@ public class PendingService {
         return new SearchingPremiseOfferId(searchingOffer, premiseOffer);
     }
 
+    private void throwIfPendingNotExists(SearchingPremiseOfferId composedId) throws PendingNotExistsException {
+        if (pendingRepository.existsById(composedId)) {
+            return;
+        }
+        String msg = String.format(PENDING_NOT_FOUND_EXCEPTION_MSG, composedId.getSearchingOffer().getId(), composedId.getPremiseOffer().getId());
+        log.error(msg);
+        throw new PendingNotExistsException(msg);
+    }
+
     private void throwIfPendingAlreadyExists(SearchingPremiseOfferId composedId) throws PendingAlreadyCreatedException {
         if (!pendingRepository.existsById(composedId)) {
             return;
         }
-        throw new PendingAlreadyCreatedException("");
+        String msg = String.format(PENDING_ALREADY_CREATED_EXCEPTION_MSG, composedId.getSearchingOffer().getId(), composedId.getPremiseOffer().getId());
+        log.error(msg);
+        throw new PendingAlreadyCreatedException(msg);
     }
 }

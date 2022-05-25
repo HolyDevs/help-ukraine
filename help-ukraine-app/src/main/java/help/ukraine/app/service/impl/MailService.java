@@ -1,4 +1,4 @@
-package help.ukraine.app.service;
+package help.ukraine.app.service.impl;
 
 import help.ukraine.app.model.PremiseOfferModel;
 import help.ukraine.app.model.UserModel;
