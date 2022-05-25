@@ -6,6 +6,7 @@ import {Dropdown, InputFormFilled} from "../../../components/widgets/Inputs";
 import {useNavigate} from "react-router-dom";
 import AppButton from "../../../components/styled-components/AppButton";
 import ValidationService from "../../../services/ValidationService";
+import LabelService from "../../../services/LabelService";
 
 const RegisterHost = () => {
 
@@ -16,7 +17,7 @@ const RegisterHost = () => {
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [phone, setPhone] = useState("");
-    const [sex, setSex] = useState("Male");
+    const [sex, setSex] = useState(LabelService.getLabelFromKey("MALE"));
     const [birthDate, setBirthDate] = useState();
 
     const createNewUser = () => {
@@ -26,12 +27,28 @@ const RegisterHost = () => {
             name: name,
             surname: surname,
             phoneNumber: phone,
-            sex: sex.toUpperCase(),
+            sex: LabelService.getKeyFromLabel(sex),
             isAccountVerified: true,
             accountType: "HOST",
             birthDate: birthDate
         };
     }
+
+    React.useEffect(() => {
+        const userData = sessionStorage.getItem('userToBeRegistered');
+        if (!userData) {
+            return;
+        }
+        const user = JSON.parse(userData);
+        setEmail(user.email);
+        setName(user.name);
+        setSurname(user.surname);
+        setPhone(user.phoneNumber);
+        setBirthDate(user.birthDate);
+        setPassword(user.password);
+        setConfirmPassword(user.password);
+        setSex(LabelService.getLabelFromKey(user.sex));
+    })
 
     // temporary alert-based error handling
     // todo: create proper error info
@@ -88,8 +105,8 @@ const RegisterHost = () => {
                           initalValue={sex}
                           onChangeCallback={(value) => setSex(value.value)}
                           options={[
-                              {key: "male", value: "Male"},
-                              {key: "female", value: "Female"}
+                              {key: "male", value: LabelService.getLabelFromKey("MALE")},
+                              {key: "female", value: LabelService.getLabelFromKey("FEMALE")}
                           ]}/>
             </AppSection>
             <AppSection>

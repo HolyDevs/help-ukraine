@@ -44,6 +44,13 @@ class SearchingOfferService {
         });
     }
 
+    async createCurrentSearchingOffer(searchingOfferData) {
+        await this.createSearchingOffer(searchingOfferData);
+        const fetchedSearchingOffer = await this.fetchSearchingOfferByRefugeeId(searchingOfferData.refugeeId);
+        sessionStorage.setItem("searching-offer", JSON.stringify(fetchedSearchingOffer));
+        return fetchedSearchingOffer;
+    }
+
     async fetchCurrentSearchingOffer() {
         const refugeeId = AuthService.getCurrentUser().id;
         const searchingOffer = await this.fetchSearchingOfferByRefugeeId(refugeeId);

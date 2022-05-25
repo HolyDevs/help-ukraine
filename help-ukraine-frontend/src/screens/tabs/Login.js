@@ -46,6 +46,10 @@ const Login = () => {
     const [login, setLogin] = useState("jan.uciekinier@gmail.com");
     const [password, setPassword] = useState("aaa");
 
+    React.useEffect(() => {
+        sessionStorage.clear();
+    })
+
     const handleLoginChanged = (event)  => {
         setLogin(event.target.value);
     }

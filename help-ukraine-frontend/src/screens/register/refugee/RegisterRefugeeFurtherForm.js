@@ -7,33 +7,50 @@ import {RegisterHeader} from "../../../components/styled-components/Headers";
 import {RegisterBody} from "../../../components/styled-components/Screens";
 import ValidationService from "../../../services/ValidationService";
 import AuthService from "../../../services/AuthService";
+import SearchingOfferService from "../../../services/SearchingOfferService";
+import LabelService from "../../../services/LabelService";
 
 
 const RegisterRefugeeFurtherForm = () => {
 
     let navigate = useNavigate();
     const [phone, setPhone] = useState("");
-    const [sex, setSex] = useState("Male");
+    const [sex, setSex] = useState(LabelService.getLabelFromKey("MALE"));
     const [birthDate, setBirthDate] = useState();
-    const [petAllowed, setPetAllowed] = useState(false);
-    const [wheelchairRequired, setWheelchairRequired] = useState(false);
+    const [userMovingIssues, setUserMovingIssues] = useState(false);
+    const [animalsInvolved, setAnimalsInvolved] = useState(false);
+    const [additionalInfo, setAdditionalInfo] = useState("");
+
     const fillNewUserWithData = () => {
         const userToBeRegistered = JSON.parse(sessionStorage.getItem('userToBeRegistered'));
         userToBeRegistered.phoneNumber = phone;
-        userToBeRegistered.sex = sex.toUpperCase();
+        userToBeRegistered.sex = LabelService.getKeyFromLabel(sex);
         userToBeRegistered.birthDate = birthDate;
         return userToBeRegistered;
     }
 
-    const registerUser = async () => {
+    const fillNewSearchingOfferWithData = (refugeeId) => {
+        const searchingOfferToBeCreated = JSON.parse(sessionStorage.getItem('searchingOfferToBeCreated'));
+        searchingOfferToBeCreated.refugeeId = refugeeId;
+        searchingOfferToBeCreated.userMovingIssues = userMovingIssues;
+        searchingOfferToBeCreated.animalsInvolved = animalsInvolved;
+        searchingOfferToBeCreated.additionalInfo = additionalInfo;
+        searchingOfferToBeCreated.rangeFromPreferredLocationInKm = 20.0;
+        searchingOfferToBeCreated.preferredLocation = "Warsaw";
+        return searchingOfferToBeCreated;
+    }
+
+    const registerUserAndCreateNewSearchingOffer = async () => {
         const userToBeRegistered = fillNewUserWithData();
-        await AuthService.register(userToBeRegistered);
+        const registerRes = await AuthService.register(userToBeRegistered);
+        const searchingOffer = fillNewSearchingOfferWithData(registerRes.id);
+        await SearchingOfferService.createCurrentSearchingOffer(searchingOffer);
     }
 
     // temporary alert-based error handling
     // todo: create proper error info
     const validateInputs = () => {
-        if (!ValidationService.isStringValid(phone)) {
+        if (!ValidationService.areStringsValid([phone, additionalInfo])) {
             window.alert("Text input cannot be empty");
             return false;
         }
@@ -48,10 +65,11 @@ const RegisterRefugeeFurtherForm = () => {
         if (!validateInputs()) {
             return;
         }
-        registerUser()
+        registerUserAndCreateNewSearchingOffer()
             .then(() => {
                 sessionStorage.removeItem('userToBeRegistered');
-                navigate("/main/search");
+                sessionStorage.removeItem('searchingOfferToBeCreated');
+                navigate("/refugee/search");
             }).catch((error) => {
             window.alert("Registration failed: " + error.response.data);
         });
@@ -72,8 +90,8 @@ const RegisterRefugeeFurtherForm = () => {
                           initalValue={sex}
                           onChangeCallback={(value) => setSex(value.value)}
                           options={[
-                              {key: "male", value: "Male"},
-                              {key: "female", value: "Female"}
+                              {key: "male", value: LabelService.getLabelFromKey("MALE")},
+                              {key: "female", value: LabelService.getLabelFromKey("FEMALE")}
                           ]}/>
             </AppSection>
             <AppSection>
@@ -83,10 +101,10 @@ const RegisterRefugeeFurtherForm = () => {
             </AppSection>
             <PustePole20px/>
             <AppSection>
-                <Checkbox initialState={wheelchairRequired} onCheckCallback={(value) => setWheelchairRequired(value)}  inputLabel="I have a physical disability and require a wheelchair"/>
+                <Checkbox initialState={userMovingIssues} onCheckCallback={(value) => setUserMovingIssues(value)}  inputLabel="I have a physical disability and require a wheelchair"/>
             </AppSection>
             <AppSection>
-                <Checkbox initialState={petAllowed} onCheckCallback={(value) => setPetAllowed(value)} inputLabel="I have a pet"/>
+                <Checkbox initialState={animalsInvolved} onCheckCallback={(value) => setAnimalsInvolved(value)} inputLabel="I have a pet"/>
             </AppSection>
             <PustePole20px/>
             <TextSection>
@@ -94,7 +112,7 @@ const RegisterRefugeeFurtherForm = () => {
                 treatment, etc.)
             </TextSection>
             <AppSection>
-                <TextareaContent />
+                <TextareaContent value={additionalInfo} onChange={(e) => setAdditionalInfo(e.target.value)}/>
             </AppSection>
             <AppSection>
                 <AppButton onClick={handleProceedButton}>

@@ -30,6 +30,10 @@ const RolePickerButtonDistancer = styled.div`
     height: 5vh;`;
 
 const RolePicker = () => {
+    React.useEffect(() => {
+        sessionStorage.clear();
+    })
+
     return (
         <RolePickerBody>
             <Link to="/registerRefugee/account-creation">

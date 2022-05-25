@@ -16,6 +16,19 @@ const RegisterRefugeeAccountForm = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    React.useEffect(() => {
+        const userData = sessionStorage.getItem('userToBeRegistered');
+        if (!userData) {
+            return;
+        }
+        const user = JSON.parse(userData);
+        setEmail(user.email);
+        setName(user.name);
+        setSurname(user.surname);
+        setPassword(user.password);
+        setConfirmPassword(user.password);
+    })
+
     const createNewUser = () => {
         return {
             email: email,

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import InputTextRow from "../Common/InputTextRow";
 import ValidationService from "../../services/ValidationService";
+import LabelService from "../../services/LabelService";
 
 const AddNewMember = ({member, membersList, onSave}) => {
-    const [gender, setGender] = useState("Female");
+    const [sex, setSex] = useState(LabelService.getLabelFromKey("FEMALE"));
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [birthDate, setBirthDate] = useState("");
@@ -22,26 +23,23 @@ const AddNewMember = ({member, membersList, onSave}) => {
         if (!validateInputs()) {
             return;
         }
-        fillMemberWithData();
+        fillMemberWithData(member);
         resetForm();
         onSave(membersList);
     }
 
-    const fillMemberWithData = () => {
-        member.name = name;
-        member.surname = surname;
-        member.birthDate = birthDate;
-        member.movingIssues = movingIssues
+    const fillMemberWithData = (memberToFill) => {
+        memberToFill.name = name;
+        memberToFill.surname = surname;
+        memberToFill.birthDate = birthDate;
+        memberToFill.movingIssues = movingIssues
+        memberToFill.sex = LabelService.getKeyFromLabel(sex);
     }
 
     const createNewMember = () => {
-        return {
-            name: name,
-            surname: surname,
-            gender: gender,
-            birthDate: birthDate,
-            movingIssues: movingIssues
-        }
+        const newMember = {};
+        fillMemberWithData(newMember);
+        return newMember;
     }
 
     const addNewMember = () => {
@@ -57,7 +55,7 @@ const AddNewMember = ({member, membersList, onSave}) => {
     const resetForm = () => {
         setName("");
         setSurname("");
-        setGender("Female");
+        setSex(LabelService.getLabelFromKey("FEMALE"));
         setBirthDate("");
         setMovingIssues(false);
     }
@@ -81,43 +79,52 @@ const AddNewMember = ({member, membersList, onSave}) => {
         if (member) {
             setName(member.name);
             setSurname(member.surname);
-            setGender(member.gender);
+            setSex(LabelService.getLabelFromKey(member.sex));
             setBirthDate(member.birthDate);
             setMovingIssues(member.movingIssues);
-        }
-        else {
+        } else {
             setName("");
             setSurname("");
-            setGender("");
+            setSex(LabelService.getLabelFromKey("FEMALE"));
             setBirthDate("")
             setMovingIssues(false);
         }
-        
+
     }, [member])
 
     return (
         <div className="addNewMember">
             <div className="memberForm">
-                <InputTextRow inputName="Name" inputType="text" value={name} onChange={(event) => setName(event.target.value)}/>
-                <InputTextRow inputName="Surname" inputType="text" value={surname} onChange={(event) => setSurname(event.target.value)}/>
-                <InputTextRow inputName="Date" inputType="date" value={birthDate} onChange={(event) => setBirthDate(event.target.value)}/>
+                <InputTextRow inputName="Name" inputType="text" value={name}
+                              onChange={(event) => setName(event.target.value)}/>
+                <InputTextRow inputName="Surname" inputType="text" value={surname}
+                              onChange={(event) => setSurname(event.target.value)}/>
+                <InputTextRow inputName="Date" inputType="date" value={birthDate}
+                              onChange={(event) => setBirthDate(event.target.value)}/>
                 <div className="sexChoice">
                     <div className="sexChoiceTitle">Sex</div>
                     <div className="spacer"/>
-                    <select className="sexSelect" value={gender} onChange={(event) => setGender(event.target.value)}>
-                        <option value="Female">Female</option>
-                        <option value="Male">Male</option>
-                </select>
+                    <select className="sexSelect" value={sex} onChange={(event) => setSex(event.target.value)}>
+                        <option
+                            value={LabelService.getLabelFromKey("FEMALE")}>
+                            {LabelService.getLabelFromKey("FEMALE")}
+                        </option>
+                        <option
+                            value={LabelService.getLabelFromKey("MALE")}>
+                            {LabelService.getLabelFromKey("MALE")}
+                        </option>
+                    </select>
                 </div>
-                <InputTextRow inputName="Moving issues" inputType="checkbox" checked={movingIssues} onChange={(event) => setMovingIssues(event.target.checked)}/>
+                <InputTextRow inputName="Moving issues" inputType="checkbox" checked={movingIssues}
+                              onChange={(event) => setMovingIssues(event.target.checked)}/>
             </div>
             <div className="spacer"/>
             <div className="saveMemberBox">
                 <div className="spacer"/>
-                <div className="saveMember" onClick={onSaveButton}> Save </div>
+                <div className="saveMember" onClick={onSaveButton}> Save</div>
                 <div className="spacer"/>
             </div>
-            
+
         </div>
     );
 }

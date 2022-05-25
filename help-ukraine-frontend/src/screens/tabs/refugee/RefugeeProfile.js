@@ -7,6 +7,7 @@ import {AppSection, PustePole20px, TextSection} from "../../../components/styled
 import {Checkbox, Dropdown, InputFormFilled, TextareaContent} from "../../../components/widgets/Inputs";
 import AppButton from "../../../components/styled-components/AppButton";
 import SearchingOfferService from "../../../services/SearchingOfferService";
+import LabelService from "../../../services/LabelService";
 
 
 const RefugeeProfile = () => {
@@ -16,7 +17,7 @@ const RefugeeProfile = () => {
     const [birthDate, setBirthDate] = useState("");
     const [phone, setPhoneNumber] = useState("");
     const [email, setEmail] = useState("");
-    const [sex, setSex] = useState("");
+    const [sex, setSex] = useState(LabelService.getLabelFromKey("MALE"));
     const [additionalInfo, setAdditionalInfo] = useState("");
     const [userMovingIssues, setUserMovingIssues] = useState(false);
     const [animalsInvolved, setAnimalsInvolved] = useState(false);
@@ -60,7 +61,7 @@ const RefugeeProfile = () => {
         updatedUserData.birthDate = birthDate;
         updatedUserData.email = email;
         updatedUserData.phoneNumber = phone;
-        updatedUserData.sex = sex.toUpperCase();
+        updatedUserData.sex = LabelService.getKeyFromLabel(sex);
         return updatedUserData;
     }
 
@@ -70,7 +71,7 @@ const RefugeeProfile = () => {
         setBirthDate(userData.birthDate);
         setEmail(userData.email);
         setPhoneNumber(userData.phoneNumber);
-        setSex(userData.sex === 'MALE'? 'Male': 'Female');
+        setSex(LabelService.getLabelFromKey(userData.sex));
         setUserMovingIssues(searchingOffer.userMovingIssues);
         setAnimalsInvolved(searchingOffer.animalsInvolved);
         setAdditionalInfo(searchingOffer.additionalInfo)
@@ -97,6 +98,7 @@ const RefugeeProfile = () => {
                 return;
             }
             rebuildDataForms(userRes, offerRes);
+            window.alert("Saved!");
         }).catch(error => {
             rebuildDataForms(userData, offerData);
             window.alert("Profile edition failed: " + error.response?.data);
@@ -134,8 +136,8 @@ const RefugeeProfile = () => {
                         inputLabel="Sex:" dark="true"
                         onChangeCallback={(value) => setSex(value.value)}
                         options={[
-                            {key: "male", value: "Male"},
-                            {key: "female", value: "Female"}
+                            {key: "male", value: LabelService.getLabelFromKey("MALE")},
+                            {key: "female", value: LabelService.getLabelFromKey("FEMALE")}
                         ]}/>
                 </AppSection>
                 <AppSection>

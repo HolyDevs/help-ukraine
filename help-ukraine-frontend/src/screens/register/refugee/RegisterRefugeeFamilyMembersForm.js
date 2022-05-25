@@ -16,6 +16,32 @@ const RegisterRefugeeFamilyMembersForm = () => {
     const [selectedFamilyMember, setSelectedFamilyMember] = useState(null);
     const [addNewMemberModalVisibility, setAddNewMemberModalVisibility] = useState(false);
 
+    React.useEffect(() => {
+        const offerData = sessionStorage.getItem('searchingOfferToBeCreated');
+        if (!offerData) {
+            return;
+        }
+        const offer = JSON.parse(offerData);
+        if (offer.searchingPeople.length === 0) {
+            return;
+        }
+        setMembers(offer.searchingPeople);
+    })
+
+    const createNewSearchingOffer = () => {
+        return {
+            searchingPeople: members
+        }
+    }
+
+    const handleSubmitButton = () => {
+        const searchingOfferToBeCreated = createNewSearchingOffer();
+        sessionStorage.setItem('searchingOfferToBeCreated', JSON.stringify(searchingOfferToBeCreated));
+        setSelectedFamilyMember(null);
+        setAddNewMemberModalVisibility(false);
+        navigate("/registerRefugee/account-further-info");
+    }
+
     const onModalClose = () => {
         setAddNewMemberModalVisibility(false);
     }
@@ -36,10 +62,6 @@ const RegisterRefugeeFamilyMembersForm = () => {
         });
         setMembers(newMembersList);
         setSelectedFamilyMember(null);
-    }
-
-    const handleSubmitButton = () => {
-        navigate("/registerRefugee/account-further-info");
     }
 
     return (
