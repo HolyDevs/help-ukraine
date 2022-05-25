@@ -2,8 +2,8 @@ import "../styles/Main.scss";
 import familyIcon from "../assets/family-icon.png";
 import searchIcon from "../assets/search-icon.png";
 import profileIcon from "../assets/profile-icon.png";
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import {useState} from "react";
+import {useNavigate} from "react-router";
 
 const RefugeeTabbar = () => {
 

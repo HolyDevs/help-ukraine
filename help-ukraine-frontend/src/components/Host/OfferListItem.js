@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import {useNavigate} from "react-router";
 import OfferListItemContent from "./OfferListItemContent";
 import OfferListItemImage from "./OfferListItemImage";
 import styled from "styled-components";

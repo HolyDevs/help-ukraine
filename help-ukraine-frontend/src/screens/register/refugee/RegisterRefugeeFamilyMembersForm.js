@@ -2,7 +2,7 @@ import FamilyMembers from "../../../components/Family/FamilyMembers";
 import addIcon from "../../../assets/add-icon.png"
 import Modal from "../../../components/Common/Modal";
 import AddNewMember from "../../../components/Family/AddNewMember";
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {AppSection, PustePole20px} from "../../../components/styled-components/Sections";
 import AppButton from "../../../components/styled-components/AppButton";
 import {useNavigate} from "react-router-dom";
