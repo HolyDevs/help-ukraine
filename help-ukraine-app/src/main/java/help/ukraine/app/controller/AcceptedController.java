@@ -62,27 +62,19 @@ public class AcceptedController {
 
     // EXCEPTION HANDLING
 
-    @ExceptionHandler(PremiseOfferNotFoundException.class)
+    @ExceptionHandler({
+            AcceptedNotExistsException.class,
+            PremiseOfferNotFoundException.class,
+            SearchingOfferNotFoundException.class
+    })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handlePremiseOfferNotFoundException(PremiseOfferNotFoundException exception) {
-        return exception.getMessage();
-    }
-
-    @ExceptionHandler(SearchingOfferNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleSearchingOfferNotFoundException(SearchingOfferNotFoundException exception) {
-        return exception.getMessage();
-    }
-
-    @ExceptionHandler(AcceptedNotExistsException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handlePendingNotExistsException(AcceptedNotExistsException exception) {
+    public String handleNotFoundExceptions(Exception exception) {
         return exception.getMessage();
     }
 
     @ExceptionHandler(AcceptedAlreadyCreatedException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public String handlePendingAlreadyCreatedException(AcceptedAlreadyCreatedException exception) {
+    public String handleConflictExceptions(Exception exception) {
         return exception.getMessage();
     }
 }

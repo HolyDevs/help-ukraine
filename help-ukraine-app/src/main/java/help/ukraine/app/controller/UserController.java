@@ -26,9 +26,11 @@ import javax.validation.Valid;
 public class UserController {
 
     // ENDPOINTS
+
     public static final String USER_ENDPOINT = AuthUrls.BACKEND_ROOT + "/user";
 
     // MESSAGES
+
     private static final String PARAM_AND_BODY_IDS_NOT_MATCH = "Id passed as parameter (%d) and one placed in body (%d) do not match";
 
     private final UserService userService;
@@ -81,7 +83,7 @@ public class UserController {
 
     @ExceptionHandler(UserEmailNotUniqueException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public String handleBadRequestExceptions(Exception exception) {
+    public String handleConflictExceptions(Exception exception) {
         return exception.getMessage();
     }
 
