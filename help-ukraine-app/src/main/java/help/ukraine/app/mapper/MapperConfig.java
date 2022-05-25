@@ -2,16 +2,11 @@ package help.ukraine.app.mapper;
 
 import help.ukraine.app.data.*;
 import help.ukraine.app.model.*;
-import ma.glasnost.orika.*;
-import ma.glasnost.orika.converter.ConverterFactory;
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
-import ma.glasnost.orika.metadata.Type;
-import org.hibernate.mapping.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Configuration
 public class MapperConfig {
@@ -55,6 +50,17 @@ public class MapperConfig {
     public MapperFacade pendingFacade() {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
         mapperFactory.classMap(PendingEntity.class, PendingModel.class)
+                .field("searchingPremiseOfferId.searchingOffer.id", "searchingOfferId")
+                .field("searchingPremiseOfferId.premiseOffer.id", "premiseOfferId")
+                .byDefault()
+                .register();
+        return mapperFactory.getMapperFacade();
+    }
+
+    @Bean
+    public MapperFacade acceptedFacade() {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        mapperFactory.classMap(AcceptedEntity.class, AcceptedModel.class)
                 .field("searchingPremiseOfferId.searchingOffer.id", "searchingOfferId")
                 .field("searchingPremiseOfferId.premiseOffer.id", "premiseOfferId")
                 .byDefault()

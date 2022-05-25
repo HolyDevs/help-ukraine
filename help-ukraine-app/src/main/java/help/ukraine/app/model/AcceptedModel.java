@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PendingModel {
+public class AcceptedModel {
     @NotNull
     private Long searchingOfferId;
     @NotNull

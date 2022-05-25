@@ -8,14 +8,12 @@ import help.ukraine.app.exception.SearchingOfferNotFoundException;
 import help.ukraine.app.model.SearchingOfferModel;
 import help.ukraine.app.repository.RefugeeRepository;
 import help.ukraine.app.repository.SearchingOfferRepository;
-import help.ukraine.app.repository.SearchingPersonRepository;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.function.Predicate;
 
 @RequiredArgsConstructor
 @Transactional

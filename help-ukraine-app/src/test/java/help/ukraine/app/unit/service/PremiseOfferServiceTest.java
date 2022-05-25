@@ -17,19 +17,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest
@@ -47,7 +44,6 @@ public class PremiseOfferServiceTest {
 
     private static PremiseOfferEntity PREMISE_OFFER_1;
     private static final Long PREMISE_OFFER_1_ID = 1L;
-    private static final String PREMISE_OFFER_1_ADDRESS = "address1";
     private static final int PREMISE_OFFER_1_PEOPLE_COUNT = 2;
     private static final int PREMISE_OFFER_1_KITCHENS_COUNT = 1;
     private static final int PREMISE_OFFER_1_BEDROOMS_COUNT = 1;
@@ -62,7 +58,6 @@ public class PremiseOfferServiceTest {
 
     private static PremiseOfferEntity PREMISE_OFFER_2;
     private static final Long PREMISE_OFFER_2_ID = 2L;
-    private static final String PREMISE_OFFER_2_ADDRESS = "address2";
     private static final int PREMISE_OFFER_2_PEOPLE_COUNT = 3;
     private static final int PREMISE_OFFER_2_KITCHENS_COUNT = 2;
     private static final int PREMISE_OFFER_2_BEDROOMS_COUNT = 2;
@@ -77,7 +72,6 @@ public class PremiseOfferServiceTest {
 
     private static PremiseOfferEntity PREMISE_OFFER_3;
     private static final Long PREMISE_OFFER_3_ID = 3L;
-    private static final String PREMISE_OFFER_3_ADDRESS = "address3";
     private static final int PREMISE_OFFER_3_PEOPLE_COUNT = 4;
     private static final int PREMISE_OFFER_3_KITCHENS_COUNT = 2;
     private static final int PREMISE_OFFER_3_BEDROOMS_COUNT = 2;
@@ -148,7 +142,6 @@ public class PremiseOfferServiceTest {
                 .id(PREMISE_OFFER_1_ID)
                 .host(HOST_ENTITY_1)
                 .offerImages(List.of(OFFER_IMAGE_1))
-//                .premiseAddress(PREMISE_OFFER_1_ADDRESS)
                 .peopleToTake(PREMISE_OFFER_1_PEOPLE_COUNT)
                 .bathrooms(PREMISE_OFFER_1_BATHROOMS_COUNT)
                 .kitchens(PREMISE_OFFER_1_KITCHENS_COUNT)
@@ -166,7 +159,6 @@ public class PremiseOfferServiceTest {
                 .id(PREMISE_OFFER_2_ID)
                 .host(HOST_ENTITY_2)
                 .offerImages(List.of(OFFER_IMAGE_2))
-//                .premiseAddress(PREMISE_OFFER_2_ADDRESS)
                 .peopleToTake(PREMISE_OFFER_2_PEOPLE_COUNT)
                 .bathrooms(PREMISE_OFFER_2_BATHROOMS_COUNT)
                 .kitchens(PREMISE_OFFER_2_KITCHENS_COUNT)
@@ -266,20 +258,11 @@ public class PremiseOfferServiceTest {
         assertThrows(PremiseOfferNotFoundException.class, () -> premiseOfferService.deletePremiseOfferById(NOT_EXISTING_PREMISE_OFFER_ID));
     }
 
-    @Disabled
-    @Test
-    @Transactional
-    void createPremiseOfferTest() throws Exception {
-        PremiseOfferModel premiseOfferModel = premiseOfferService.getPremiseOfferById(PREMISE_OFFER_1_ID);
-        premiseOfferService.createPremiseOffer(premiseOfferModel);
-    }
-
     private void compareEntityToModel(PremiseOfferEntity entity, PremiseOfferModel model) {
         assertEquals(entity.getId(), model.getId());
         assertEquals(entity.getHost().getUserId(), model.getHostId());
         List<String> entityImageLocations = entity.getOfferImages().stream().map(OfferImageEntity::getImageLocation).collect(Collectors.toList());
         assertFalse(Collections.disjoint(entityImageLocations, model.getOfferImagesLocations()));
-//        assertEquals(entity.getPremiseAddress(), model.getPremiseAddress());
         assertEquals(entity.getBathrooms(), model.getBathrooms());
         assertEquals(entity.getKitchens(), model.getKitchens());
         assertEquals(entity.getBedrooms(), model.getBedrooms());

@@ -4,14 +4,16 @@
 ### -Dspring.profiles.active=local - dzieki temu uzywamy in-memory bazki ktorą inicjalizuje schema.sql i data.sql
 # AUTENTYKACJA LOKALNIE
  mozna sie autentykowac userem tworzonym w data.sql:
- 1. strzał POST pod /auth/login -> body jako x-www-form-urlencoded (username - jan.lokalny@gmail.com, password - aaa)
+ 1. strzał POST pod /auth/login -> body jako x-www-form-urlencoded (username - **jan.uciekinier@gmail.com** (**REFUGEE**), 
+ **jan.pomocny@gmail.com** (**HOST**), password - **aaa**)
  2. dostajemy access_token (10 min waznosci) i refresh_token (30 min)
  3. strzał pod endpoint musi miec header Authorization z wartoscia Bearer <access_token>
  4. refresh tokenów -> strzał GET pod /auth/refresh plus header Authorization z wartoscia Bearer <refresh_token>
 # KOMPILACJA & DOCKER
 ## kompilacja z utworzeniem obrazu dockerowego:
- mvn clean install -Dprofile=local - obraz do odpalenia lokalnie na bazce h2
- mvn clean install -Dprofile=dev - obraz do odpalenia na srodowisku start kontenera lokalnie:
+ - mvn clean install -Dprofile=local - obraz do odpalenia lokalnie na bazce h2
+ - mvn clean install -Dprofile=dev - obraz do odpalenia na srodowisku 
+## start kontenera lokalnie:
 ### docker run -p 8080:8080 help-ukraine/help-ukraine 
 ## tagowanie obrazu dockerowego:
 ### docker tag help-ukraine/help-ukraine gcr.io/help-ukraine-344011/help-ukraine
