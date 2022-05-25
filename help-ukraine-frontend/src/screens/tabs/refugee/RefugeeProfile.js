@@ -1,30 +1,37 @@
 import React, {useState} from "react";
-import {Dropdown, InputFormFilled} from "../../components/widgets/Inputs";
-import {ProfileBody} from "../../components/styled-components/Screens";
-import AppButton from "../../components/styled-components/AppButton";
-import {AppSection, PustePole20px} from "../../components/styled-components/Sections";
-import AuthService from "../../services/AuthService";
-import {useNavigate} from "react-router-dom";
-import ValidationService from "../../services/ValidationService";
+import {useNavigate} from "react-router";
+import AuthService from "../../../services/AuthService";
+import ValidationService from "../../../services/ValidationService";
+import {ProfileBody} from "../../../components/styled-components/Screens";
+import {AppSection, PustePole20px, TextSection} from "../../../components/styled-components/Sections";
+import {Checkbox, Dropdown, InputFormFilled, TextareaContent} from "../../../components/widgets/Inputs";
+import AppButton from "../../../components/styled-components/AppButton";
+import SearchingOfferService from "../../../services/SearchingOfferService";
+import LabelService from "../../../services/LabelService";
 
-const Profile = () => {
+
+const RefugeeProfile = () => {
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [birthDate, setBirthDate] = useState("");
     const [phone, setPhoneNumber] = useState("");
     const [email, setEmail] = useState("");
-    const [sex, setSex] = useState("");
+    const [sex, setSex] = useState(LabelService.getLabelFromKey("MALE"));
+    const [additionalInfo, setAdditionalInfo] = useState("");
+    const [userMovingIssues, setUserMovingIssues] = useState(false);
+    const [animalsInvolved, setAnimalsInvolved] = useState(false);
 
     React.useEffect(() => {
         const user = AuthService.getCurrentUser();
-        rebuildDataForms(user);
+        const searchingOffer = SearchingOfferService.getCurrentSearchingOffer();
+        rebuildDataForms(user, searchingOffer);
     }, []);
 
     // temporary alert-based error handling
     // todo: create proper error info
     const validateInputs = () => {
-        if (!ValidationService.areStringsValid([name, surname, phone, email])) {
+        if (!ValidationService.areStringsValid([name, surname, phone, email, additionalInfo])) {
             window.alert("Text input cannot be empty");
             return false;
         }
@@ -39,6 +46,14 @@ const Profile = () => {
         return true;
     }
 
+    const buildModifiedSearchingOfferData = (searchingOfferData) => {
+        const updatedSearchingOfferData = Object.assign({}, searchingOfferData);
+        updatedSearchingOfferData.userMovingIssues = userMovingIssues;
+        updatedSearchingOfferData.animalsInvolved = animalsInvolved;
+        updatedSearchingOfferData.additionalInfo = additionalInfo;
+        return updatedSearchingOfferData;
+    }
+
     const buildModifiedUserData = (userData) => {
         const updatedUserData = Object.assign({}, userData);
         updatedUserData.name = name;
@@ -46,17 +61,28 @@ const Profile = () => {
         updatedUserData.birthDate = birthDate;
         updatedUserData.email = email;
         updatedUserData.phoneNumber = phone;
-        updatedUserData.sex = sex.toUpperCase();
+        updatedUserData.sex = LabelService.getKeyFromLabel(sex);
         return updatedUserData;
     }
 
-    const rebuildDataForms = (userData) => {
+    const rebuildDataForms = (userData, searchingOffer) => {
         setName(userData.name);
         setSurname(userData.surname);
         setBirthDate(userData.birthDate);
         setEmail(userData.email);
         setPhoneNumber(userData.phoneNumber);
-        setSex(userData.sex === 'MALE'? 'Male': 'Female');
+        setSex(LabelService.getLabelFromKey(userData.sex));
+        setUserMovingIssues(searchingOffer.userMovingIssues);
+        setAnimalsInvolved(searchingOffer.animalsInvolved);
+        setAdditionalInfo(searchingOffer.additionalInfo)
+    }
+
+    const modifyUserAndSearchingOffer = async (userData, offerData) => {
+        const updatedUserData = buildModifiedUserData(userData);
+        const updatedOfferData = buildModifiedSearchingOfferData(offerData);
+        const userRes = await AuthService.modifyCurrentUser(updatedUserData);
+        const offerRes = await SearchingOfferService.modifyCurrentSearchingOffer(updatedOfferData);
+        return [userRes, offerRes];
     }
 
     const handleSaveButton = () => {
@@ -64,27 +90,30 @@ const Profile = () => {
             return;
         }
         const userData = AuthService.getCurrentUser();
-        const updatedUserData = buildModifiedUserData(userData);
-        AuthService.modifyCurrentUser(updatedUserData).then(res => {
-            if (isEmailModified(userData.email, res.email)) {
+        const offerData = SearchingOfferService.getCurrentSearchingOffer();
+        modifyUserAndSearchingOffer(userData, offerData).then(([userRes, offerRes]) => {
+            if (isEmailModified(userData.email, userRes.email)) {
                 logOut();
                 window.alert("Email was modified - you have to login again");
                 return;
             }
-            rebuildDataForms(res);
+            rebuildDataForms(userRes, offerRes);
+            window.alert("Saved!");
         }).catch(error => {
-            rebuildDataForms(userData);
+            rebuildDataForms(userData, offerData);
             window.alert("Profile edition failed: " + error.response?.data);
-        })
+        });
     }
 
     const isEmailModified = (oldValue, newValue) => {
         return oldValue !== newValue;
     }
+
     const logOut = () => {
         AuthService.logout();
         navigate("/");
     }
+
     return (
         <div className="profile">
             <ProfileBody>
@@ -105,11 +134,11 @@ const Profile = () => {
                     <Dropdown
                         initalValue={sex}
                         inputLabel="Sex:" dark="true"
-                          onChangeCallback={(value) => setSex(value.value)}
-                          options={[
-                              {key: "male", value: "Male"},
-                              {key: "female", value: "Female"}
-                          ]}/>
+                        onChangeCallback={(value) => setSex(value.value)}
+                        options={[
+                            {key: "male", value: LabelService.getLabelFromKey("MALE")},
+                            {key: "female", value: LabelService.getLabelFromKey("FEMALE")}
+                        ]}/>
                 </AppSection>
                 <AppSection>
                     <InputFormFilled value={birthDate} onChange={(e) => {
@@ -128,12 +157,25 @@ const Profile = () => {
                         setEmail(e.target.value)
                     }} inputLabel="Email:" type="text" dark="true"/>
                 </AppSection>
-                {/*<AppSection>*/}
-                {/*    <Checkbox inputLabel="I have a physical disability and require a wheelchair"/>*/}
-                {/*</AppSection>*/}
-                {/*<AppSection>*/}
-                {/*    <Checkbox inputLabel="I have a pet"/>*/}
-                {/*</AppSection>*/}
+                <AppSection>
+                    <Checkbox initialState={userMovingIssues}
+                              onCheckCallback={(value) => setUserMovingIssues(value)}
+                              inputLabel="I have a physical disability and require a wheelchair"/>
+                </AppSection>
+                <AppSection>
+                    <Checkbox  initialState={animalsInvolved}
+                               onCheckCallback={(value) => setAnimalsInvolved(value)}
+                               inputLabel="I have a pet"/>
+                </AppSection>
+                <PustePole20px/>
+                <TextSection>
+                    Additional information that might be important about you (allergies, diseases, requiring special
+                    treatment, etc.)
+                </TextSection>
+                <PustePole20px/>
+                <AppSection>
+                    <TextareaContent value={additionalInfo} onChange={(e) => setAdditionalInfo(e.target.value)}/>
+                </AppSection>
                 <PustePole20px/>
                 <AppSection>
                     <AppButton onClick={handleSaveButton}>
@@ -151,4 +193,4 @@ const Profile = () => {
     );
 }
 
-export default Profile;
+export default RefugeeProfile;

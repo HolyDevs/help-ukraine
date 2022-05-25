@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.function.Predicate;
 
 @RequiredArgsConstructor
 @Transactional
@@ -62,14 +63,26 @@ public class SearchingOfferService {
     }
 
     public SearchingOfferModel updateSearchingOffer(SearchingOfferModel searchingOfferModel) throws SearchingOfferNotFoundException, RefugeeDoesNotExistException, FailedToSaveSearchingOfferException {
-        searchingOfferRepository.findById(searchingOfferModel.getId())
+        SearchingOfferEntity searchingOfferEntity = searchingOfferRepository.findById(searchingOfferModel.getId())
                 .orElseThrow(() -> new SearchingOfferNotFoundException(String.format(SEARCHING_OFFER_NOT_FOUND_MSG, searchingOfferModel.getId())));
+        removeNotReferencedSearchingPeople(searchingOfferEntity, searchingOfferModel);
         return createSearchingOffer(searchingOfferModel);
     }
 
     private void setSearchingOfferReferenceToSearchingPeople(SearchingOfferEntity searchingOffer) {
         for (SearchingPersonEntity searchingPersonEntity : searchingOffer.getSearchingPeople()) {
             searchingPersonEntity.setSearchingOffer(searchingOffer);
+        }
+    }
+
+    private void removeNotReferencedSearchingPeople(SearchingOfferEntity searchingOfferEntity, SearchingOfferModel searchingOfferModel) {
+        for (SearchingPersonEntity searchingPersonEntity : searchingOfferEntity.getSearchingPeople()) {
+            boolean shouldStay = searchingOfferModel.getSearchingPeople().stream()
+                    .anyMatch(personModel -> personModel.getId().equals(searchingPersonEntity.getId()));
+            if (shouldStay) {
+                continue;
+            }
+            searchingPersonEntity.setSearchingOffer(null);
         }
     }
 

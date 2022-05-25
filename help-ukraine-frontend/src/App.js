@@ -5,10 +5,8 @@ import RolePicker from "./screens/register/RolePicker";
 import Login from "./screens/tabs/Login";
 import Error from "./screens/tabs/Error";
 import Family from "./screens/tabs/refugee/Family";
-import Profile from "./screens/tabs/Profile";
 import Search from "./screens/tabs/refugee/Search";
 import Refugee from './screens/tabs/refugee/Refugee';
-import RegisterRefugeeBasicInfoForm from "./screens/register/refugee/RegisterRefugeeBasicInfoForm";
 import RegisterHost from "./screens/register/host/RegisterHost";
 import RegisterRefugeeAccountForm from "./screens/register/refugee/RegisterRefugeeAccountForm";
 import RegisterRefugeeFurtherForm from "./screens/register/refugee/RegisterRefugeeFurtherForm";
@@ -17,6 +15,9 @@ import RegisterHostFurtherForm from "./screens/register/host/RegisterHostFurther
 import Host from "./screens/tabs/host/Host";
 import Offers from "./screens/tabs/host/Offers";
 import HostOfferDetails from "./screens/tabs/HostOfferDetails";
+import RegisterRefugeeFamilyMembersForm from "./screens/register/refugee/RegisterRefugeeFamilyMembersForm";
+import HostProfile from "./screens/tabs/host/HostProfile";
+import RefugeeProfile from "./screens/tabs/refugee/RefugeeProfile";
 
 
 function App() {
@@ -27,19 +28,19 @@ function App() {
                 <Route path="/" element={<Login/>}/>
                 <Route path="/rolePicker" element={<RolePicker/>}/>
                 <Route path="/host" element={<Host/>}>
-                    <Route path="profile" element={<Profile/>}/>
+                    <Route path="profile" element={<HostProfile/>}/>
                     <Route path="offers" element={<Offers/>}/>
                     <Route path="offers/:id" element={<HostOfferDetails/>}/>
                 </Route>
                 <Route path="/refugee" element={<Refugee/>}>
                     <Route path="family" element={<Family/>}/>
-                    <Route path="profile" element={<Profile/>}/>
+                    <Route path="profile" element={<RefugeeProfile/>}/>
                     <Route path="search" element={<Search/>}/>
                     <Route path="search/:id" element={<SearchOfferDetails/>}/>
                 </Route>
                 <Route path="/error" element={<Error/>}/>
                 <Route path="/registerRefugee/account-creation" element={<RegisterRefugeeAccountForm/>}/>
-                <Route path="/registerRefugee/account-basic-info" element={<RegisterRefugeeBasicInfoForm/>}/>
+                <Route path="/registerRefugee/account-family" element={<RegisterRefugeeFamilyMembersForm/>}/>
                 <Route path="/registerRefugee/account-further-info" element={<RegisterRefugeeFurtherForm/>}/>
                 <Route path="/registerHost" element={<RegisterHost/>}/>
                 <Route path="/registerHost/host-further-info" element={<RegisterHostFurtherForm/>}/>

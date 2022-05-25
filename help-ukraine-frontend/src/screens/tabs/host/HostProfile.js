@@ -1,0 +1,151 @@
+import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import AuthService from "../../../services/AuthService";
+import ValidationService from "../../../services/ValidationService";
+import {AppSection, PustePole20px} from "../../../components/styled-components/Sections";
+import {Dropdown, InputFormFilled} from "../../../components/widgets/Inputs";
+import {ProfileBody} from "../../../components/styled-components/Screens";
+import AppButton from "../../../components/styled-components/AppButton";
+import LabelService from "../../../services/LabelService";
+
+
+const HostProfile = () => {
+    const navigate = useNavigate();
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
+    const [birthDate, setBirthDate] = useState("");
+    const [phone, setPhoneNumber] = useState("");
+    const [email, setEmail] = useState("");
+    const [sex, setSex] = useState(LabelService.getLabelFromKey("MALE"));
+
+    React.useEffect(() => {
+        const user = AuthService.getCurrentUser();
+        rebuildDataForms(user);
+    }, []);
+
+    // temporary alert-based error handling
+    // todo: create proper error info
+    const validateInputs = () => {
+        if (!ValidationService.areStringsValid([name, surname, phone, email])) {
+            window.alert("Text input cannot be empty");
+            return false;
+        }
+        if (!ValidationService.isEmailValid(email)) {
+            window.alert("Entered email is invalid");
+            return false;
+        }
+        if (!ValidationService.isBirthDateValid(birthDate)) {
+            window.alert("Chosen date is invalid");
+            return false;
+        }
+        return true;
+    }
+
+    const buildModifiedUserData = (userData) => {
+        const updatedUserData = Object.assign({}, userData);
+        updatedUserData.name = name;
+        updatedUserData.surname = surname;
+        updatedUserData.birthDate = birthDate;
+        updatedUserData.email = email;
+        updatedUserData.phoneNumber = phone;
+        updatedUserData.sex = LabelService.getKeyFromLabel(sex);
+        return updatedUserData;
+    }
+
+    const rebuildDataForms = (userData) => {
+        setName(userData.name);
+        setSurname(userData.surname);
+        setBirthDate(userData.birthDate);
+        setEmail(userData.email);
+        setPhoneNumber(userData.phoneNumber);
+        setSex(LabelService.getLabelFromKey(userData.sex));
+    }
+
+    const handleSaveButton = () => {
+        if (!validateInputs()) {
+            return;
+        }
+        const userData = AuthService.getCurrentUser();
+        const updatedUserData = buildModifiedUserData(userData);
+        AuthService.modifyCurrentUser(updatedUserData).then(res => {
+            if (isEmailModified(userData.email, res.email)) {
+                logOut();
+                window.alert("Email was modified - you have to login again");
+                return;
+            }
+            rebuildDataForms(res);
+            window.alert("Saved!");
+        }).catch(error => {
+            rebuildDataForms(userData);
+            window.alert("Profile edition failed: " + error.response?.data);
+        })
+    }
+
+    const isEmailModified = (oldValue, newValue) => {
+        return oldValue !== newValue;
+    }
+    const logOut = () => {
+        AuthService.logout();
+        navigate("/");
+    }
+    return (
+        <div className="profile">
+            <ProfileBody>
+                <h1>Profile</h1>
+                <AppSection>
+                    <InputFormFilled value={name} onChange={(e) => {
+                        setName(e.target.value);
+                    }} inputLabel="Name:" type="text" dark="true"/>
+                </AppSection>
+                <PustePole20px/>
+                <AppSection>
+                    <InputFormFilled value={surname} onChange={(e) => {
+                        setSurname(e.target.value)
+                    }} inputLabel="Surname:" type="text" dark="true"/>
+                </AppSection>
+                <PustePole20px/>
+                <AppSection>
+                    <Dropdown
+                        initalValue={sex}
+                        inputLabel="Sex:" dark="true"
+                        onChangeCallback={(value) => setSex(value.value)}
+                        options={[
+                            {key: "male", value: LabelService.getLabelFromKey("MALE")},
+                            {key: "female", value: LabelService.getLabelFromKey("FEMALE")}
+                        ]}/>
+                </AppSection>
+                <AppSection>
+                    <InputFormFilled value={birthDate} onChange={(e) => {
+                        setBirthDate(e.target.value);
+                    }} inputLabel="Date of birth:" type="date" dark="true"/>
+                </AppSection>
+                <PustePole20px/>
+                <AppSection>
+                    <InputFormFilled value={phone} onChange={(e) => {
+                        setPhoneNumber(e.target.value)
+                    }} inputLabel="Phone number:" type="text" dark="true"/>
+                </AppSection>
+                <PustePole20px/>
+                <AppSection>
+                    <InputFormFilled value={email} onChange={(e) => {
+                        setEmail(e.target.value)
+                    }} inputLabel="Email:" type="text" dark="true"/>
+                </AppSection>
+                <PustePole20px/>
+                <AppSection>
+                    <AppButton onClick={handleSaveButton}>
+                        Save
+                    </AppButton>
+                </AppSection>
+                <AppSection>
+                    <AppButton onClick={logOut}>
+                        Logout
+                    </AppButton>
+                </AppSection>
+            </ProfileBody>
+            <PustePole20px/>
+        </div>
+    );
+}
+
+export default HostProfile;
