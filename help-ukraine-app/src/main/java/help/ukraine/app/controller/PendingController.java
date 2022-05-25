@@ -27,9 +27,11 @@ public class PendingController {
     private final PendingService pendingService;
 
     // ENDPOINTS
+
     public static final String PENDING_ENDPOINT = AuthUrls.BACKEND_ROOT + "/pending";
 
     // CRUD
+
     @GetMapping(path = "/{searchingOfferId}/{premiseOfferId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PendingModel> getPending(@PathVariable Long searchingOfferId,
                                                    @PathVariable Long premiseOfferId) throws PendingNotExistsException, PremiseOfferNotFoundException, SearchingOfferNotFoundException {
@@ -63,27 +65,19 @@ public class PendingController {
 
     // EXCEPTION HANDLING
 
-    @ExceptionHandler(PremiseOfferNotFoundException.class)
+    @ExceptionHandler({
+            PendingNotExistsException.class,
+            SearchingOfferNotFoundException.class,
+            PremiseOfferNotFoundException.class
+    })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handlePremiseOfferNotFoundException(PremiseOfferNotFoundException exception) {
-        return exception.getMessage();
-    }
-
-    @ExceptionHandler(SearchingOfferNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleSearchingOfferNotFoundException(SearchingOfferNotFoundException exception) {
-        return exception.getMessage();
-    }
-
-    @ExceptionHandler(PendingNotExistsException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handlePendingNotExistsException(PendingNotExistsException exception) {
+    public String handleNotFoundExceptions(Exception exception) {
         return exception.getMessage();
     }
 
     @ExceptionHandler(PendingAlreadyCreatedException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public String handlePendingAlreadyCreatedException(PendingAlreadyCreatedException exception) {
+    public String handleConflictExceptions(Exception exception) {
         return exception.getMessage();
     }
 }

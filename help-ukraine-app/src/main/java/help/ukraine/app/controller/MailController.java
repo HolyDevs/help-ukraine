@@ -42,6 +42,8 @@ public class MailController {
         return ResponseEntity.ok("Message sent");
     }
 
+    // EXCEPTION HANDLING
+
     @ExceptionHandler({
             UserNotExistsException.class,
             PremiseOfferNotFoundException.class})
