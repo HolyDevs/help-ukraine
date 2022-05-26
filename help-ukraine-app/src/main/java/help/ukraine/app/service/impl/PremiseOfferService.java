@@ -12,9 +12,14 @@ import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
+
+import static help.ukraine.app.data.PremiseOfferEntity.*;
 
 @Service
 @Transactional
@@ -27,6 +32,7 @@ public class PremiseOfferService {
     private final PremiseOfferRepository premiseOfferRepository;
     private final HostRepository hostRepository;
     private final MapperFacade premiseOfferFacade;
+    private final EntityManager entityManager;
 
     public PremiseOfferModel getPremiseOfferById(Long id) throws PremiseOfferNotFoundException {
         PremiseOfferEntity premiseOffer = premiseOfferRepository.findById(id)
@@ -37,6 +43,46 @@ public class PremiseOfferService {
     public List<PremiseOfferModel> getAllPremiseOffers() {
         List<PremiseOfferEntity> premiseOffers = premiseOfferRepository.findAll();
         return premiseOfferFacade.mapAsList(premiseOffers, PremiseOfferModel.class);
+    }
+
+    public List<PremiseOfferModel> filterPremiseOffers(@Nullable Boolean animalsInvolved, @Nullable Boolean movingIssues,
+                                                       @Nullable Integer numberOfPeople, int count) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<PremiseOfferEntity> query = getFilterQuery(criteriaBuilder, animalsInvolved, movingIssues, numberOfPeople);
+        List<PremiseOfferEntity> filteredEntities =  entityManager.createQuery(query).setMaxResults(count).getResultList();
+        return premiseOfferFacade.mapAsList(filteredEntities, PremiseOfferModel.class);
+    }
+
+    private CriteriaQuery<PremiseOfferEntity> getFilterQuery(CriteriaBuilder criteriaBuilder, @Nullable Boolean animalsInvolved,
+                                                             @Nullable Boolean movingIssues, @Nullable Integer numberOfPeople) {
+        CriteriaQuery<PremiseOfferEntity> query = criteriaBuilder.createQuery(PremiseOfferEntity.class);
+        Root<PremiseOfferEntity> root = query.from(PremiseOfferEntity.class);
+        Predicate animalsInvolvedPredicate = getAnimalsInvolvedPredicate(root, criteriaBuilder, animalsInvolved);
+        Predicate movingIssuesPredicate = getMovingIssuesPredicate(root, criteriaBuilder, movingIssues);
+        Predicate numberOfPeoplePredicate = getNumberOfPeoplePredicate(root, criteriaBuilder, numberOfPeople);
+        Order sortingOrder = criteriaBuilder.asc(root.get(PEOPLE_TO_TAKE_FIELD_NAME));
+        return query.select(root).where(animalsInvolvedPredicate, movingIssuesPredicate, numberOfPeoplePredicate).orderBy(sortingOrder);
+    }
+
+    private Predicate getAnimalsInvolvedPredicate(Root<PremiseOfferEntity> root, CriteriaBuilder criteriaBuilder, @Nullable Boolean animalsInvolved) {
+        if (Objects.isNull(animalsInvolved) || !animalsInvolved) {
+            return criteriaBuilder.and();
+        }
+        return criteriaBuilder.equal(root.get(ANIMALS_ALLOWED_FIELD_NAME), true);
+    }
+
+    private Predicate getMovingIssuesPredicate(Root<PremiseOfferEntity> root, CriteriaBuilder criteriaBuilder, @Nullable Boolean movingIssues) {
+        if (Objects.isNull(movingIssues) || !movingIssues) {
+            return criteriaBuilder.and();
+        }
+        return criteriaBuilder.equal(root.get(WHEELCHAIR_FRIENDLY_FIELD_NAME), true);
+    }
+
+    private Predicate getNumberOfPeoplePredicate(Root<PremiseOfferEntity> root, CriteriaBuilder criteriaBuilder, @Nullable Integer numberOfPeople) {
+        if (Objects.isNull(numberOfPeople)) {
+            return criteriaBuilder.and();
+        }
+        return criteriaBuilder.ge(root.get(PEOPLE_TO_TAKE_FIELD_NAME), numberOfPeople);
     }
 
     public List<PremiseOfferModel> getAllPremiseOffersByHostId(Long hostId) {

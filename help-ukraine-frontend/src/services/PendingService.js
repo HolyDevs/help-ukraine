@@ -13,9 +13,9 @@ class PendingService {
         }
     }
 
-    createPendingForCurrentSearchingOffer(premiseOfferId) {
+    async createPendingForCurrentSearchingOffer(premiseOfferId) {
         const searchingOfferId = SearchingOfferService.getCurrentSearchingOffer().id;
-        return this.createPending(searchingOfferId, premiseOfferId);
+        return await this.createPending(searchingOfferId, premiseOfferId);
     }
 
     createPending(searchingOfferId, premiseOfferId) {

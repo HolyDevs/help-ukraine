@@ -72,6 +72,13 @@ class SearchingOfferService {
         const options = this.getAuthHeader();
         return axios.get(API_URL + "searching-offers/" + id, options).then(res => res.data);
     }
+
+    hasSearchingOfferMovingIssues(searchingOfferData) {
+        if (searchingOfferData.userMovingIssues) {
+            return true;
+        }
+        return searchingOfferData.searchingPeople.some(p => p.movingIssues);
+    }
 }
 
 export default new SearchingOfferService();

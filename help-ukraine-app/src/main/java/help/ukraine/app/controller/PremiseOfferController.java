@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(AuthUrls.BACKEND_ROOT + "/premise-offers")
@@ -46,6 +47,17 @@ public class PremiseOfferController {
             return premiseOfferService.getAllPremiseOffersByHostEmail(hostEmail);
         }
         return premiseOfferService.getAllPremiseOffers();
+    }
+
+    @GetMapping("/search")
+    public List<PremiseOfferModel> filterPremiseOffers(@RequestParam(required = false) Boolean movingIssues,
+                                                       @RequestParam(required = false) Boolean animalsInvolved,
+                                                       @RequestParam(required = false) Integer numberOfPeople,
+                                                       @RequestParam(required = false) Integer count)  {
+        if (Objects.isNull(count)) {
+            count = 10;
+        }
+        return premiseOfferService.filterPremiseOffers(animalsInvolved, movingIssues, numberOfPeople, count);
     }
 
     @GetMapping(path = "/{id}")
