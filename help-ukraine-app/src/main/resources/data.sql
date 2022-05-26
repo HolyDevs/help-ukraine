@@ -15,8 +15,8 @@ INSERT INTO premise_offers(id, host_user_id, city, street, house_number, postal_
                            wheelchair_friendly, smoking_allowed, from_date, to_date, active, verified, description)
 VALUES
 (221, 126, 'Warsaw', 'Akacjowa', '1', '90-000', 1, 1, 1, 1, true, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
-(222, 124, 'Lodz', 'Akacjowa', '1', '90-000', 4, 1, 1, 1, false, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
-(223, 124, 'Warsaw', 'Akacjowa', '1', '90-000', 3, 1, 1, 1, false, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
+(222, 124, 'Lodz', 'Akacjowa', '1', '90-000', 4, 1, 1, 1, true, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
+(223, 124, 'Warsaw', 'Akacjowa', '1', '90-000', 3, 1, 1, 1, true, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
 (224, 125, 'Wroclaw', 'Akacjowa', '1', '90-000', 3, 1, 1, 1, false, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
 (225, 125, 'Cracow', 'Akacjowa', '1', '90-000', 2, 1, 1, 1, false, true, true, '2022-01-01', '2023-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności');
 

@@ -37,11 +37,14 @@ public class PremiseOfferEntity {
     private String houseNumber;
     private String postalCode;
     private int peopleToTake;
+    public static final String PEOPLE_TO_TAKE_FIELD_NAME = "peopleToTake";
     private int bathrooms;
     private int kitchens;
     private int bedrooms;
     private boolean animalsAllowed;
+    public static final String ANIMALS_ALLOWED_FIELD_NAME = "animalsAllowed";
     private boolean wheelchairFriendly;
+    public static final String WHEELCHAIR_FRIENDLY_FIELD_NAME = "wheelchairFriendly";
     private boolean smokingAllowed;
     private LocalDate fromDate;
     private LocalDate toDate;
