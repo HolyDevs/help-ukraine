@@ -6,7 +6,7 @@ const Search = () => {
 
     const [results, setResults] = useState([]);
     useEffect(() => {
-        PremiseOfferService.fetchPremiseOffers()
+        PremiseOfferService.filterPremiseOffersByCurrentSearchingOffer()
             .then(res => {
                 setResults(res);
             })
