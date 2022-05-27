@@ -36,8 +36,11 @@ public class AcceptedService {
     private static final String ACCEPTED_ALREADY_CREATED_EXCEPTION_MSG = "Accepted with searching offer id %s and premise offer id %s is already created";
 
     public AcceptedModel createAccepted(AcceptedModel acceptedModel) throws SearchingOfferNotFoundException, PremiseOfferNotFoundException, AcceptedAlreadyCreatedException {
-        SearchingPremiseOfferId composedId = getComposedId(acceptedModel.getSearchingOfferId(), acceptedModel.getPremiseOfferId());
+        SearchingOfferEntity searchingOffer = getSearchingOfferEntity(acceptedModel.getSearchingOfferId());
+        PremiseOfferEntity premiseOffer = getPremiseOfferEntity(acceptedModel.getPremiseOfferId());
+        SearchingPremiseOfferId composedId = new SearchingPremiseOfferId(searchingOffer, premiseOffer);
         throwIfAcceptedAlreadyExists(composedId);
+        deactivatePremiseOfferEntity(premiseOffer);
         AcceptedEntity acceptedEntity = new AcceptedEntity(composedId);
         acceptedEntity = acceptedRepository.save(acceptedEntity);
         return acceptedFacade.map(acceptedEntity, AcceptedModel.class);
@@ -71,11 +74,24 @@ public class AcceptedService {
         return acceptedFacade.mapAsList(acceptedEntities, AcceptedModel.class);
     }
 
-    private SearchingPremiseOfferId getComposedId(Long searchingOfferId, Long premiseOfferId) throws PremiseOfferNotFoundException, SearchingOfferNotFoundException {
-        SearchingOfferEntity searchingOffer = searchingOfferRepository.findById(searchingOfferId)
-                .orElseThrow(() -> new SearchingOfferNotFoundException(String.format(SEARCHING_OFFER_NOT_FOUND_MSG, searchingOfferId)));
-        PremiseOfferEntity premiseOffer = premiseOfferRepository.findById(premiseOfferId)
+    private PremiseOfferEntity getPremiseOfferEntity(Long premiseOfferId) throws PremiseOfferNotFoundException {
+        return premiseOfferRepository.findById(premiseOfferId)
                 .orElseThrow(() -> new PremiseOfferNotFoundException(String.format(PREMISE_OFFER_NOT_FOUND_EXCEPTION_MSG, premiseOfferId)));
+    }
+
+    private SearchingOfferEntity getSearchingOfferEntity(Long searchingOfferId) throws SearchingOfferNotFoundException {
+        return searchingOfferRepository.findById(searchingOfferId)
+                .orElseThrow(() -> new SearchingOfferNotFoundException(String.format(SEARCHING_OFFER_NOT_FOUND_MSG, searchingOfferId)));
+    }
+
+    private void deactivatePremiseOfferEntity(PremiseOfferEntity premiseOfferEntity) {
+        premiseOfferEntity.setActive(false);
+        premiseOfferRepository.save(premiseOfferEntity);
+    }
+
+    private SearchingPremiseOfferId getComposedId(Long searchingOfferId, Long premiseOfferId) throws PremiseOfferNotFoundException, SearchingOfferNotFoundException {
+        SearchingOfferEntity searchingOffer = getSearchingOfferEntity(searchingOfferId);
+        PremiseOfferEntity premiseOffer = getPremiseOfferEntity(premiseOfferId);
         return new SearchingPremiseOfferId(searchingOffer, premiseOffer);
     }
 

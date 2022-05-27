@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,7 +50,7 @@ public class PremiseOfferService {
                                                        @Nullable Integer numberOfPeople, int count) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PremiseOfferEntity> query = getFilterQuery(criteriaBuilder, animalsInvolved, movingIssues, numberOfPeople);
-        List<PremiseOfferEntity> filteredEntities =  entityManager.createQuery(query).setMaxResults(count).getResultList();
+        List<PremiseOfferEntity> filteredEntities = entityManager.createQuery(query).setMaxResults(count).getResultList();
         return premiseOfferFacade.mapAsList(filteredEntities, PremiseOfferModel.class);
     }
 
@@ -57,11 +58,22 @@ public class PremiseOfferService {
                                                              @Nullable Boolean movingIssues, @Nullable Integer numberOfPeople) {
         CriteriaQuery<PremiseOfferEntity> query = criteriaBuilder.createQuery(PremiseOfferEntity.class);
         Root<PremiseOfferEntity> root = query.from(PremiseOfferEntity.class);
+        Predicate[] predicates = getFilteringPredicates(root, criteriaBuilder, animalsInvolved, movingIssues, numberOfPeople);
+        Order sortingOrder = criteriaBuilder.asc(root.get(PEOPLE_TO_TAKE_FIELD_NAME));
+        return query
+                .select(root)
+                .where(predicates)
+                .orderBy(sortingOrder);
+    }
+
+    private Predicate[] getFilteringPredicates(Root<PremiseOfferEntity> root, CriteriaBuilder criteriaBuilder, @Nullable Boolean animalsInvolved,
+                                               @Nullable Boolean movingIssues, @Nullable Integer numberOfPeople) {
         Predicate animalsInvolvedPredicate = getAnimalsInvolvedPredicate(root, criteriaBuilder, animalsInvolved);
         Predicate movingIssuesPredicate = getMovingIssuesPredicate(root, criteriaBuilder, movingIssues);
         Predicate numberOfPeoplePredicate = getNumberOfPeoplePredicate(root, criteriaBuilder, numberOfPeople);
-        Order sortingOrder = criteriaBuilder.asc(root.get(PEOPLE_TO_TAKE_FIELD_NAME));
-        return query.select(root).where(animalsInvolvedPredicate, movingIssuesPredicate, numberOfPeoplePredicate).orderBy(sortingOrder);
+        Predicate activePredicate = criteriaBuilder.equal(root.get(ACTIVE_FIELD_NAME), true);
+        Predicate toDatePredicate = criteriaBuilder.greaterThanOrEqualTo(root.get(TO_DATE_FIELD_NAME), LocalDate.now());
+        return new Predicate[]{animalsInvolvedPredicate, movingIssuesPredicate, numberOfPeoplePredicate, activePredicate, toDatePredicate};
     }
 
     private Predicate getAnimalsInvolvedPredicate(Root<PremiseOfferEntity> root, CriteriaBuilder criteriaBuilder, @Nullable Boolean animalsInvolved) {

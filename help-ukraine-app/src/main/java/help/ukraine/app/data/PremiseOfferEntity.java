@@ -47,7 +47,9 @@ public class PremiseOfferEntity {
     public static final String WHEELCHAIR_FRIENDLY_FIELD_NAME = "wheelchairFriendly";
     private boolean smokingAllowed;
     private LocalDate fromDate;
+    public static final String TO_DATE_FIELD_NAME = "toDate";
     private LocalDate toDate;
+    public static final String ACTIVE_FIELD_NAME = "active";
     private boolean active;
     private boolean verified;
     private String description;
