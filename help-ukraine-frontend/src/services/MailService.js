@@ -16,7 +16,7 @@ class MailService {
         const  refugeeId =  AuthService.getCurrentUser().id
         const options = this.getAuthHeader();
         return axios.post(
-            API_URL + "mail/" + offerId + "/" + refugeeId,null, options).then(res => res.data);
+            API_URL + "mail/pending/" + offerId + "/" + refugeeId,null, options).then(res => res.data);
     }
 }
 

@@ -17,11 +17,13 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
 @Log4j2
+@Transactional
 @RequestMapping(UserController.USER_ENDPOINT)
 public class UserController {
 
