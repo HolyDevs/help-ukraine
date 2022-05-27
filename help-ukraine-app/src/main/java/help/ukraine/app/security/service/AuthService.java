@@ -27,6 +27,24 @@ public class AuthService {
         throw new UserNoAccessException(AuthMessages.USER_NO_ACCESS_MSG);
     }
 
+    public void throwIfAuthNotBelongToAnyUser(Long... ids) throws UserNoAccessException {
+        for (Long id : ids) {
+            if (checkIfAuthBelongsToUser(id)) {
+                return;
+            }
+        }
+        throw new UserNoAccessException(AuthMessages.USER_NO_ACCESS_MSG);
+    }
+
+    public void throwIfAuthNotBelongToAnyUser(String... emails) throws UserNoAccessException {
+        for (String email : emails) {
+            if (checkIfAuthBelongsToUser(email)) {
+                return;
+            }
+        }
+        throw new UserNoAccessException(AuthMessages.USER_NO_ACCESS_MSG);
+    }
+
     private boolean checkIfAuthBelongsToUser(String email) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.isNull(authentication) || !authentication.isAuthenticated()) {
