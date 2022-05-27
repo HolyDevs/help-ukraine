@@ -54,6 +54,7 @@ public class CandidateController {
         for (SearchingOfferModel searchingOfferModel : searchingOfferModels) {
             UserModel refugee = userService.getUserById(searchingOfferModel.getRefugeeId());
             CandidateDto candidateDto = CandidateDto.builder()
+                    .searchingOfferId(searchingOfferModel.getId())
                     .name(refugee.getName())
                     .surname(refugee.getSurname())
                     .email(refugee.getEmail())
