@@ -1,6 +1,7 @@
 import "../styles/Main.scss";
 import offersIcon from "../assets/tag-date-icon.png";
 import profileIcon from "../assets/profile-icon.png";
+import familyIcon from "../assets/family-icon.png";
 import {useState} from "react";
 import {useNavigate} from "react-router";
 
@@ -29,6 +30,9 @@ const HostTabbar = () => {
             case 1:
                 navigate("/host/profile");
                 break;
+            case 2:
+                navigate("/host/requests");
+                break;
         }
     }
 
@@ -42,6 +46,11 @@ const HostTabbar = () => {
             <div className={getTabbarItemClass(1)} onClick={() => onTabClicked(1)}>
                 <div className="tabbar__item__icon">
                     <img src={profileIcon}></img>
+                </div>
+            </div>
+            <div className={getTabbarItemClass(2)} onClick={() => onTabClicked(2)}>
+                <div className="tabbar__item__icon">
+                    <img src={familyIcon}></img>
                 </div>
             </div>
         </div>
