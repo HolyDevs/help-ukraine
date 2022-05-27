@@ -18,6 +18,7 @@ import HostOfferDetails from "./screens/tabs/host/HostOfferDetails";
 import RegisterRefugeeFamilyMembersForm from "./screens/register/refugee/RegisterRefugeeFamilyMembersForm";
 import HostProfile from "./screens/tabs/host/HostProfile";
 import RefugeeProfile from "./screens/tabs/refugee/RefugeeProfile";
+import HostRequests from './screens/tabs/host/HostRequests';
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
                     <Route path="profile" element={<HostProfile/>}/>
                     <Route path="offers" element={<Offers/>}/>
                     <Route path="offers/:id" element={<HostOfferDetails/>}/>
+                    <Route path="requests" element={<HostRequests/>}/>
                 </Route>
                 <Route path="/refugee" element={<Refugee/>}>
                     <Route path="family" element={<Family/>}/>

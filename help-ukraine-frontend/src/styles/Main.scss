@@ -242,10 +242,112 @@
         }
     }
 
+    .requests {
+
+        
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .request-list {
+
+            h3 {
+                background-color: var(--ukrainski-niebieski);
+                color: white;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                padding-left: 20px;
+                font-weight: 100;
+            }
+
+            .request-list-item {
+                width: 90%;
+                margin-left: auto;
+                margin-right: auto;
+                overflow: hidden;
+                margin-bottom: 20px;
+
+                border-radius: 5px;
+                -webkit-box-shadow: 0px 0px 4px 0px rgba(66, 68, 90, 0.25);
+                -moz-box-shadow: 0px 0px 4px 0px rgba(66, 68, 90, 0.25);
+                box-shadow: 0px 0px 4px 0px rgba(66, 68, 90, 0.25);
+
+                ul {
+                    padding: 20px;
+
+                    li {
+                        margin-bottom: 15px;
+                    }
+
+                    .request-list-item__name {
+                        font-weight: bold;
+                        padding-bottom: 5px;
+                    }
+
+                    .request-list-item__features {
+                        color: gray;
+
+                        span {
+                            margin-right: 10px;
+                        }
+                    }
+                }
+
+                .request-list-item__lowersection {
+                    background-color: gray;
+                    display: flex;
+                    align-items: center;
+                    height: 50px;
+                    padding-left: 20px;
+                    padding-right: 20px;
+
+                    .request-list-item__contact-section__pets {
+                        color: white;
+                    }
+
+                    .request-list-item__button-section {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        .request-list-item__button,
+                        .request-list-item__button-decline {
+                            background-color: white; 
+                            color: var(--ukrainski-niebieski);
+                            border-radius: 3px;
+                            padding-top: 8px;
+                            padding-bottom: 8px;
+                            padding-left: 10px;
+                            padding-right: 10px;
+                            margin-left: auto;
+                            margin-right: auto;
+                            font-size: 14px;
+                            font-weight: bold;
+                            cursor: pointer;
+                        }
+
+                        .request-list-item__button {
+                            padding-left: 30px;
+                            padding-right: 30px;
+                        }
+
+                        .request-list-item__button-decline {
+                            color: lightgray;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
     .search,
     .profile,
     .family,
-    .details {
+    .details,
+    .requests {
         animation: fade-in .5s;
     }
 }
