@@ -17,6 +17,7 @@ import java.util.List;
 @Getter
 public class CandidateDto {
     private Long searchingOfferId;
+    private boolean isChosen;
     private String name;
     private String surname;
     private Sex sex;
