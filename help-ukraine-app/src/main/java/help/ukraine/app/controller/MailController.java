@@ -51,12 +51,25 @@ public class MailController {
     @Secured(AuthRoles.HOST_ROLE)
     public ResponseEntity<String> sendAcceptedNotificationMail(@PathVariable Long searchingOfferId, @PathVariable Long hostId) throws PremiseOfferNotFoundException, UserNotExistsException, MessagingException, UserNoAccessException, SearchingOfferNotFoundException {
         SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(searchingOfferId);
-        authService.throwIfAuthNotBelongToUser(searchingOfferModel.getRefugeeId());
+        authService.throwIfAuthNotBelongToUser(hostId);
         UserModel refugee = userService.getUserById(searchingOfferModel.getRefugeeId());
         UserModel host = userService.getUserById(hostId);
         mailService.sendAcceptedNotificationMail(host, refugee);
         return ResponseEntity.ok("Message sent");
     }
+
+    @PostMapping(path = "/rejected/{searchingOfferId}/{hostId}")
+    @Secured(AuthRoles.HOST_ROLE)
+    public ResponseEntity<String> sendRejectedNotificationMail(@PathVariable Long searchingOfferId, @PathVariable Long hostId) throws PremiseOfferNotFoundException, UserNotExistsException, MessagingException, UserNoAccessException, SearchingOfferNotFoundException {
+        SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(searchingOfferId);
+        authService.throwIfAuthNotBelongToUser(hostId);
+        UserModel refugee = userService.getUserById(searchingOfferModel.getRefugeeId());
+        UserModel host = userService.getUserById(hostId);
+        mailService.sendRejectedNotificationMail(host, refugee);
+        return ResponseEntity.ok("Message sent");
+    }
+
+
 
     // EXCEPTION HANDLING
 
