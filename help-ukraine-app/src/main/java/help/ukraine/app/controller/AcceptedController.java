@@ -74,7 +74,7 @@ public class AcceptedController {
     public ResponseEntity<AcceptedModel> createAccepted(@RequestBody @Valid AcceptedModel acceptedModel) throws PremiseOfferNotFoundException, SearchingOfferNotFoundException, AcceptedAlreadyCreatedException, PendingNotExistsException, UserNoAccessException {
         SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(acceptedModel.getSearchingOfferId());
         authService.throwIfAuthNotBelongToUser(searchingOfferModel.getRefugeeId());
-        pendingService.deletePending(acceptedModel.getSearchingOfferId(), acceptedModel.getPremiseOfferId());
+        pendingService.deletePendingsByPremiseOfferIds(acceptedModel.getPremiseOfferId());
         AcceptedModel savedModel = acceptedService.createAccepted(acceptedModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedModel);
     }

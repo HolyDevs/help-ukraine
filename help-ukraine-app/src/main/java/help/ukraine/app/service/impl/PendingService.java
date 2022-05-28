@@ -50,6 +50,10 @@ public class PendingService {
         pendingRepository.deleteBySearchingPremiseOfferId(composedId);
     }
 
+    public void deletePendingsByPremiseOfferIds(Long premiseOfferId) {
+        pendingRepository.deleteByPremiseOfferId(premiseOfferId);
+    }
+
     public PendingModel getPending(Long searchingOfferId, Long premiseOfferId) throws PremiseOfferNotFoundException, SearchingOfferNotFoundException, PendingNotExistsException {
         SearchingPremiseOfferId composedId = getComposedId(searchingOfferId, premiseOfferId);
         PendingEntity pendingEntity = pendingRepository.findById(composedId)
