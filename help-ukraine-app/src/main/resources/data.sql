@@ -18,7 +18,7 @@ VALUES
 (222, 124, 'Lodz', 'Akacjowa', '1', '90-000', 4, 1, 1, 1, true, true, true, '2022-01-01', '2025-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
 (223, 124, 'Warsaw', 'Akacjowa', '1', '90-000', 3, 1, 1, 1, true, true, true, '2022-01-01', '2025-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
 (224, 125, 'Wroclaw', 'Akacjowa', '1', '90-000', 3, 1, 1, 1, false, true, true, '2022-01-01', '2025-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności'),
-(225, 125, 'Cracow', 'Akacjowa', '1', '90-000', 2, 1, 1, 1, false, true, true, '2022-01-01', '2025-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności');
+(225, 125, 'Cracow', 'Akacjowa', '1', '90-000', 3, 1, 1, 1, false, true, true, '2022-01-01', '2025-01-01', true, true, 'Obecnie jako sztab kryzysowy skutecznie wspiera, koordynuje i bezpośrednio pomaga uchodźcom z Ukrainy i organizuje pomoc docelową dla Ukrainy i obronności');
 
 
 INSERT INTO offer_images(id, image_location, premise_offer_id)
@@ -31,7 +31,7 @@ VALUES
 
 INSERT INTO searching_offers(id, additional_info, animals_involved, user_moving_issues, preferred_location,
                              range_from_preferred_location_in_km, refugee_user_id)
-VALUES(441, 'I have diabetes', true, false, 'Warsaw', 20, 123);
+VALUES(441, 'I have diabetes', false, false, 'Warsaw', 20, 123);
 
 INSERT INTO searching_people(id, birth_date, moving_issues, name, searching_offer_id,
                              sex, surname)

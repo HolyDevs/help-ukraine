@@ -15,7 +15,11 @@ public interface PendingRepository extends JpaRepository<PendingEntity, Searchin
 
     @Modifying
     @Query("DELETE FROM PendingEntity p WHERE p.searchingPremiseOfferId.premiseOffer.id = :premiseOfferId")
-    void deleteByPremiseOfferId(Long premiseOfferId);
+    void deleteByPremiseOfferId(@Param("premiseOfferId") Long premiseOfferId);
+
+    @Modifying
+    @Query("DELETE FROM PendingEntity p WHERE p.searchingPremiseOfferId.searchingOffer.id = :searchingOfferId")
+    void deleteBySearchingOfferId(@Param("searchingOfferId") Long searchingOfferId);
 
     @Query("SELECT p FROM PendingEntity  p WHERE p.searchingPremiseOfferId.searchingOffer.id = :searchingOfferId")
     List<PendingEntity> getAllBySearchingOfferId(@Param("searchingOfferId") Long searchingOfferId);

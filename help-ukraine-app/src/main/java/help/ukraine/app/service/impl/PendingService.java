@@ -50,8 +50,12 @@ public class PendingService {
         pendingRepository.deleteBySearchingPremiseOfferId(composedId);
     }
 
-    public void deletePendingsByPremiseOfferIds(Long premiseOfferId) {
+    public void deletePendingsByPremiseOfferId(Long premiseOfferId) {
         pendingRepository.deleteByPremiseOfferId(premiseOfferId);
+    }
+
+    public void deletePendingsBySearchingOfferId(Long searchingOfferId) {
+        pendingRepository.deleteBySearchingOfferId(searchingOfferId);
     }
 
     public PendingModel getPending(Long searchingOfferId, Long premiseOfferId) throws PremiseOfferNotFoundException, SearchingOfferNotFoundException, PendingNotExistsException {
