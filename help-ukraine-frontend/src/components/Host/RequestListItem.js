@@ -31,7 +31,7 @@ const RequestListItem = ({request, reloadRequests, premiseOfferId}) => {
 
     const getButtonOrContactSection = () => {
 
-        if (!request.isChosen) return (
+        if (request.isChosen) return (
             <div className="request-list-item__contact-section">
                 <div className="request-list-item__contact-section__phone">{request.phoneNumber}</div>
                 <div className="request-list-item__contact-section__mail">{request.email}</div>
