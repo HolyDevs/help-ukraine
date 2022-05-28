@@ -76,7 +76,7 @@ public class CandidateController {
                 .name(refugee.getName())
                 .surname(refugee.getSurname())
                 .email(refugee.getEmail())
-                .phoneNumber(refugee.getEmail())
+                .phoneNumber(refugee.getPhoneNumber())
                 .sex(refugee.getSex())
                 .movingIssues(searchingOfferModel.getUserMovingIssues())
                 .birthDate(refugee.getBirthDate())
