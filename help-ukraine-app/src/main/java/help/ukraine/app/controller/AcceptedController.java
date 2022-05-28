@@ -72,8 +72,8 @@ public class AcceptedController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({AuthRoles.HOST_ROLE})
     public ResponseEntity<AcceptedModel> createAccepted(@RequestBody @Valid AcceptedModel acceptedModel) throws PremiseOfferNotFoundException, SearchingOfferNotFoundException, AcceptedAlreadyCreatedException, PendingNotExistsException, UserNoAccessException {
-        SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(acceptedModel.getSearchingOfferId());
-        authService.throwIfAuthNotBelongToUser(searchingOfferModel.getRefugeeId());
+        PremiseOfferModel premiseOfferModel = premiseOfferService.getPremiseOfferById(acceptedModel.getPremiseOfferId());
+        authService.throwIfAuthNotBelongToUser(premiseOfferModel.getHostId());
         pendingService.deletePendingsByPremiseOfferIds(acceptedModel.getPremiseOfferId());
         AcceptedModel savedModel = acceptedService.createAccepted(acceptedModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedModel);
