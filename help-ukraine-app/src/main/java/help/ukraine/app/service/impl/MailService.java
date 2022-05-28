@@ -22,9 +22,14 @@ public class MailService {
     private static final String PENDING_MSG_SUBJECT = "Someone is interested in your offer! \uD83D\uDC40";
 
     private static final String ACCEPTED_MSG = "Dear %s!\n" +
-            "... %s ...";
+            "Congratulations, %s has accepted your searching offer!";
 
-    private static final String ACCEPTED_MSG_SUBJECT = "";
+    private static final String ACCEPTED_MSG_SUBJECT = "%s has accepted your searching offer!";
+
+    private static final String REJECTED_MSG = "Dear %s!\n" +
+            "%s has rejected your searching offer, good luck next time!";
+
+    private static final String REJECTED_MSG_SUBJECT = "%s has rejected your searching offer";
 
     public void sendPendingNotificationMail(UserModel host, UserModel refugee, PremiseOfferModel premiseOfferModel) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -40,8 +45,17 @@ public class MailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setTo(host.getEmail());
-        mimeMessageHelper.setSubject(ACCEPTED_MSG_SUBJECT);
-        mimeMessageHelper.setText(String.format(ACCEPTED_MSG, host.getName(), refugee.getName()), false);
+        mimeMessageHelper.setSubject(String.format(ACCEPTED_MSG_SUBJECT, host.getName()));
+        mimeMessageHelper.setText(String.format(ACCEPTED_MSG, refugee.getName(), host.getName()), false);
+        javaMailSender.send(mimeMessage);
+    }
+
+    public void sendRejectedNotificationMail(UserModel host, UserModel refugee) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setTo(host.getEmail());
+        mimeMessageHelper.setSubject(String.format(REJECTED_MSG_SUBJECT, host.getName()));
+        mimeMessageHelper.setText(String.format(REJECTED_MSG, refugee.getName(), host.getName()), false);
         javaMailSender.send(mimeMessage);
     }
 
