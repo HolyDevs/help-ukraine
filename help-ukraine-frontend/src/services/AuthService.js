@@ -73,7 +73,7 @@ class AuthService {
     }
 
     async modifyCurrentUser(userData) {
-        const token = this.getAccessToken();
+        const token = await this.getAccessToken();
         const userResponse = await this.doModify(userData, token);
         sessionStorage.setItem("user", JSON.stringify(userResponse));
         return userResponse;
@@ -87,14 +87,13 @@ class AuthService {
         return JSON.parse(sessionStorage.getItem('user'));
     }
 
-    getAccessToken() {
+    async getAccessToken() {
         const decodedAccessToken = JSON.parse(sessionStorage.getItem("decoded_access_token"));
         const expiryTimestamp = decodedAccessToken.exp;
         if (new Date(expiryTimestamp * 1000) < Date.now()) {
-            this.refreshToken();
+            await this.refreshToken();
             console.log('Refreshed user token')
         }
-
         return sessionStorage.getItem("access_token");
     }
 
@@ -104,7 +103,8 @@ class AuthService {
             this.fillTokenData(res);
         }).catch((error) => {
             this.logout();
-            throw error;
+            window.alert("Your session is expired - you have to log in again");
+            window.location.href = '/';
         });
     }
 

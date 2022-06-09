@@ -67,7 +67,7 @@ const OfferListItemContent = ({ result }) => {
                     </ImageWrapperRow>
                     <ImageWrapperRow>
                         <Image src={result.active ? lock_open : lock_closed}/>
-                        <span>{result.active ? "Waiting" : "Locked" }</span>
+                        <span>{result.active ? "Active" : "Not active" }</span>
                     </ImageWrapperRow>
                 </ImageWrapper>
             </Panel>

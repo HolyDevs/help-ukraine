@@ -8,10 +8,13 @@ const HostRequests = () => {
     const [homes, setHomes] = useState([]);
 
     useEffect(() => {
+        reloadRequests();
+    }, []);
+
+    const reloadRequests = () => {
         const currentUser = JSON.parse(sessionStorage.getItem("user"));
         PremiseOfferService.fetchPremiseOffersByHostId(currentUser.id)
             .then(res => {
-                console.log(res);
                 setHomes(
                     res.map(home => { return { id: home.id, city: home.city, street: home.street, active: home.active, houseNumber: home.houseNumber}})
                 );
@@ -19,12 +22,12 @@ const HostRequests = () => {
             .catch(error => {
                 window.alert("Something went wrong - cannot fetch offers")
             })
-    }, []);
+    }
 
     const getRequestLists = () => {
         return (
             <ul>
-                {homes.map(home => <RequestList key={home.id} home={home}/>)}
+                {homes.map(home => <RequestList key={home.id} reloadRequests={reloadRequests} home={home}/>)}
             </ul>
         );
     }

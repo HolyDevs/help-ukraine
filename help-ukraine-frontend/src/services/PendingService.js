@@ -6,8 +6,8 @@ const API_URL = "/api/";
 
 class PendingService {
 
-    getAuthHeader() {
-        const accessToken = AuthService.getAccessToken();
+    async getAuthHeader() {
+        const accessToken = await AuthService.getAccessToken();
         return {
             headers: {'Authorization': 'Bearer ' + accessToken},
         }
@@ -18,8 +18,8 @@ class PendingService {
         return await this.createPending(searchingOfferId, premiseOfferId);
     }
 
-    createPending(searchingOfferId, premiseOfferId) {
-        const options = this.getAuthHeader();
+    async createPending(searchingOfferId, premiseOfferId) {
+        const options = await this.getAuthHeader();
         const pendingData = {
             searchingOfferId: searchingOfferId,
             premiseOfferId: premiseOfferId

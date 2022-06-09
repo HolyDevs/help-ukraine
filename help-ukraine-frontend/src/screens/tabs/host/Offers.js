@@ -18,6 +18,7 @@ const HeaderWrapper = styled.div`
 const Offers = () => {
 
     const [results, setResults] = useState([]);
+    const [displayedResults, setDisplayedResults] = useState([]);
     const [filter, setFilter] = useState("All");
 
     useEffect(() => {
@@ -25,11 +26,27 @@ const Offers = () => {
         PremiseOfferService.fetchPremiseOffersByHostId(currentUser.id)
             .then(res => {
                 setResults(res);
+                setDisplayedResults(res);
             })
             .catch(error => {
                 window.alert("Something went wrong - cannot fetch offers")
             })
     }, []);
+
+    const handleFilter = (label) => {
+        switch (label.value) {
+            case "Not active":
+                setDisplayedResults(results.filter(e => !e.active));
+                break;
+            case "Active":
+                setDisplayedResults(results.filter(e => e.active));
+                break
+            default:
+                setDisplayedResults(results);
+                break;
+        }
+        setFilter(label.value);
+    }
 
     return (
         <div className="search">
@@ -39,19 +56,16 @@ const Offers = () => {
                 </HeaderWrapper>
                 <FilterWrapper>
                     <Dropdown
-                        onChangeCallback={(value) => {setFilter(value.value);
-                            console.log(value.value);}}
-                        initalValue="All"
-                        inputLabel="Number of residents:"
-                        // onChangeCallback={(value) => setPeopleToTake(value)}
+                        onChangeCallback={(label) => handleFilter(label)}
+                        initalValue={filter}
                         options={[
                             {key: "1", value: "All"},
-                            {key: "2", value: "Waiting"},
-                            {key: "3", value: "Closed"}
+                            {key: "2", value: "Active"},
+                            {key: "3", value: "Not active"}
                         ]}/>
                 </FilterWrapper>
             </h1>
-            {results && <OfferList results={results}/>}
+            {displayedResults && <OfferList results={displayedResults}/>}
         </div>
     );
 }
