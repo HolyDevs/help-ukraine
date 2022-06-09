@@ -27,7 +27,7 @@ const OfferListItem = ({ result }) => {
 
     const navigate = useNavigate();
     const onSearchItemClicked = () => {
-        navigate("/host/offers/" + result.id, { state: { details: result } });
+        navigate("/host/offers/edit", { state: { details: result } });
     }
 
     return (

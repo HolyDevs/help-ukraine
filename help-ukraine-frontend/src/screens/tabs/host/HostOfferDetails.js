@@ -1,4 +1,4 @@
-import {useLocation} from "react-router";
+import {useLocation, useNavigate} from "react-router";
 
 import {HostDetailsBody} from "../../../components/styled-components/Screens";
 import {AppSection, PustePole20px, TextSection} from "../../../components/styled-components/Sections";
@@ -7,51 +7,65 @@ import AppButton from "../../../components/styled-components/AppButton";
 import React, {useState} from "react";
 import ValidationService from "../../../services/ValidationService";
 import PremiseOfferService from "../../../services/PremiseOfferService";
+import AuthService from "../../../services/AuthService";
 
 const HostOfferDetails = () => {
 
+    const navigate = useNavigate();
     let {state} = useLocation();
-    let {details} = state;
-    let offerDetails = details;
+    let offerDetails = state?.details;
 
-    const [peopleToTake, setPeopleToTake] = useState(offerDetails.peopleToTake);
-    const [bathrooms, setBathrooms] = useState(offerDetails.bathrooms);
-    const [kitchens, setKitchens] = useState(offerDetails.kitchens);
-    const [bedrooms, setBedrooms] = useState(offerDetails.bedrooms);
-    const [wheelchairFriendly, setWheelchairFriendly] = useState(offerDetails.wheelchairFriendly);
-    const [animalsAllowed, setAnimalsAllowed] = useState(offerDetails.animalsAllowed);
-    const [smokingAllowed, setSmokingAllowed] = useState(offerDetails.smokingAllowed);
-    const [description, setDescription] = useState(offerDetails.description);
-    const [city, setCity] = useState(offerDetails.city);
-    const [houseNumber, setHouseNumber] = useState(offerDetails.houseNumber);
-    const [street, setStreet] = useState(offerDetails.street);
-    const [postalCode, setPostalCode] = useState(offerDetails.postalCode);
-    const [fromDate, setFromDate] = useState(offerDetails.fromDate);
-    const [toDate, setToDate] = useState(offerDetails.toDate);
-    const [active, setActive] = useState(offerDetails.active);
+    const [peopleToTake, setPeopleToTake] = useState(1);
+    const [bathrooms, setBathrooms] = useState(1);
+    const [kitchens, setKitchens] = useState(1);
+    const [bedrooms, setBedrooms] = useState(1);
+    const [wheelchairFriendly, setWheelchairFriendly] = useState(false);
+    const [animalsAllowed, setAnimalsAllowed] = useState(false);
+    const [smokingAllowed, setSmokingAllowed] = useState(false);
+    const [active, setActive] = useState(true);
+    const [description, setDescription] = useState("");
+    const [city, setCity] = useState("");
+    const [houseNumber, setHouseNumber] = useState("");
+    const [street, setStreet] = useState("");
+    const [postalCode, setPostalCode] = useState("");
+    const [fromDate, setFromDate] = useState();
+    const [toDate, setToDate] = useState();
+
+    const fillPremiseOfferWithData = (premiseOffer) => {
+        premiseOffer.peopleToTake = peopleToTake;
+        premiseOffer.bathrooms = bathrooms;
+        premiseOffer.bedrooms= bedrooms;
+        premiseOffer.kitchens = kitchens;
+        premiseOffer.animalsAllowed = animalsAllowed;
+        premiseOffer.city = city;
+        premiseOffer.street = street;
+        premiseOffer.postalCode = postalCode;
+        premiseOffer.houseNumber = houseNumber;
+        premiseOffer.description = description;
+        premiseOffer.fromDate = fromDate;
+        premiseOffer.toDate = toDate;
+        premiseOffer.active = active;
+        premiseOffer.wheelchairFriendly = wheelchairFriendly;
+        premiseOffer.smokingAllowed = smokingAllowed;
+    }
 
     const buildModifiedPremiseOfferData = () => {
         const updatedPremiseOfferData = Object.assign({}, offerDetails);
-        updatedPremiseOfferData.peopleToTake = peopleToTake;
-        updatedPremiseOfferData.bathrooms = bathrooms;
-        updatedPremiseOfferData.bedrooms= bedrooms;
-        updatedPremiseOfferData.kitchens = kitchens;
-        updatedPremiseOfferData.animalsAllowed = animalsAllowed;
-        updatedPremiseOfferData.city = city;
-        updatedPremiseOfferData.street = street;
-        updatedPremiseOfferData.postalCode = postalCode;
-        updatedPremiseOfferData.houseNumber = houseNumber;
-        updatedPremiseOfferData.description = description;
-        updatedPremiseOfferData.fromDate = fromDate;
-        updatedPremiseOfferData.toDate = toDate;
-        updatedPremiseOfferData.active = active;
-        updatedPremiseOfferData.wheelchairFriendly = wheelchairFriendly;
-        updatedPremiseOfferData.smokingAllowed = smokingAllowed;
+        fillPremiseOfferWithData(updatedPremiseOfferData);
         return updatedPremiseOfferData;
     }
 
+    const buildNewPremiseOfferData = () => {
+        const premiseOffer = {
+            hostId: AuthService.getCurrentUser().id,
+            verified: true,
+            offerImagesLocations: ["https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Happy_family_%281%29.jpg/1200px-Happy_family_%281%29.jpg?20120321172928"]
+        }
+        fillPremiseOfferWithData(premiseOffer);
+        return premiseOffer;
+    }
+
     const rebuildDataForms = () => {
-        console.log(offerDetails);
         setPeopleToTake(offerDetails.peopleToTake);
         setBathrooms(offerDetails.bathrooms);
         setKitchens(offerDetails.kitchens);
@@ -63,17 +77,33 @@ const HostOfferDetails = () => {
         setHouseNumber(offerDetails.houseNumber);
         setDescription(offerDetails.description);
         setFromDate(offerDetails.fromDate);
-        setActive(offerDetails.active);
         setToDate(offerDetails.toDate);
+        setActive(offerDetails.active)
         setWheelchairFriendly(offerDetails.wheelchairFriendly);
         setSmokingAllowed(offerDetails.smokingAllowed);
-
     }
 
     const handleSaveButton = () => {
         if (!validateInputs()) {
             return;
         }
+        if (!offerDetails) {
+            createPremiseOffer()
+            return;
+        }
+        updatePremiseOffer();
+    }
+
+    const createPremiseOffer = () => {
+        const newPremiseOffer = buildNewPremiseOfferData();
+        PremiseOfferService.createPremiseOffer(newPremiseOffer).then(res => {
+            navigate("/host/offers")
+        }).catch(error => {
+            window.alert("Offer creation failed: " + error.response?.data);
+        })
+    }
+
+    const updatePremiseOffer = () => {
         const updatedOfferData = buildModifiedPremiseOfferData();
         PremiseOfferService.modifyPremiseOffer(updatedOfferData).then(res => {
             offerDetails = res;
@@ -100,9 +130,11 @@ const HostOfferDetails = () => {
 
 
     React.useEffect(() => {
-       PremiseOfferService.getPremiseOfferById(details.id).then(
+       if (!offerDetails) {
+           return;
+       }
+       PremiseOfferService.getPremiseOfferById(offerDetails.id).then(
            (res) => {
-               console.log(res);
                offerDetails = res;
                rebuildDataForms();
            });
@@ -111,7 +143,8 @@ const HostOfferDetails = () => {
 
     return (
     <div className="details">
-        <img src={offerDetails.offerImagesLocations[0]} />
+        {offerDetails && <img src={offerDetails.offerImagesLocations[0]} />}
+        {!offerDetails && <img src={"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Happy_family_%281%29.jpg/1200px-Happy_family_%281%29.jpg?20120321172928"} />}
         <HostDetailsBody>
             <AppSection>
                 <InputFormFilled value={city} onChange={(e) => {

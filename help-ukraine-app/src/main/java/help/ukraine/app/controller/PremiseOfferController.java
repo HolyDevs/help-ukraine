@@ -48,19 +48,14 @@ public class PremiseOfferController {
     }
 
     @GetMapping
-    @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    public List<PremiseOfferModel> getAllPremiseOffers(@RequestParam(required = false) Long hostId, @RequestParam(required = false) String hostEmail) {
-        if (hostId != null) {
-            return premiseOfferService.getAllPremiseOffersByHostId(hostId);
-        }
-        if (hostEmail != null) {
-            return premiseOfferService.getAllPremiseOffersByHostEmail(hostEmail);
-        }
-        return premiseOfferService.getAllPremiseOffers();
+    @Secured(AuthRoles.HOST_ROLE)
+    public List<PremiseOfferModel> getPremiseOffersByHostId(@RequestParam Long hostId) throws UserNoAccessException {
+        authService.throwIfAuthNotBelongToUser(hostId);
+        return premiseOfferService.getAllPremiseOffersByHostId(hostId);
     }
 
     @GetMapping("/search")
-    @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
+    @Secured(AuthRoles.REFUGEE_ROLE)
     public List<PremiseOfferModel> filterPremiseOffers(@RequestParam(required = false) Boolean movingIssues,
                                                        @RequestParam(required = false) Boolean animalsInvolved,
                                                        @RequestParam(required = false) Integer numberOfPeople,

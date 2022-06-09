@@ -1,6 +1,7 @@
 import OfferListItem from "./OfferListItem";
 import addIcon from "../../assets/add-icon.png";
 import styled from "styled-components";
+import {useNavigate} from "react-router-dom";
 
 const AddIcon = styled.div`
     margin-top: 50px;
@@ -14,6 +15,12 @@ const IMG = styled.img`
 
 const OfferList = ({ results }) => {
 
+    let navigate = useNavigate();
+
+    const handleAddButton = () => {
+        navigate("/host/offers/create");
+    }
+
     const generateResults = () => {
         return results.map((result, index) => <OfferListItem key={index} result={result} />);
     }
@@ -22,7 +29,7 @@ const OfferList = ({ results }) => {
         <ul>
             {generateResults()}
             <AddIcon>
-                <IMG src={addIcon}></IMG>
+                <IMG onClick = {handleAddButton} src={addIcon}></IMG>
             </AddIcon>
         </ul>
     );

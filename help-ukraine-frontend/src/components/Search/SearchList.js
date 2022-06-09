@@ -1,9 +1,9 @@
 import SearchListItem from "./SearchListItem";
 
-const SearchList = ({ results }) => {
+const SearchList = ({ acceptedContactData, results }) => {
 
     const generateResults = () => {
-        return results.map((result, index) => <SearchListItem key={index} result={result} />);
+        return results.map((result, index) => <SearchListItem acceptedContactData = {acceptedContactData} key={index} result={result} />);
     }
 
     return (

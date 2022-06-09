@@ -1,4 +1,5 @@
 import RequestService from "../../services/RequestService";
+import MailService from "../../services/MailService";
 
 const RequestListItem = ({request, reloadRequests, premiseOfferId}) => {
 
@@ -13,8 +14,18 @@ const RequestListItem = ({request, reloadRequests, premiseOfferId}) => {
         return request.animalsInvolved ? <div className="request-list-item__contact-section__pets">Traveling with pets</div> : null;
     }
 
+    const acceptCandidateAndSendMail = async (searchingOfferId, premiseOfferId) => {
+        await RequestService.acceptCandidate(searchingOfferId, premiseOfferId);
+        await MailService.sendAcceptedRequest(searchingOfferId);
+    }
+
+    const rejectCandidateAndSendMail = async (searchingOfferId, premiseOfferId) => {
+        await RequestService.declineCandidate(searchingOfferId, premiseOfferId);
+        await MailService.sendRejectedRequest(searchingOfferId);
+    }
+
     const onAcceptClicked = () => {
-        RequestService.acceptCandidate(request.searchingOfferId, premiseOfferId).then(
+        acceptCandidateAndSendMail(request.searchingOfferId, premiseOfferId).then(
             () => {
                 reloadRequests();
             }
@@ -22,7 +33,7 @@ const RequestListItem = ({request, reloadRequests, premiseOfferId}) => {
     }
 
     const onDeclineClicked = () => {
-        RequestService.declineCandidate(request.searchingOfferId, premiseOfferId).then(
+        rejectCandidateAndSendMail(request.searchingOfferId, premiseOfferId).then(
             () => {
                 reloadRequests();
             }

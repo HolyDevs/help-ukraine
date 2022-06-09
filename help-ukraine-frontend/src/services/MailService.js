@@ -5,18 +5,32 @@ const API_URL = "/api/";
 
 class MailService {
 
-    getAuthHeader() {
-        const accessToken = AuthService.getAccessToken();
+    async getAuthHeader() {
+        const accessToken = await AuthService.getAccessToken();
         return {
             headers: {'Authorization': 'Bearer ' + accessToken},
         }
     }
 
-    sendHelpRequest(offerId) {
+    async sendHelpRequest(offerId) {
         const  refugeeId =  AuthService.getCurrentUser().id
-        const options = this.getAuthHeader();
+        const options = await this.getAuthHeader();
         return axios.post(
             API_URL + "mail/pending/" + offerId + "/" + refugeeId,null, options).then(res => res.data);
+    }
+
+    async sendAcceptedRequest(offerId) {
+        const  hostId =  AuthService.getCurrentUser().id
+        const options = await this.getAuthHeader();
+        return axios.post(
+            API_URL + "mail/accepted/" + offerId + "/" + hostId,null, options).then(res => res.data);
+    }
+
+    async sendRejectedRequest(offerId) {
+        const  hostId =  AuthService.getCurrentUser().id
+        const options = await this.getAuthHeader();
+        return axios.post(
+            API_URL + "mail/rejected/" + offerId + "/" + hostId,null, options).then(res => res.data);
     }
 }
 

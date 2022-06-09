@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -39,6 +40,10 @@ public class PendingController {
     private final PremiseOfferService premiseOfferService;
     private final AuthService authService;
 
+    // MSGS
+
+    private static final String NO_REQUIRED_PARAMS = "No required request params";
+
     // ENDPOINTS
 
     public static final String PENDING_ENDPOINT = AuthUrls.BACKEND_ROOT + "/pending";
@@ -56,15 +61,16 @@ public class PendingController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    public List<PendingModel> getPendings(@RequestParam(required = false) Long searchingOfferId, @RequestParam(required = false) Long premiseOfferId) throws UserNoAccessException, PremiseOfferNotFoundException, SearchingOfferNotFoundException {
-        throwIfAuthNotBelongToAllowedUsers(searchingOfferId, premiseOfferId);
+    public List<PendingModel> getPendings(@RequestParam(required = false) Long searchingOfferId, @RequestParam(required = false) Long premiseOfferId) throws UserNoAccessException, SearchingOfferNotFoundException, PremiseOfferNotFoundException {
         if (Objects.nonNull(searchingOfferId)) {
+            throwIfAuthNotBelongToAllowedRefugee(searchingOfferId);
             return pendingService.getPendingsBySearchingOfferId(searchingOfferId);
         }
         if (Objects.nonNull(premiseOfferId)) {
+            throwIfAuthNotBelongToAllowedHost(premiseOfferId);
             return pendingService.getPendingsByPremiseOfferId(premiseOfferId);
         }
-        return pendingService.getAllPendings();
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_REQUIRED_PARAMS);
     }
 
     @DeleteMapping("/{searchingOfferId}/{premiseOfferId}")
@@ -113,6 +119,16 @@ public class PendingController {
         SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(searchingOfferId);
         PremiseOfferModel premiseOfferModel = premiseOfferService.getPremiseOfferById(premiseOfferId);
         authService.throwIfAuthNotBelongToAnyUser(searchingOfferModel.getRefugeeId(), premiseOfferModel.getHostId());
+    }
+
+    private void throwIfAuthNotBelongToAllowedRefugee(Long searchingOfferId) throws UserNoAccessException, SearchingOfferNotFoundException {
+        SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(searchingOfferId);
+        authService.throwIfAuthNotBelongToUser(searchingOfferModel.getRefugeeId());
+    }
+
+    private void throwIfAuthNotBelongToAllowedHost(Long premiseOfferId) throws UserNoAccessException, PremiseOfferNotFoundException {
+        PremiseOfferModel premiseOfferModel = premiseOfferService.getPremiseOfferById(premiseOfferId);
+        authService.throwIfAuthNotBelongToUser(premiseOfferModel.getHostId());
     }
 }
 

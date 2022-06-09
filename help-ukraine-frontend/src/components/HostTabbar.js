@@ -7,7 +7,7 @@ import {useNavigate} from "react-router";
 
 const HostTabbar = () => {
 
-    const [activeTabIndex, setActiveTabIndex] = useState(0);
+    const [activeTabIndex, setActiveTabIndex] = useState(1);
     const navigate = useNavigate();
 
     const getTabbarItemClass = (index) => {
@@ -21,17 +21,14 @@ const HostTabbar = () => {
 
     const pushSubroute = (index) => {
         switch (index) {
-            // case 0:
-            //     navigate("/main/refugee/family");
-            //     break;
             case 0:
-                navigate("/host/offers");
+                navigate("/host/requests");
                 break;
             case 1:
-                navigate("/host/profile");
+                navigate("/host/offers");
                 break;
             case 2:
-                navigate("/host/requests");
+                navigate("/host/profile");
                 break;
         }
     }
@@ -40,17 +37,17 @@ const HostTabbar = () => {
         <div className="tabbar">
             <div className={getTabbarItemClass(0)} onClick={() => onTabClicked(0)}>
                 <div className="tabbar__item__icon">
-                    <img src={offersIcon}></img>
+                    <img src={familyIcon}></img>
                 </div>
             </div>
             <div className={getTabbarItemClass(1)} onClick={() => onTabClicked(1)}>
                 <div className="tabbar__item__icon">
-                    <img src={profileIcon}></img>
+                    <img src={offersIcon}></img>
                 </div>
             </div>
             <div className={getTabbarItemClass(2)} onClick={() => onTabClicked(2)}>
                 <div className="tabbar__item__icon">
-                    <img src={familyIcon}></img>
+                    <img src={profileIcon}></img>
                 </div>
             </div>
         </div>

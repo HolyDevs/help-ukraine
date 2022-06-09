@@ -1,19 +1,18 @@
 package help.ukraine.app.controller;
 
-import help.ukraine.app.data.AcceptedEntity;
 import help.ukraine.app.dto.CandidateDto;
+import help.ukraine.app.exception.PremiseOfferNotFoundException;
 import help.ukraine.app.exception.SearchingOfferNotFoundException;
 import help.ukraine.app.exception.UserNotExistsException;
-import help.ukraine.app.model.AcceptedModel;
-import help.ukraine.app.model.PendingModel;
-import help.ukraine.app.model.SearchingOfferModel;
-import help.ukraine.app.model.UserModel;
-import help.ukraine.app.repository.AcceptedRepository;
+import help.ukraine.app.model.*;
 import help.ukraine.app.security.constants.AuthRoles;
 import help.ukraine.app.security.constants.AuthUrls;
+import help.ukraine.app.security.exception.UserNoAccessException;
+import help.ukraine.app.security.service.AuthService;
 import help.ukraine.app.service.UserService;
 import help.ukraine.app.service.impl.AcceptedService;
 import help.ukraine.app.service.impl.PendingService;
+import help.ukraine.app.service.impl.PremiseOfferService;
 import help.ukraine.app.service.impl.SearchingOfferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -36,8 +35,10 @@ public class CandidateController {
 
     private final UserService userService;
     private final SearchingOfferService searchingOfferService;
+    private final PremiseOfferService premiseOfferService;
     private final PendingService pendingService;
     private final AcceptedService acceptedService;
+    private final AuthService authService;
 
     // ENDPOINTS
     public static final String CANDIDATE_DATA_ENDPOINT = AuthUrls.BACKEND_ROOT + "/candidate";
@@ -45,7 +46,8 @@ public class CandidateController {
     // CRUD
     @GetMapping(path = "/{premiseOfferId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured(AuthRoles.HOST_ROLE)
-    public List<CandidateDto> getCandidates(@PathVariable Long premiseOfferId) throws UserNotExistsException, SearchingOfferNotFoundException {
+    public List<CandidateDto> getCandidates(@PathVariable Long premiseOfferId) throws UserNotExistsException, SearchingOfferNotFoundException, UserNoAccessException, PremiseOfferNotFoundException {
+        throwIfAuthNotBelongToAllowedUser(premiseOfferId);
         Optional<CandidateDto> acceptedCandidate = getAcceptedCandidateDto(premiseOfferId);
         if (acceptedCandidate.isPresent()) {
             return List.of(acceptedCandidate.get());
@@ -90,11 +92,23 @@ public class CandidateController {
 
     @ExceptionHandler({
             UserNotExistsException.class,
-            SearchingOfferNotFoundException.class
+            SearchingOfferNotFoundException.class,
+            PremiseOfferNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNotFoundExceptions(Exception exception) {
         return exception.getMessage();
+    }
+
+    @ExceptionHandler(UserNoAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public String handleForbiddenExceptions(Exception exception) {
+        return exception.getMessage();
+    }
+
+    private void throwIfAuthNotBelongToAllowedUser(Long premiseOfferId) throws UserNoAccessException, PremiseOfferNotFoundException {
+        PremiseOfferModel premiseOfferModel = premiseOfferService.getPremiseOfferById(premiseOfferId);
+        authService.throwIfAuthNotBelongToUser(premiseOfferModel.getHostId());
     }
 }
 

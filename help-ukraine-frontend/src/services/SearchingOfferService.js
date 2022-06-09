@@ -5,35 +5,35 @@ const API_URL = "/api/";
 
 class SearchingOfferService {
 
-    getAuthHeader() {
-        const accessToken = AuthService.getAccessToken();
+    async getAuthHeader() {
+        const accessToken = await AuthService.getAccessToken();
         return {
             headers: {'Authorization': 'Bearer ' + accessToken},
         }
     }
 
-    createSearchingOffer(searchingOfferData) {
-        const options = this.getAuthHeader();
+    async createSearchingOffer(searchingOfferData) {
+        const options = await this.getAuthHeader();
         return axios.post(API_URL + "searching-offers", searchingOfferData, options).then(res => res.data);
     }
 
-    modifySearchingOffer(searchingOfferData) {
-        const options = this.getAuthHeader();
+    async modifySearchingOffer(searchingOfferData) {
+        const options = await this.getAuthHeader();
         return axios.put(API_URL + "searching-offers/" + searchingOfferData.id, searchingOfferData, options).then(res => res.data);
     }
 
-    fetchSearchingOffers() {
-        const options = this.getAuthHeader();
+    async fetchSearchingOffers() {
+        const options = await this.getAuthHeader();
         return axios.get(API_URL + "searching-offers", options).then(res => res.data);
     }
 
-    fetchSearchingOffersByRefugeeId(refugeeId) {
-        const options = this.getAuthHeader();
+    async fetchSearchingOffersByRefugeeId(refugeeId) {
+        const options = await this.getAuthHeader();
         return axios.get(API_URL + "searching-offers?refugeeId=" + refugeeId, options).then(res => res.data);
     }
 
-    fetchSearchingOfferByRefugeeId(refugeeId) {
-        const options = this.getAuthHeader();
+    async fetchSearchingOfferByRefugeeId(refugeeId) {
+        const options = await this.getAuthHeader();
         return axios.get(API_URL + "searching-offers?refugeeId=" + refugeeId, options).then(res => {
             if (res.data.length > 0) {
                 return res.data[0];
@@ -68,8 +68,8 @@ class SearchingOfferService {
         return response;
     }
 
-    getSearchingOfferById(id) {
-        const options = this.getAuthHeader();
+    async getSearchingOfferById(id) {
+        const options = await this.getAuthHeader();
         return axios.get(API_URL + "searching-offers/" + id, options).then(res => res.data);
     }
 

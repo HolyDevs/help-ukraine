@@ -32,6 +32,7 @@ function App() {
                     <Route path="profile" element={<HostProfile/>}/>
                     <Route path="offers" element={<Offers/>}/>
                     <Route path="offers/:id" element={<HostOfferDetails/>}/>
+                    <Route path="offers/create" element={<HostOfferDetails/>}/>
                     <Route path="requests" element={<HostRequests/>}/>
                 </Route>
                 <Route path="/refugee" element={<Refugee/>}>

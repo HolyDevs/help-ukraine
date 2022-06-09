@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -34,7 +35,12 @@ public class AcceptedController {
     private final SearchingOfferService searchingOfferService;
     private final AuthService authService;
 
+    // MSGS
+
+    private static final String NO_REQUIRED_PARAMS = "No required request params";
+
     // ENDPOINTS
+
     public static final String ACCEPTED_ENDPOINT = AuthUrls.BACKEND_ROOT + "/accepted";
 
     // CRUD
@@ -49,15 +55,16 @@ public class AcceptedController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    public List<AcceptedModel> getAccepteds(@RequestParam(required = false) Long searchingOfferId, @RequestParam(required = false) Long premiseOfferId) throws UserNoAccessException, PremiseOfferNotFoundException, SearchingOfferNotFoundException {
-        throwIfAuthNotBelongToAllowedUsers(searchingOfferId, premiseOfferId);
-        if (Objects.nonNull(searchingOfferId)) {
-            return acceptedService.getAcceptedsBySearchingOfferId(searchingOfferId);
-        }
+    public List<AcceptedModel> getAccepteds(@RequestParam(required = false) Long premiseOfferId, @RequestParam(required = false) Long searchingOfferId) throws UserNoAccessException, PremiseOfferNotFoundException, SearchingOfferNotFoundException {
         if (Objects.nonNull(premiseOfferId)) {
+            throwIfAuthNotBelongToAllowedHost(premiseOfferId);
             return acceptedService.getAcceptedsByPremiseOfferId(premiseOfferId);
         }
-        return acceptedService.getAllAccepteds();
+        if (Objects.nonNull(searchingOfferId)) {
+            throwIfAuthNotBelongToAllowedRefugee(searchingOfferId);
+            return acceptedService.getAcceptedsBySearchingOfferId(searchingOfferId);
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, NO_REQUIRED_PARAMS);
     }
 
     @DeleteMapping("/{searchingOfferId}/{pendingOfferId}")
@@ -70,7 +77,7 @@ public class AcceptedController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @Secured({AuthRoles.HOST_ROLE})
+    @Secured(AuthRoles.HOST_ROLE)
     public ResponseEntity<AcceptedModel> createAccepted(@RequestBody @Valid AcceptedModel acceptedModel) throws PremiseOfferNotFoundException, SearchingOfferNotFoundException, AcceptedAlreadyCreatedException, PendingNotExistsException, UserNoAccessException {
         PremiseOfferModel premiseOfferModel = premiseOfferService.getPremiseOfferById(acceptedModel.getPremiseOfferId());
         authService.throwIfAuthNotBelongToUser(premiseOfferModel.getHostId());
@@ -109,5 +116,15 @@ public class AcceptedController {
         SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(searchingOfferId);
         PremiseOfferModel premiseOfferModel = premiseOfferService.getPremiseOfferById(premiseOfferId);
         authService.throwIfAuthNotBelongToAnyUser(searchingOfferModel.getRefugeeId(), premiseOfferModel.getHostId());
+    }
+
+    private void throwIfAuthNotBelongToAllowedRefugee(Long searchingOfferId) throws UserNoAccessException, SearchingOfferNotFoundException {
+        SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(searchingOfferId);
+        authService.throwIfAuthNotBelongToUser(searchingOfferModel.getRefugeeId());
+    }
+
+    private void throwIfAuthNotBelongToAllowedHost(Long premiseOfferId) throws UserNoAccessException, PremiseOfferNotFoundException {
+        PremiseOfferModel premiseOfferModel = premiseOfferService.getPremiseOfferById(premiseOfferId);
+        authService.throwIfAuthNotBelongToUser(premiseOfferModel.getHostId());
     }
 }

@@ -18,13 +18,14 @@ const SearchOfferDetails = () => {
 
     const {state} = useLocation();
     const {details} = state;
+    const {acceptedContactData} = state;
 
     const sendMailAndCreatePending = async () => {
         await PendingService.createPendingForCurrentSearchingOffer(details.id);
         await MailService.sendHelpRequest(details.id);
     }
 
-    const handleMakeContact =  () => {
+    const handleMakeContact = () => {
         sendMailAndCreatePending().then(() => {
             window.alert("Your contact request was sent!");
         }).catch(err => {
@@ -48,34 +49,39 @@ const SearchOfferDetails = () => {
         console.log(details);
         return (
             <>
-                <Tag icon={numOfPeopleIcon} tagName={details.peopleToTake + ""} />
-                <Tag icon={locationIcon} tagName={details.city} />
-                <Tag icon={dateFromIcon} tagName={"from: " + details.fromDate} />
-                <Tag icon={dateToIcon} tagName={"to: " + details.toDate} />
-                <Tag icon={numOfBedroomsIcon} tagName={"bedrooms: " + details.bedrooms + ""} />
-                <Tag icon={numOfBathroomsIcon} tagName={"bathrooms: " + details.bathrooms + ""} />
-                <Tag icon={numOfKitchensIcon} tagName={"kitchens: " + details.kitchens + ""} />
-                {details.animalsAllowed && <Tag icon={animalsAllowedIcon} tagName={"Pet friendly"} />}
-                {details.wheelchairFriendly && <Tag icon={wheelchairFriendlyIcon} tagName={"Wheelchair adjusted"} />}
-                {details.smokingAllowed && <Tag icon={smokingAllowedIcon} tagName={"Smoking allowed"} />}
+                <Tag icon={numOfPeopleIcon} tagName={details.peopleToTake + ""}/>
+                <Tag icon={locationIcon} tagName={details.city}/>
+                <Tag icon={dateFromIcon} tagName={"from: " + details.fromDate}/>
+                <Tag icon={dateToIcon} tagName={"to: " + details.toDate}/>
+                <Tag icon={numOfBedroomsIcon} tagName={"bedrooms: " + details.bedrooms + ""}/>
+                <Tag icon={numOfBathroomsIcon} tagName={"bathrooms: " + details.bathrooms + ""}/>
+                <Tag icon={numOfKitchensIcon} tagName={"kitchens: " + details.kitchens + ""}/>
+                {details.animalsAllowed && <Tag icon={animalsAllowedIcon} tagName={"Pet friendly"}/>}
+                {details.wheelchairFriendly && <Tag icon={wheelchairFriendlyIcon} tagName={"Wheelchair adjusted"}/>}
+                {details.smokingAllowed && <Tag icon={smokingAllowedIcon} tagName={"Smoking allowed"}/>}
             </>
         );
     }
 
     return (
-    <div className="details">
-        <img src={details.offerImagesLocations[0]} />
-        <div className="details__content">
-            <h2>{details.city + " - " + details.peopleToTake + " accommodation(s)"}</h2>
-            <div className="separator"/>
-            <div className="details__content__tags">
-                {generateTags()}
+        <div className="details">
+            <img src={details.offerImagesLocations[0]}/>
+            <div className="details__content">
+                {!acceptedContactData && <h2>{details.city + " - " + details.peopleToTake + " accommodation(s)"}</h2>}
+                {acceptedContactData &&
+                <h2>{details.city + ", " + details.street + " " + details.houseNumber + ", " + details.postalCode}</h2>}
+                <div className="separator"/>
+                <div className="details__content__tags">
+                    {generateTags()}
+                </div>
+                <h3>About home</h3>
+                <p>{details.description}</p>
+                {acceptedContactData && <h3>Contact data</h3>}
+                {acceptedContactData && <p>{acceptedContactData.name + " " + acceptedContactData.surname + "\n" +
+                acceptedContactData.email + " " + acceptedContactData.phoneNumber}</p>}
+                {!acceptedContactData && <Button onClick={handleMakeContact}>Make contact</Button>}
             </div>
-            <h3>About home</h3>
-            <p>{details.description}</p>
-            <Button onClick={handleMakeContact}>Make contact</Button>
         </div>
-    </div>
     );
 }
 

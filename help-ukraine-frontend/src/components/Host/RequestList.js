@@ -2,24 +2,19 @@ import { useEffect, useState } from "react";
 import RequestService from "../../services/RequestService";
 import RequestListItem from "./RequestListItem";
 
-const RequestList = ({home}) => {
+const RequestList = ({home, reloadRequests}) => {
 
     const [requests, setRequests] = useState([]);
 
     useEffect(() => {
-        reloadRequests();
-    }, []);
-
-    const reloadRequests = () => {
         RequestService.fetchCandidatesByPremiseOfferId(home.id)
             .then(res => {
-                console.log(res);
                 setRequests(res);
             })
             .catch(error => {
                 window.alert("Something went wrong - cannot fetch offers")
             })
-    }
+    }, [home]);
 
     const generateList = () => {
         return (
