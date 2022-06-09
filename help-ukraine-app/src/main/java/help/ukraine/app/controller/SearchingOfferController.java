@@ -47,12 +47,10 @@ public class SearchingOfferController {
     }
 
     @GetMapping
-    @Secured({AuthRoles.REFUGEE_ROLE, AuthRoles.HOST_ROLE})
-    public List<SearchingOfferModel> getAllSearchingOffers(@RequestParam(required = false) Long refugeeId) {
-        if (refugeeId != null) {
-            return searchingOfferService.getSearchingOffersForRefugeeId(refugeeId);
-        }
-        return searchingOfferService.getAllSearchingOffers();
+    @Secured(AuthRoles.REFUGEE_ROLE)
+    public List<SearchingOfferModel> getSearchingOffersByRefugeeId(@RequestParam Long refugeeId) throws UserNoAccessException {
+        authService.throwIfAuthNotBelongToUser(refugeeId);
+        return searchingOfferService.getSearchingOffersForRefugeeId(refugeeId);
     }
 
     @GetMapping(path = "/{id}")

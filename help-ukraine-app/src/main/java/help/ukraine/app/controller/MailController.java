@@ -49,9 +49,9 @@ public class MailController {
 
     @PostMapping(path = "/accepted/{searchingOfferId}/{hostId}")
     @Secured(AuthRoles.HOST_ROLE)
-    public ResponseEntity<String> sendAcceptedNotificationMail(@PathVariable Long searchingOfferId, @PathVariable Long hostId) throws PremiseOfferNotFoundException, UserNotExistsException, MessagingException, UserNoAccessException, SearchingOfferNotFoundException {
-        SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(searchingOfferId);
+    public ResponseEntity<String> sendAcceptedNotificationMail(@PathVariable Long searchingOfferId, @PathVariable Long hostId) throws UserNotExistsException, MessagingException, UserNoAccessException, SearchingOfferNotFoundException {
         authService.throwIfAuthNotBelongToUser(hostId);
+        SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(searchingOfferId);
         UserModel refugee = userService.getUserById(searchingOfferModel.getRefugeeId());
         UserModel host = userService.getUserById(hostId);
         mailService.sendAcceptedNotificationMail(host, refugee);
@@ -60,9 +60,9 @@ public class MailController {
 
     @PostMapping(path = "/rejected/{searchingOfferId}/{hostId}")
     @Secured(AuthRoles.HOST_ROLE)
-    public ResponseEntity<String> sendRejectedNotificationMail(@PathVariable Long searchingOfferId, @PathVariable Long hostId) throws PremiseOfferNotFoundException, UserNotExistsException, MessagingException, UserNoAccessException, SearchingOfferNotFoundException {
-        SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(searchingOfferId);
+    public ResponseEntity<String> sendRejectedNotificationMail(@PathVariable Long searchingOfferId, @PathVariable Long hostId) throws UserNotExistsException, MessagingException, UserNoAccessException, SearchingOfferNotFoundException {
         authService.throwIfAuthNotBelongToUser(hostId);
+        SearchingOfferModel searchingOfferModel = searchingOfferService.getSearchingOfferById(searchingOfferId);
         UserModel refugee = userService.getUserById(searchingOfferModel.getRefugeeId());
         UserModel host = userService.getUserById(hostId);
         mailService.sendRejectedNotificationMail(host, refugee);
