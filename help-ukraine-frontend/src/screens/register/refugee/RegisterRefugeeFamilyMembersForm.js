@@ -1,5 +1,5 @@
 import FamilyMembers from "../../../components/Family/FamilyMembers";
-import addIcon from "../../../assets/add-icon.png"
+import addIcon from "../../../assets/add-icon-white.png"
 import Modal from "../../../components/Common/Modal";
 import AddNewMember from "../../../components/Family/AddNewMember";
 import React, {useState} from "react";
@@ -64,9 +64,19 @@ const RegisterRefugeeFamilyMembersForm = () => {
         setSelectedFamilyMember(null);
     }
 
+
+
     return (
-        <div className="family">
-            <h1 className="familyTitle">Do you have any family members?</h1>
+        <>
+
+            <div className="family register-modal-wrapper">
+             <Modal  isVisible={addNewMemberModalVisibility} onClose={onModalClose}>
+                     <AddNewMember member={selectedFamilyMember} membersList={members} onSave={onModalClose}/>
+             </Modal>
+            </div>
+
+            <div className="family-register-screen">
+            <div className="familyTitle">Do you have any family members?</div>
             <FamilyMembers members={members} onFamilyMemberRemoved={onFamilyMemberRemoved} onFamilyMemberClicked={onFamilyMemberClicked}/>
             <div
                 className="addFamilyMember"
@@ -74,15 +84,15 @@ const RegisterRefugeeFamilyMembersForm = () => {
             >
                 <img src={addIcon}></img>
             </div>
-            <Modal isVisible={addNewMemberModalVisibility} onClose={onModalClose}>
-                <AddNewMember member={selectedFamilyMember} membersList={members} onSave={onModalClose}/>
-            </Modal>
+
             <AppSection>
                 <PustePole20px>
                 </PustePole20px>
                 <AppButton onClick={handleSubmitButton}>Submit</AppButton>
             </AppSection>
-        </div>
+            </div>
+        </>
+
     );
 }
 
