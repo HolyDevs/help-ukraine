@@ -34,3 +34,5 @@ spring:
     gcp:
       sql:
         enabled: false
+  mail:
+    username: a@b.com
