@@ -27,7 +27,7 @@ spring:
         database-name: ${db-name}
         instance-connection-name: ${db-connection}
   mail:
-    host: 142.251.1.108
+    host: smtp.office365.com
     port: 587
     username: ${mail-username}
     password: ${mail-password}
