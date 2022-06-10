@@ -4,7 +4,9 @@ import Card from '../../components/styled-components/Card'
 import {Link} from "react-router-dom";
 
 const RolePickerBody = styled.div`
-    height: 100vh;
+    animation: fade-in .5s;
+    height: fit-content;
+    min-height: 100%;
     background-color: var(--ukrainski-niebieski);
     display: flex;
     flex-direction: column;
