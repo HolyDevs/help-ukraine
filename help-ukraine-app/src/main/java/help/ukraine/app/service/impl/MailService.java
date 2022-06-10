@@ -3,6 +3,7 @@ package help.ukraine.app.service.impl;
 import help.ukraine.app.model.PremiseOfferModel;
 import help.ukraine.app.model.UserModel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ import javax.mail.internet.MimeMessage;
 @Service
 @RequiredArgsConstructor
 public class MailService {
+
+    @Value("${spring.mail.username}")
+    private String from;
 
     private final JavaMailSender javaMailSender;
 
@@ -35,6 +39,7 @@ public class MailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setTo(host.getEmail());
+        mimeMessageHelper.setFrom(from);
         mimeMessageHelper.setSubject(PENDING_MSG_SUBJECT);
         String offerAddress = parseAddress(premiseOfferModel);
         mimeMessageHelper.setText(String.format(PENDING_MSG, host.getName(), refugee.getName(), offerAddress), false);
@@ -45,6 +50,7 @@ public class MailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setTo(refugee.getEmail());
+        mimeMessageHelper.setFrom(from);
         mimeMessageHelper.setSubject(String.format(ACCEPTED_MSG_SUBJECT, host.getName()));
         mimeMessageHelper.setText(String.format(ACCEPTED_MSG, refugee.getName(), host.getName()), false);
         javaMailSender.send(mimeMessage);
@@ -53,6 +59,7 @@ public class MailService {
     public void sendRejectedNotificationMail(UserModel host, UserModel refugee) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+        mimeMessageHelper.setFrom(from);
         mimeMessageHelper.setTo(refugee.getEmail());
         mimeMessageHelper.setSubject(String.format(REJECTED_MSG_SUBJECT, host.getName()));
         mimeMessageHelper.setText(String.format(REJECTED_MSG, refugee.getName(), host.getName()), false);
