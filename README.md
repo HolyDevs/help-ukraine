@@ -12,7 +12,8 @@
 # KOMPILACJA & DOCKER
 ## kompilacja z utworzeniem obrazu dockerowego:
  - mvn clean install -Dprofile=local - obraz do odpalenia lokalnie na bazce h2
- - mvn clean install -Dprofile=dev - obraz do odpalenia na srodowisku 
+ - mvn clean install -Dprofile=dev-gcp - obraz do odpalenia na srodowisku (bazka GCP)
+ - mvn clean install -Dprofile=dev-h2 - obraz do odpalenia na srodowisku (bazka h2 in memory)
 ## start kontenera lokalnie:
 ### docker run -p 8080:8080 help-ukraine/help-ukraine 
 ## tagowanie obrazu dockerowego:
